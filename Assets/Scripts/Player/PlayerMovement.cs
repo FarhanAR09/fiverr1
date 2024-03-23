@@ -17,10 +17,19 @@ public class PlayerMovement : MonoBehaviour
     [SerializeField]
     private bool smooth = false;
 
+    GridMover gridMover;
+
+    private void Awake()
+    {
+        gridMover = new GameObject("Player Grid Mover", typeof(GridMover)).GetComponent<GridMover>();
+        gridMover.transform.parent = transform;
+        gridMover.SetUp(transform, speed, new Vector2Int(0, 0));
+    }
+
     private void Start()
     {
-        MoveTo(new(0, 0));
-        StartCoroutine(MoveLoop());
+        //MoveTo(new(0, 0));
+        //StartCoroutine(MoveLoop());
     }
 
     private void Update()
@@ -28,26 +37,21 @@ public class PlayerMovement : MonoBehaviour
         #region Inputs
         if (Input.GetButton("Up"))
         {
-            currentDirection = MovementDirection.Up;
+            gridMover.Direction = MovementDirection.Up;
         }
         else if (Input.GetButton("Down"))
         {
-            currentDirection = MovementDirection.Down;
+            gridMover.Direction = MovementDirection.Down;
         }
         else if (Input.GetButton("Left"))
         {
-            currentDirection = MovementDirection.Left;
+            gridMover.Direction = MovementDirection.Left;
         }
         else if (Input.GetButton("Right"))
         {
-            currentDirection = MovementDirection.Right;
+            gridMover.Direction = MovementDirection.Right;
         }
         #endregion
-    }
-
-    private void FixedUpdate()
-    {
-        
     }
 
     private void OnDestroy()
