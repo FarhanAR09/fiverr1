@@ -11,6 +11,7 @@ public enum EnemyBehaviourState
     Chasing
 }
 
+[RequireComponent(typeof(EnemyPatrol))]
 public class EnemyBehaviour : MonoBehaviour
 {
     [SerializeField]
@@ -23,11 +24,16 @@ public class EnemyBehaviour : MonoBehaviour
 
     private GridMover gridMover;
 
+    private EnemyPatrol enemyPatrol;
+    private EnemyBehaviourState seekState = EnemyBehaviourState.Patrolling;
+
     private void Awake()
     {
         gridMover = new GameObject("Player Grid Mover", typeof(GridMover)).GetComponent<GridMover>();
         gridMover.transform.parent = transform;
         gridMover.SetUp(transform, speed, initialPosition, initialDirection);
+
+        enemyPatrol = GetComponent<EnemyPatrol>();
     }
 
     private void OnEnable()
@@ -37,6 +43,7 @@ public class EnemyBehaviour : MonoBehaviour
             gridMover.OnFinishedMoving.AddListener(FinishedMoving);
             gridMover.OnStartedMoving.AddListener(StartedMoving);
         }
+        enemyPatrol.OnPlayerDetected.AddListener(EnterChaseStateTemporarily);
     }
 
     private void FixedUpdate()
@@ -46,8 +53,12 @@ public class EnemyBehaviour : MonoBehaviour
         {
             if (MapHandler.Instance != null && MapHandler.Instance.MapGrid != null)
             {
-                Vector2Int target = MapHandler.Instance.MapGrid.GetXY(PlayerMovement.GOInstance.transform.position);
-
+                var target = seekState switch
+                {
+                    EnemyBehaviourState.Patrolling => TryGetRandomTilePosition(), //TODO: Optimize this, but good enough (detect if target is reached)
+                    EnemyBehaviourState.Chasing => MapHandler.Instance.MapGrid.GetXY(PlayerMovement.GOInstance.transform.position),
+                    _ => new Vector2Int(-1, -1),
+                };
                 Dictionary<MovementDirection, float> directionDistances = new ()
                 {
                     { MovementDirection.Up, CalculateDistanceSqr(gridMover.Position + new Vector2Int(0, 1), target) },
@@ -73,6 +84,8 @@ public class EnemyBehaviour : MonoBehaviour
                 }
             }
         }
+
+        //Debug.Log("Seek State: " + seekState.ToString());
     }
 
     private void OnDisable()
@@ -82,6 +95,12 @@ public class EnemyBehaviour : MonoBehaviour
             gridMover.OnFinishedMoving.RemoveListener(FinishedMoving);
             gridMover.OnStartedMoving.RemoveListener(StartedMoving);
         }
+        enemyPatrol.OnPlayerDetected.RemoveListener(EnterChaseStateTemporarily);
+    }
+
+    private void OnDestroy()
+    {
+        StopAllCoroutines();
     }
 
     private float CalculateDistanceSqr(Vector2Int from, Vector2Int to)
@@ -98,6 +117,17 @@ public class EnemyBehaviour : MonoBehaviour
         return float.PositiveInfinity;
     }
 
+    private void EnterChaseStateTemporarily()
+    {
+        IEnumerator HandleChaseState()
+        {
+            seekState = EnemyBehaviourState.Chasing;
+            yield return new WaitForSeconds(8);
+            seekState = EnemyBehaviourState.Patrolling;
+        }
+        StartCoroutine(HandleChaseState());
+    }
+
     private void StartedMoving()
     {
         finishedMoving = false;
@@ -106,5 +136,22 @@ public class EnemyBehaviour : MonoBehaviour
     private void FinishedMoving()
     {
         finishedMoving = true;
+    }
+
+    private Vector2Int TryGetRandomTilePosition()
+    {
+        int maxTries = 200;
+        if (MapHandler.Instance != null && MapHandler.Instance.MapGrid != null)
+        {
+            int maxWidth = MapHandler.Instance.MapGrid.GetWidth();
+            int maxHeight = MapHandler.Instance.MapGrid.GetHeight();
+            for (int i = 0; i < maxTries; i++)
+            {
+                Vector2Int randomTilePos = new(UnityEngine.Random.Range(0, maxWidth), UnityEngine.Random.Range(0, maxHeight));
+                if (MapHandler.Instance.MapGrid.GetGridObject(randomTilePos).Walkable)
+                    return randomTilePos;
+            }
+        }
+        return new Vector2Int(-1, -1);
     }
 }
