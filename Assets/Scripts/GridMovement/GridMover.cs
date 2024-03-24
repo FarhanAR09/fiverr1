@@ -2,14 +2,34 @@ using System.Collections;
 using System.Collections.Generic;
 using Unity.VisualScripting;
 using UnityEngine;
+using UnityEngine.Events;
 
 public class GridMover : MonoBehaviour, IGridMover
 {
     #region Interface Attributes
-    public Vector2Int Position { get; private set; }
-    public Transform Mover { get; set; }
+    public Vector2Int Position { 
+        get
+        {
+            if (_mover != null && MapHandler.Instance != null && MapHandler.Instance.MapGrid != null)
+                return MapHandler.Instance.MapGrid.GetXY(_mover.transform.position);
+            return Vector2Int.zero;
+        }
+    }
+    private Transform _mover;
+    public Transform Mover { 
+        get
+        {
+            if (_mover == null)
+                Destroy(gameObject);
+            return _mover;
+        } 
+        set => _mover = value; 
+    }
     public MovementDirection Direction { get; set; } = MovementDirection.Right;
     public float Speed { get; set; }
+    public bool BeenSetUp { get => beenSetUp; private set => beenSetUp = value; }
+    public UnityEvent OnStartedMoving { get; } = new();
+    public UnityEvent OnFinishedMoving { get; } = new();
     #endregion
 
     private Vector2Int initialPos;
@@ -25,16 +45,17 @@ public class GridMover : MonoBehaviour, IGridMover
     #endregion
 
     /// <summary>
-    /// Prepares the GridMover before it can be usedS
+    ///Prepares the GridMover before it can be used
     /// </summary>
     /// <param name="mover">The transform that is going to be manipulated</param>
-    /// <param name="speed"></param>
-    /// <param name="initialPos"></param>
-    public void SetUp(Transform mover, float speed, Vector2Int initialPos)
+    /// <param name="speed">Tiles per second</param>
+    /// <param name="initialPos">Where will the mover starts moving?</param>
+    public void SetUp(Transform mover, float speed, Vector2Int initialPos, MovementDirection initialDirection)
     {
         Mover = mover;
         Speed = speed;
         this.initialPos = initialPos;
+        Direction = initialDirection;
         beenSetUp = true;
     }
 
@@ -113,6 +134,8 @@ public class GridMover : MonoBehaviour, IGridMover
                 {
                     //Debug.Log("Traverse started");
 
+                    OnStartedMoving.Invoke();
+
                     float duration = 1 / Speed; //Time taken every tile
                     float time = 0;
                     Vector2 initWorldPosition = Mover.transform.position;
@@ -129,6 +152,7 @@ public class GridMover : MonoBehaviour, IGridMover
                         yield return new WaitForFixedUpdate();
                     }
 
+                    OnFinishedMoving.Invoke();
                     canMove = true;
                     //Debug.Log("Traverse finished");
                 }

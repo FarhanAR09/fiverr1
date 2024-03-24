@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.Events;
 
 public interface IGridMover
 {
@@ -11,8 +12,12 @@ public interface IGridMover
     public Vector2Int Position { get; }
     public MovementDirection Direction { get; set; }
     public float Speed { get; set; }
+    public bool BeenSetUp { get; }
+
+    public UnityEvent OnStartedMoving { get; }
+    public UnityEvent OnFinishedMoving { get; }
 
     public void ForceMoveTo(Vector2Int position);
 
-    public void SetUp(Transform mover, float speed, Vector2Int initialPos);
+    public void SetUp(Transform mover, float speed, Vector2Int initialPos, MovementDirection initialDirection);
 }

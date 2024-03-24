@@ -41,4 +41,12 @@ public class MapHandler : MonoBehaviour
         }
         else Debug.LogWarning("Map Data is null");
     }
+
+    public bool CheckBoundary(Vector2Int position)
+    {
+        if (position.x >= 0 && position.x < MapGrid.GetWidth() && position.y >= 0 && position.y < MapGrid.GetHeight())
+            return true;
+        else 
+            return false;
+    }
 }
