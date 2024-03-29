@@ -17,7 +17,7 @@ public class EnemyPatrolWatcher : MonoBehaviour
 
     private void OnTriggerEnter2D(Collider2D collision)
     {
-        if (collision.gameObject.Equals(PlayerMovement.GOInstance))
+        if (collision.gameObject.Equals(PlayerInput.GOInstance))
         {
             OnPlayerDetected.Invoke();
         }

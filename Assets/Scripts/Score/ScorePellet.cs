@@ -15,7 +15,10 @@ public class ScorePellet : MonoBehaviour
 
     private void OnTriggerEnter2D(Collider2D collision)
     {
-        ScoreCounter.AddScore(1);
-        Destroy(gameObject);
+        if (collision.gameObject.Equals(PlayerInput.GOInstance))
+        {
+            ScoreCounter.AddScore(1);
+            Destroy(gameObject);
+        }
     }
 }

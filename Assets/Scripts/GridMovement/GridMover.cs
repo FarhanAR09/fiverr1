@@ -36,6 +36,7 @@ public class GridMover : MonoBehaviour, IGridMover
 
     private bool beenSetUp = false;
     private bool canMove = true;
+    public bool Paused { get; set; } = false;
 
     #region Interface Methods
     public void ForceMoveTo(Vector2Int position)
@@ -62,7 +63,7 @@ public class GridMover : MonoBehaviour, IGridMover
     IEnumerator MoveLoop()
     {
         yield return new WaitUntil(() => beenSetUp);
-        MoveTo(initialPos);
+        MoveTo(initialPos); //Please move this out
         while (Mover != null && beenSetUp)
         {
             //Debug.Log("Current Direction: " + currentDirection.ToString());
@@ -84,7 +85,7 @@ public class GridMover : MonoBehaviour, IGridMover
             }
 
             //Debug.Log("Waiting Move Loop...");
-            yield return new WaitUntil(() => canMove);
+            yield return new WaitUntil(() => canMove && !Paused);
             yield return new WaitForFixedUpdate();
         }
     }

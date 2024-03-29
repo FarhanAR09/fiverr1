@@ -12,7 +12,7 @@ public enum EnemyBehaviourState
 }
 
 [RequireComponent(typeof(EnemyPatrol))]
-public class EnemyBehaviour : MonoBehaviour
+public class EnemyBehaviour : MonoBehaviour, IStunnable
 {
     [SerializeField]
     private float speed = 2.2f;
@@ -26,6 +26,8 @@ public class EnemyBehaviour : MonoBehaviour
 
     private EnemyPatrol enemyPatrol;
     private EnemyBehaviourState seekState = EnemyBehaviourState.Patrolling;
+
+    private Coroutine stunCoroutine;
 
     private void Awake()
     {
@@ -49,14 +51,14 @@ public class EnemyBehaviour : MonoBehaviour
     private void FixedUpdate()
     {
         //Consider input every frame
-        if (finishedMoving && gridMover != null && PlayerMovement.GOInstance)
+        if (finishedMoving && gridMover != null && PlayerInput.GOInstance)
         {
             if (MapHandler.Instance != null && MapHandler.Instance.MapGrid != null)
             {
                 var target = seekState switch
                 {
                     EnemyBehaviourState.Patrolling => TryGetRandomTilePosition(), //TODO: Optimize this, but good enough (detect if target is reached)
-                    EnemyBehaviourState.Chasing => MapHandler.Instance.MapGrid.GetXY(PlayerMovement.GOInstance.transform.position),
+                    EnemyBehaviourState.Chasing => MapHandler.Instance.MapGrid.GetXY(PlayerInput.GOInstance.transform.position),
                     _ => new Vector2Int(-1, -1),
                 };
                 Dictionary<MovementDirection, float> directionDistances = new ()
@@ -153,5 +155,22 @@ public class EnemyBehaviour : MonoBehaviour
             }
         }
         return new Vector2Int(-1, -1);
+    }
+
+    public void Stun(float duration)
+    {
+        if (gridMover != null)
+        {
+            //Restarts stun
+            if (stunCoroutine != null)
+                StopCoroutine(stunCoroutine);
+            IEnumerator StunTiming()
+            {
+                gridMover.Paused = true;
+                yield return new WaitForSeconds(duration);
+                gridMover.Paused = false;
+            }
+            stunCoroutine = StartCoroutine(StunTiming());
+        }
     }
 }

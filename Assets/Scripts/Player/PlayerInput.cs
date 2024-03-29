@@ -3,9 +3,10 @@ using System.Collections.Generic;
 using System.Runtime.CompilerServices;
 using Unity.VisualScripting;
 using UnityEngine;
+using UnityEngine.Events;
 using UnityEngine.Rendering.UI;
 
-public class PlayerMovement : MonoBehaviour
+public class PlayerInput : MonoBehaviour
 {
     //Singleton
     public static GameObject GOInstance { get; private set; }
@@ -19,6 +20,9 @@ public class PlayerMovement : MonoBehaviour
     [SerializeField]
     private MovementDirection initialDirection = MovementDirection.Right;
     GridMover gridMover;
+
+    public UnityEvent OnSpaceDown { get; private set; } = new();
+    public UnityEvent OnVDown { get; private set; } = new();
 
     private void Awake()
     {
@@ -39,6 +43,7 @@ public class PlayerMovement : MonoBehaviour
     private void Update()
     {
         #region Inputs
+        #region Movement
         // Translate inputs to direction
         if (Input.GetButton("Up"))
         {
@@ -56,6 +61,17 @@ public class PlayerMovement : MonoBehaviour
         {
             gridMover.Direction = MovementDirection.Right;
         }
+        #endregion
+        #region Power Up
+        if (Input.GetKeyDown(KeyCode.Space))
+        {
+            OnSpaceDown.Invoke();
+        }
+        if (Input.GetKeyDown(KeyCode.V))
+        {
+            OnVDown.Invoke();
+        }
+        #endregion
         #endregion
     }
 
