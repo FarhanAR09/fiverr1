@@ -27,6 +27,14 @@ public class Battery : MonoBehaviour
         spriteStatesNum = stateSprites.Count;
     }
 
+    private void Start()
+    {
+        if (spriteRenderer != null)
+        {
+            spriteRenderer.material.SetFloat("_Intensity", 0.75f);
+        }
+    }
+
     private void FixedUpdate()
     {
         if (CurrentCharge < 1f)
@@ -49,6 +57,17 @@ public class Battery : MonoBehaviour
         {
             int index = Mathf.Min(spriteStatesNum - 1, Mathf.FloorToInt(spriteStatesNum * CurrentCharge));
             spriteRenderer.sprite = stateSprites[index];
+
+            Color playerGlowColor = index switch
+            {
+                0 => Color.red,
+                1 => Color.red,
+                2 => Color.yellow,
+                3 => Color.green,
+                4 => Color.cyan,
+                _ => Color.red
+            };
+            spriteRenderer.material.SetColor("_Color", playerGlowColor);
         }
     }
 

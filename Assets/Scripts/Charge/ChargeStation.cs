@@ -8,6 +8,8 @@ public class ChargeStation : MonoBehaviour
 
     [SerializeField]
     private GameObject batteryPrefab;
+    [SerializeField]
+    private ParticleSystem psExplode;
 
     private void Start()
     {
@@ -21,6 +23,11 @@ public class ChargeStation : MonoBehaviour
             }
         }
         else Debug.LogWarning("Battery Prefab is null");
+
+        if (psExplode != null)
+        {
+            psExplode.Emit(50);
+        }
     }
 
     private void OnTriggerEnter2D(Collider2D collision)
@@ -49,6 +56,12 @@ public class ChargeStation : MonoBehaviour
                 charge++;
             }
         }
+
+        if (psExplode != null && charge > 0)
+        {
+            psExplode.Emit(50);
+        }
+
         return charge;
     }
 }

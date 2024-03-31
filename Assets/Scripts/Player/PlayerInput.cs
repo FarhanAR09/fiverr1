@@ -20,6 +20,7 @@ public class PlayerInput : MonoBehaviour
     [SerializeField]
     private MovementDirection initialDirection = MovementDirection.Right;
     GridMover gridMover;
+    public MovementDirection Direction { get; private set; }
 
     public UnityEvent OnSpaceDown { get; private set; } = new();
     public UnityEvent OnVDown { get; private set; } = new();
@@ -38,6 +39,11 @@ public class PlayerInput : MonoBehaviour
         gridMover = new GameObject("Player Grid Mover", typeof(GridMover)).GetComponent<GridMover>();
         gridMover.transform.parent = transform;
         gridMover.SetUp(transform, speed, initialPosition, initialDirection);
+    }
+
+    private void Start()
+    {
+        Direction = initialDirection;
     }
 
     private void Update()
@@ -61,6 +67,7 @@ public class PlayerInput : MonoBehaviour
         {
             gridMover.Direction = MovementDirection.Right;
         }
+        Direction = gridMover.Direction;
         #endregion
         #region Power Up
         if (Input.GetKeyDown(KeyCode.Space))
