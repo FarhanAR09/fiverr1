@@ -35,7 +35,7 @@ public class GameUIHandler : MonoBehaviour
     private void UpdateGameSpeedDisplay()
     {
         if (gameSpeedDisplay != null)
-            gameSpeedDisplay.SetText("Game Speed:\n" + Time.timeScale.ToString("F6"));
+            gameSpeedDisplay.SetText("Game Speed:\n" + Time.timeScale.ToString("F2") + " GHz");
     }
 
     private void UpdateLoseDisplay(bool s)

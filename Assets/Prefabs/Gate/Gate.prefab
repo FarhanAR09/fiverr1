@@ -166,6 +166,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 10baf1d38af23d74bbcc7cbc72c682aa, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  pickedSFX: {fileID: 8300000, guid: 647d60d0c324b17488f9bc177700b8bf, type: 3}
 --- !u!95 &7083935111469741573
 Animator:
   serializedVersion: 5

@@ -22,6 +22,9 @@ public class PlayerAnimation : MonoBehaviour
     private ParticleSystem psExplode;
     private ParticleSystem.MainModule psExplodeMain;
 
+    [SerializeField]
+    private AudioClip playerDeathSFX, playerEmpSFX, playerSlowSFX;
+
     private void Awake()
     {
         input = GetComponent<PlayerInput>();
@@ -43,6 +46,8 @@ public class PlayerAnimation : MonoBehaviour
     private void OnEnable()
     {
         powerManager.OnBulletTimeActivated.AddListener(Explode);
+        powerManager.OnEMPThrown.AddListener(EmpSFX);
+        GameEvents.OnPlayerLose.Add(DeathSFX);
     }
 
     private void Update()
@@ -98,6 +103,8 @@ public class PlayerAnimation : MonoBehaviour
     private void OnDisable()
     {
         powerManager.OnBulletTimeActivated.RemoveListener(Explode);
+        powerManager.OnEMPThrown.RemoveListener(EmpSFX);
+        GameEvents.OnPlayerLose.Remove(DeathSFX);
     }
 
     private void Explode()
@@ -112,6 +119,27 @@ public class PlayerAnimation : MonoBehaviour
                 _ => Color.red
             };
             psExplode.Emit(60);
+        }
+
+        if (playerSlowSFX != null && SFXController.Instance != null)
+        {
+            SFXController.Instance.RequestPlay(playerSlowSFX, 19999);
+        }
+    }
+
+    private void DeathSFX(bool s)
+    {
+        if (playerDeathSFX != null && SFXController.Instance != null)
+        {
+            SFXController.Instance.RequestPlay(playerDeathSFX, 20000, timePitching: false);
+        }
+    }
+
+    private void EmpSFX()
+    {
+        if (playerEmpSFX != null && SFXController.Instance != null)
+        {
+            SFXController.Instance.RequestPlay(playerEmpSFX, 19999);
         }
     }
 }

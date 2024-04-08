@@ -4916,6 +4916,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   spriteRenderer: {fileID: 5338783726066514095}
   psDischarge: {fileID: 874341560637408234}
+  pickupSFX: {fileID: 8300000, guid: d128f7f86599f4c40b8c2ca1812c79df, type: 3}
 --- !u!95 &5850376107097213299
 Animator:
   serializedVersion: 5

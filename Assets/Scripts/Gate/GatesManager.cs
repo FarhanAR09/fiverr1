@@ -104,7 +104,7 @@ public class GatesManager : MonoBehaviour
             for (int i = 0; i < maxTries; i++)
             {
                 Vector2Int randomTilePos = new(UnityEngine.Random.Range(0, maxWidth), UnityEngine.Random.Range(0, maxHeight));
-                if (GateSpawnableArea.GetData(randomTilePos.x, randomTilePos.y) && !spawnedGatePositions.Exists(spawnedGatePosition => spawnedGatePosition == randomTilePos))
+                if (GateSpawnableArea.GetData(randomTilePos.x, randomTilePos.y) && !spawnedGatePositions.Exists(spawnedGatePosition => Mathf.Abs((randomTilePos - spawnedGatePosition).x) < 3 && Mathf.Abs((randomTilePos - spawnedGatePosition).y) < 3))
                 {
                     spawnedGatePositions.Add(randomTilePos);
                     return randomTilePos;

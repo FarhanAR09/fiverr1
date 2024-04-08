@@ -14,6 +14,9 @@ public class ScorePellet : MonoBehaviour, IStunnable
     [SerializeField]
     private ParticleSystem psDischarge;
 
+    [SerializeField]
+    private AudioClip pickupSFX;
+
     private void Awake()
     {
         circleCollider = GetComponent<CircleCollider2D>();
@@ -31,12 +34,19 @@ public class ScorePellet : MonoBehaviour, IStunnable
                 animator.Play("pellet_picked");
             canBePicked = false;
             ScoreCounter.AddScore(10);
+
+            if (pickupSFX != null && SFXController.Instance != null)
+            {
+                SFXController.Instance.RequestPlay(pickupSFX, 10000, volumeMultiplier: 0.25f);
+            }
+
             Destroy(gameObject, animator != null ? animator.GetCurrentAnimatorStateInfo(0).length : 0);
         }
     }
 
     public void Stun(float duration)
     {
+        canBePicked = false;
         if (spriteRenderer != null)
             spriteRenderer.enabled = false;
         float animationTime = 0;

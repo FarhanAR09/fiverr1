@@ -33,7 +33,6 @@ public class ChargeStation : MonoBehaviour
 
     private void FixedUpdate()
     {
-        //TODO: fix charging always right first
         foreach (var battery in batteries)
         {
             battery.AllowCharging = false;

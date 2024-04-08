@@ -21,6 +21,10 @@ public class PlayerPowerUpManager : MonoBehaviour
 
     public UnityEvent OnBulletTimeActivated { get; private set; } = new();
     public UnityEvent OnBulletTimeDeactivated { get; private set; } = new();
+    public UnityEvent OnEMPThrown { get; private set; } = new();
+
+    [SerializeField]
+    private AudioClip fillChargeSFX;
 
     private void Awake()
     {
@@ -68,10 +72,16 @@ public class PlayerPowerUpManager : MonoBehaviour
     {
         StopAllCoroutines();
         OnBulletTimeActivated.RemoveAllListeners();
+        OnBulletTimeDeactivated.RemoveAllListeners();
+        OnEMPThrown.RemoveAllListeners();
     }
 
     public void FillCharge(int amount)
     {
+        if (amount > 0 && fillChargeSFX != null && SFXController.Instance != null)
+        {
+            SFXController.Instance.RequestPlay(fillChargeSFX, 15000);
+        }
         AvailableCharge += amount;
     }
     
@@ -131,6 +141,7 @@ public class PlayerPowerUpManager : MonoBehaviour
                 AvailableCharge -= usedCharge;
                 GameObject emp = Instantiate(empControllerPrefab, transform.position, new Quaternion());
                 Destroy(emp, 2f);
+                OnEMPThrown.Invoke();
             }
         }
     }

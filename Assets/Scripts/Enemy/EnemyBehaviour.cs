@@ -30,6 +30,9 @@ public class EnemyBehaviour : MonoBehaviour, IStunnable
 
     private bool isStunned = false;
 
+    [SerializeField]
+    private AudioClip detectPlayerSFX, stunnedSFX;
+
     private void Awake()
     {
         gridMover = new GameObject(name + " Grid Mover", typeof(GridMover)).GetComponent<GridMover>();
@@ -139,6 +142,11 @@ public class EnemyBehaviour : MonoBehaviour, IStunnable
     {
         IEnumerator HandleChaseState()
         {
+            if (detectPlayerSFX != null && SFXController.Instance != null)
+            {
+                SFXController.Instance.RequestPlay(detectPlayerSFX, 15000);
+            }
+
             seekState = EnemyBehaviourState.Chasing;
             yield return new WaitForSeconds(8);
             seekState = EnemyBehaviourState.Patrolling;
@@ -182,6 +190,11 @@ public class EnemyBehaviour : MonoBehaviour, IStunnable
                 StopCoroutine(stunCoroutine);
             IEnumerator StunTiming()
             {
+                if (stunnedSFX != null && SFXController.Instance != null)
+                {
+                    SFXController.Instance.RequestPlay(stunnedSFX, 15001);
+                }
+
                 gridMover.Enabled = false;
                 isStunned = true;
                 yield return new WaitForSeconds(duration);
