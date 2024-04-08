@@ -11,7 +11,8 @@ public class EnemyPatrol : MonoBehaviour
     private void Awake()
     {
         //Instantiates patrol watcher
-        watcher = new GameObject("Patrol Watcher", typeof(EnemyPatrolWatcher)).GetComponent<EnemyPatrolWatcher>();
+        watcher = new GameObject("Patrol Watcher", typeof(EnemyPatrolWatcher), typeof(Rigidbody2D)).GetComponent<EnemyPatrolWatcher>();
+        watcher.GetComponent<Rigidbody2D>().isKinematic = true;
         watcher.transform.parent = transform;
         watcher.transform.localPosition = Vector3.zero;
     }

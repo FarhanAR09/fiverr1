@@ -41,6 +41,11 @@ public class PlayerInput : MonoBehaviour
         gridMover.SetUp(transform, speed, initialPosition, initialDirection);
     }
 
+    private void OnEnable()
+    {
+        GameEvents.OnPlayerLose.Add(HandleLosing);
+    }
+
     private void Start()
     {
         Direction = initialDirection;
@@ -51,23 +56,52 @@ public class PlayerInput : MonoBehaviour
         #region Inputs
         #region Movement
         // Translate inputs to direction
-        if (Input.GetButton("Up"))
+        if (MapHandler.Instance != null && MapHandler.Instance.MapGrid != null)
         {
-            gridMover.Direction = MovementDirection.Up;
+            Vector2Int gridPos = MapHandler.Instance.MapGrid.GetXY(transform.position);
+
+            if (MapHandler.Instance.CheckBoundary(gridPos))
+            {
+                Vector2Int checkedPos = Vector2Int.zero;
+                if (Input.GetButton("Up"))
+                {
+                    checkedPos = gridPos + Vector2Int.up;
+                    if (MapHandler.Instance.CheckBoundary(checkedPos) && MapHandler.Instance.MapGrid.GetGridObject(checkedPos).Walkable)
+                    {
+                        gridMover.Direction = MovementDirection.Up;
+                    }
+                    //Debug.Log("Up: " + MapHandler.Instance.CheckBoundary(checkedPos) + " " + MapHandler.Instance.MapGrid.GetGridObject(checkedPos).Walkable);
+                }
+                else if (Input.GetButton("Down"))
+                {
+                    checkedPos = gridPos + Vector2Int.down;
+                    if (MapHandler.Instance.CheckBoundary(checkedPos) && MapHandler.Instance.MapGrid.GetGridObject(checkedPos).Walkable)
+                    {
+                        gridMover.Direction = MovementDirection.Down;
+                    }
+                    //Debug.Log("Down: " + MapHandler.Instance.CheckBoundary(checkedPos) + " " + MapHandler.Instance.MapGrid.GetGridObject(checkedPos).Walkable);
+                }
+                else if (Input.GetButton("Left"))
+                {
+                    checkedPos = gridPos + Vector2Int.left;
+                    if (MapHandler.Instance.CheckBoundary(checkedPos) && MapHandler.Instance.MapGrid.GetGridObject(checkedPos).Walkable)
+                    {
+                        gridMover.Direction = MovementDirection.Left;
+                    }
+                    //Debug.Log("Left: " + MapHandler.Instance.CheckBoundary(checkedPos) + " " + MapHandler.Instance.MapGrid.GetGridObject(checkedPos).Walkable);
+                }
+                else if (Input.GetButton("Right"))
+                {
+                    checkedPos = gridPos + Vector2Int.right;
+                    if (MapHandler.Instance.CheckBoundary(checkedPos) && MapHandler.Instance.MapGrid.GetGridObject(checkedPos).Walkable)
+                    {
+                        gridMover.Direction = MovementDirection.Right;
+                    }
+                    //Debug.Log("Right: " + MapHandler.Instance.CheckBoundary(checkedPos) + " " + MapHandler.Instance.MapGrid.GetGridObject(checkedPos).Walkable);
+                }
+                Direction = gridMover.Direction;
+            }
         }
-        else if (Input.GetButton("Down"))
-        {
-            gridMover.Direction = MovementDirection.Down;
-        }
-        else if (Input.GetButton("Left"))
-        {
-            gridMover.Direction = MovementDirection.Left;
-        }
-        else if (Input.GetButton("Right"))
-        {
-            gridMover.Direction = MovementDirection.Right;
-        }
-        Direction = gridMover.Direction;
         #endregion
         #region Power Up
         if (Input.GetKeyDown(KeyCode.Space))
@@ -82,8 +116,21 @@ public class PlayerInput : MonoBehaviour
         #endregion
     }
 
+    private void OnDisable()
+    {
+        GameEvents.OnPlayerLose.Remove(HandleLosing);
+    }
+
     private void OnDestroy()
     {
         StopAllCoroutines();
+    }
+
+    private void HandleLosing(bool enabled)
+    {
+        if (gridMover != null)
+        {
+            gridMover.Enabled = enabled;
+        }
     }
 }

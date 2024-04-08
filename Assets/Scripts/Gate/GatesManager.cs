@@ -16,6 +16,8 @@ public class GatesManager : MonoBehaviour
     private int spawnedGateNumber = 0;
     private int collectedGateNumber = 0;
 
+    private List<Vector2Int> spawnedGatePositions = new();
+
     public UnityEvent OnAllGatesCollected { get; private set; } = new();
 
     private List<GameObject> spawnedGates = new();
@@ -45,6 +47,7 @@ public class GatesManager : MonoBehaviour
 
                     collectedGateNumber = 0;
                     spawnedGateNumber = 0;
+                    spawnedGatePositions.Clear();
                     for (int count = 0; count < maxGateNumber; count++)
                     {
                         Vector2Int pickedPosition = TryGetRandomTilePosition();
@@ -101,8 +104,11 @@ public class GatesManager : MonoBehaviour
             for (int i = 0; i < maxTries; i++)
             {
                 Vector2Int randomTilePos = new(UnityEngine.Random.Range(0, maxWidth), UnityEngine.Random.Range(0, maxHeight));
-                if (GateSpawnableArea.GetData(randomTilePos.x, randomTilePos.y))
+                if (GateSpawnableArea.GetData(randomTilePos.x, randomTilePos.y) && !spawnedGatePositions.Exists(spawnedGatePosition => spawnedGatePosition == randomTilePos))
+                {
+                    spawnedGatePositions.Add(randomTilePos);
                     return randomTilePos;
+                }
             }
         }
         return new Vector2Int(-1, -1);

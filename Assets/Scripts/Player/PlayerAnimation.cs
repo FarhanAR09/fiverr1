@@ -18,6 +18,10 @@ public class PlayerAnimation : MonoBehaviour
     private ParticleSystem trail;
     private ParticleSystem.MainModule trailMain;
 
+    [SerializeField]
+    private ParticleSystem psExplode;
+    private ParticleSystem.MainModule psExplodeMain;
+
     private void Awake()
     {
         input = GetComponent<PlayerInput>();
@@ -29,6 +33,16 @@ public class PlayerAnimation : MonoBehaviour
         else Debug.Log("Trail particle system is null");
 
         powerManager = GetComponent<PlayerPowerUpManager>();
+
+        if (psExplode != null)
+        {
+            psExplodeMain = psExplode.main;
+        }
+    }
+
+    private void OnEnable()
+    {
+        powerManager.OnBulletTimeActivated.AddListener(Explode);
     }
 
     private void Update()
@@ -78,6 +92,26 @@ public class PlayerAnimation : MonoBehaviour
                 3 => (ParticleSystem.MinMaxGradient)Color.cyan,
                 _ => (ParticleSystem.MinMaxGradient)Color.red,
             };
+        }
+    }
+
+    private void OnDisable()
+    {
+        powerManager.OnBulletTimeActivated.RemoveListener(Explode);
+    }
+
+    private void Explode()
+    {
+        if (psExplode != null)
+        {
+            psExplodeMain.startColor = (powerManager.AvailableCharge + 1) switch
+            {
+                1 => Color.yellow,
+                2 => Color.green,
+                3 => Color.cyan,
+                _ => Color.red
+            };
+            psExplode.Emit(60);
         }
     }
 }

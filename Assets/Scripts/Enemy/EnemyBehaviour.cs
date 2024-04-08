@@ -3,7 +3,6 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
-using static UnityEditor.ShaderGraph.Internal.KeywordDependentCollection;
 
 public enum EnemyBehaviourState
 {
@@ -29,9 +28,11 @@ public class EnemyBehaviour : MonoBehaviour, IStunnable
 
     private Coroutine stunCoroutine;
 
+    private bool isStunned = false;
+
     private void Awake()
     {
-        gridMover = new GameObject("Player Grid Mover", typeof(GridMover)).GetComponent<GridMover>();
+        gridMover = new GameObject(name + " Grid Mover", typeof(GridMover)).GetComponent<GridMover>();
         gridMover.transform.parent = transform;
         gridMover.SetUp(transform, speed, initialPosition, initialDirection);
 
@@ -44,6 +45,8 @@ public class EnemyBehaviour : MonoBehaviour, IStunnable
         {
             gridMover.OnFinishedMoving.AddListener(FinishedMoving);
             gridMover.OnStartedMoving.AddListener(StartedMoving);
+
+            GameEvents.OnPlayerLose.Add(HandleLosing);
         }
         enemyPatrol.OnPlayerDetected.AddListener(EnterChaseStateTemporarily);
     }
@@ -51,14 +54,16 @@ public class EnemyBehaviour : MonoBehaviour, IStunnable
     private void FixedUpdate()
     {
         //Consider input every frame
-        if (finishedMoving && gridMover != null && PlayerInput.GOInstance)
+        if (finishedMoving && gridMover != null)
         {
             if (MapHandler.Instance != null && MapHandler.Instance.MapGrid != null)
             {
-                var target = seekState switch
+                Vector2Int target = seekState switch
                 {
                     EnemyBehaviourState.Patrolling => TryGetRandomTilePosition(), //TODO: Optimize this, but good enough (detect if target is reached)
-                    EnemyBehaviourState.Chasing => MapHandler.Instance.MapGrid.GetXY(PlayerInput.GOInstance.transform.position),
+                    EnemyBehaviourState.Chasing => PlayerInput.GOInstance != null ?
+                        MapHandler.Instance.MapGrid.GetXY(PlayerInput.GOInstance.transform.position) :
+                        new Vector2Int(-1, -1),
                     _ => new Vector2Int(-1, -1),
                 };
                 Dictionary<MovementDirection, float> directionDistances = new ()
@@ -86,8 +91,17 @@ public class EnemyBehaviour : MonoBehaviour, IStunnable
                 }
             }
         }
+    }
 
-        //Debug.Log("Seek State: " + seekState.ToString());
+    private void OnTriggerEnter2D(Collider2D collision)
+    {
+        if (!isStunned && PlayerInput.GOInstance != null && collision.gameObject.Equals(PlayerInput.GOInstance))
+        {
+            if (PlaySceneManager.Instance != null)
+            {
+                GameEvents.OnPlayerLose.Publish(false);
+            }
+        }
     }
 
     private void OnDisable()
@@ -96,6 +110,8 @@ public class EnemyBehaviour : MonoBehaviour, IStunnable
         {
             gridMover.OnFinishedMoving.RemoveListener(FinishedMoving);
             gridMover.OnStartedMoving.RemoveListener(StartedMoving);
+
+            GameEvents.OnPlayerLose.Remove(HandleLosing);
         }
         enemyPatrol.OnPlayerDetected.RemoveListener(EnterChaseStateTemporarily);
     }
@@ -166,11 +182,21 @@ public class EnemyBehaviour : MonoBehaviour, IStunnable
                 StopCoroutine(stunCoroutine);
             IEnumerator StunTiming()
             {
-                gridMover.Paused = true;
+                gridMover.Enabled = false;
+                isStunned = true;
                 yield return new WaitForSeconds(duration);
-                gridMover.Paused = false;
+                gridMover.Enabled = true;
+                isStunned = false;
             }
             stunCoroutine = StartCoroutine(StunTiming());
+        }
+    }
+
+    private void HandleLosing(bool enabled)
+    {
+        if (gridMover != null)
+        {
+            gridMover.Enabled = enabled;
         }
     }
 }

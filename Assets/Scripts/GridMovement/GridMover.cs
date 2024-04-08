@@ -36,7 +36,7 @@ public class GridMover : MonoBehaviour, IGridMover
 
     private bool beenSetUp = false;
     private bool canMove = true;
-    public bool Paused { get; set; } = false;
+    public bool Enabled { get; set; } = true;
 
     #region Interface Methods
     public void ForceMoveTo(Vector2Int position)
@@ -85,92 +85,102 @@ public class GridMover : MonoBehaviour, IGridMover
             }
 
             //Debug.Log("Waiting Move Loop...");
-            yield return new WaitUntil(() => canMove && !Paused);
+            yield return new WaitUntil(() => canMove && Enabled);
             yield return new WaitForFixedUpdate();
         }
     }
 
     private bool RequestMoveTo(Vector2Int direction)
     {
-        if (Mover != null)
+        if (Enabled)
         {
-            if (MapHandler.Instance != null)
+            if (Mover != null)
             {
-                if (canMove)
+                if (MapHandler.Instance != null)
                 {
-                    //Debug.Log("Current Direction: " + currentDirection.ToString());
-
-                    Vector2Int currentPos = MapHandler.Instance.MapGrid.GetXY(Mover.transform.position);
-                    Vector2Int targetPos = currentPos + direction;
-                    //Within grid boundary
-                    if (targetPos.x >= 0 && targetPos.x < MapHandler.Instance.MapGrid.GetWidth() && targetPos.y >= 0 && targetPos.y < MapHandler.Instance.MapGrid.GetHeight())
+                    if (canMove)
                     {
-                        //Is target walkable
-                        if (MapHandler.Instance.MapGrid.GetGridObject(targetPos).Walkable)
-                        {
-                            //Debug.Log("Requested");
-                            MoveTo(targetPos);
+                        //Debug.Log("Current Direction: " + currentDirection.ToString());
 
-                            return true;
+                        Vector2Int currentPos = MapHandler.Instance.MapGrid.GetXY(Mover.transform.position);
+                        Vector2Int targetPos = currentPos + direction;
+                        //Within grid boundary
+                        if (targetPos.x >= 0 && targetPos.x < MapHandler.Instance.MapGrid.GetWidth() && targetPos.y >= 0 && targetPos.y < MapHandler.Instance.MapGrid.GetHeight())
+                        {
+                            //Is target walkable
+                            if (MapHandler.Instance.MapGrid.GetGridObject(targetPos).Walkable)
+                            {
+                                //Debug.Log("Requested");
+                                MoveTo(targetPos);
+
+                                return true;
+                            }
                         }
                     }
                 }
             }
+            else Destroy(gameObject);
         }
-        else Destroy(gameObject);
         return false;
     }
 
     private void MoveTo(Vector2Int gridPosition)
     {
-        if (Mover != null)
+        if (Enabled)
         {
-            if (MapHandler.Instance != null && canMove)
+            if (Mover != null)
             {
-                canMove = false;
-
-                Vector2 worldPosition = MapHandler.Instance.MapGrid.GetWorldPosition(gridPosition.x, gridPosition.y);
-
-                IEnumerator TraverseTile()
+                if (MapHandler.Instance != null && canMove)
                 {
-                    //Debug.Log("Traverse started");
+                    canMove = false;
 
-                    OnStartedMoving.Invoke();
+                    Vector2 worldPosition = MapHandler.Instance.MapGrid.GetWorldPosition(gridPosition.x, gridPosition.y);
 
-                    float duration = 1 / Speed; //Time taken every tile
-                    float time = 0;
-                    Vector2 initWorldPosition = Mover.transform.position;
-                    while (true)
+                    IEnumerator TraverseTile()
                     {
-                        time += Time.fixedDeltaTime;
+                        //Debug.Log("Traverse started");
 
-                        float cellSize = MapHandler.Instance.MapGrid.GetCellSize();
-                        Mover.transform.position = (Vector3)Vector2.Lerp(initWorldPosition, worldPosition + new Vector2(0.5f * cellSize, 0.5f * cellSize), time / duration) + new Vector3(0, 0, Mover.transform.position.z);
+                        OnStartedMoving.Invoke();
 
-                        if (time >= duration) break;
-                        //Debug.Log("Moving");
+                        float duration = 1 / Speed; //Time taken every tile
+                        float time = 0;
+                        Vector2 initWorldPosition = Mover.transform.position;
+                        while (true)
+                        {
+                            time += Time.fixedDeltaTime;
 
-                        yield return new WaitForFixedUpdate();
+                            float cellSize = MapHandler.Instance.MapGrid.GetCellSize();
+                            Mover.transform.position = (Vector3)Vector2.Lerp(initWorldPosition, worldPosition + new Vector2(0.5f * cellSize, 0.5f * cellSize), time / duration) + new Vector3(0, 0, Mover.transform.position.z);
+
+                            if (time >= duration) break;
+                            //Debug.Log("Moving");
+
+                            yield return new WaitForFixedUpdate();
+                        }
+
+                        OnFinishedMoving.Invoke();
+                        canMove = true;
+                        //Debug.Log("Traverse finished");
                     }
-
-                    OnFinishedMoving.Invoke();
-                    canMove = true;
-                    //Debug.Log("Traverse finished");
+                    StartCoroutine(TraverseTile());
                 }
-                StartCoroutine(TraverseTile());
             }
+            else Destroy(gameObject);
         }
-        else Destroy(gameObject);
     }
 
-    private void Start()
+    private void OnEnable()
     {
         StartCoroutine(MoveLoop());
     }
 
+    private void OnDisable()
+    {
+        StopCoroutine(MoveLoop());
+    }
+
     private void OnDestroy()
     {
-
         StopAllCoroutines();
     }
 }

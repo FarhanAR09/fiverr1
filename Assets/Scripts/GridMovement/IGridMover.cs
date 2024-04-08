@@ -13,6 +13,7 @@ public interface IGridMover
     public MovementDirection Direction { get; set; }
     public float Speed { get; set; }
     public bool BeenSetUp { get; }
+    public bool Enabled { get; }
 
     public UnityEvent OnStartedMoving { get; }
     public UnityEvent OnFinishedMoving { get; }

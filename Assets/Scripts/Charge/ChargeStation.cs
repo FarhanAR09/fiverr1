@@ -5,6 +5,7 @@ using UnityEngine;
 public class ChargeStation : MonoBehaviour
 {
     private readonly List<Battery> batteries = new();
+    private Battery currentyChargingBattery;
 
     [SerializeField]
     private GameObject batteryPrefab;
@@ -18,7 +19,7 @@ public class ChargeStation : MonoBehaviour
             for (int i = 0; i < 3; i++)
             {
                 //Battery newBattery = new GameObject("Battery " + i, typeof(Battery)).GetComponent<Battery>();
-                GameObject newBattery = Instantiate(batteryPrefab, new Vector3(21f + i * 2.5f, 8.45f), new Quaternion());
+                GameObject newBattery = Instantiate(batteryPrefab, new Vector3(21f + i * 2.4f, 8.45f), new Quaternion());
                 batteries.Add(newBattery.GetComponent<Battery>());
             }
         }
@@ -27,6 +28,28 @@ public class ChargeStation : MonoBehaviour
         if (psExplode != null)
         {
             psExplode.Emit(50);
+        }
+    }
+
+    private void FixedUpdate()
+    {
+        //TODO: fix charging always right first
+        foreach (var battery in batteries)
+        {
+            battery.AllowCharging = false;
+        }
+        float highestCharge = float.NegativeInfinity;
+        for (int i = 0; i < batteries.Count; i++)
+        {
+            if (batteries[i].CurrentCharge < 1f && batteries[i].CurrentCharge > highestCharge)
+            {
+                highestCharge = batteries[i].CurrentCharge;
+                foreach (var battery in batteries)
+                {
+                    battery.AllowCharging = false;
+                }
+                batteries[i].AllowCharging = true;
+            }
         }
     }
 

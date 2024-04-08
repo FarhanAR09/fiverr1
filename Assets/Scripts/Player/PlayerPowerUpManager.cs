@@ -2,6 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using Unity.VisualScripting;
 using UnityEngine;
+using UnityEngine.Events;
 using static Unity.Burst.Intrinsics.X86.Avx;
 
 public class PlayerPowerUpManager : MonoBehaviour
@@ -17,6 +18,9 @@ public class PlayerPowerUpManager : MonoBehaviour
 
     public int MaxCharge { get; private set; } = 3;
     public int AvailableCharge { get; private set; } = 0;
+
+    public UnityEvent OnBulletTimeActivated { get; private set; } = new();
+    public UnityEvent OnBulletTimeDeactivated { get; private set; } = new();
 
     private void Awake()
     {
@@ -63,6 +67,7 @@ public class PlayerPowerUpManager : MonoBehaviour
     private void OnDestroy()
     {
         StopAllCoroutines();
+        OnBulletTimeActivated.RemoveAllListeners();
     }
 
     public void FillCharge(int amount)
@@ -78,6 +83,8 @@ public class PlayerPowerUpManager : MonoBehaviour
             if (bulletTimeCoroutine != null)
                 StopCoroutine(bulletTimeCoroutine);
             GameSpeedManager.TryModifyGameSpeedModifier(BULLETTIME, 1);
+            
+            OnBulletTimeDeactivated.Invoke();
         }
 
         int usedCharge = 1;
@@ -87,12 +94,13 @@ public class PlayerPowerUpManager : MonoBehaviour
             {
                 AvailableCharge -= usedCharge;
                 bulletTimeActive = true;
-                static IEnumerator BulletTime()
+                IEnumerator BulletTime()
                 {
+                    OnBulletTimeActivated.Invoke();
                     float calculatedBulletTimeSpeed = 1;
                     while (true)
                     {
-                        calculatedBulletTimeSpeed = Mathf.Lerp(calculatedBulletTimeSpeed, 0.1f, 0.1f);
+                        calculatedBulletTimeSpeed = Mathf.Lerp(calculatedBulletTimeSpeed, 0.1f, 0.5f);
                         GameSpeedManager.TryModifyGameSpeedModifier(BULLETTIME, calculatedBulletTimeSpeed);
 
                         yield return new WaitForFixedUpdate();

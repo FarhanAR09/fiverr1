@@ -3,10 +3,12 @@ using System.Collections.Generic;
 using System.Xml;
 using UnityEditor.PackageManager;
 using UnityEngine;
+using UnityEngine.Events;
 
 public static class GameSpeedManager
 {
     private static Dictionary<string, float> activeModifiers = new();
+    public static UnityEvent OnGameSpeedUpdated { get; private set; } = new();
 
     public static bool TryAddGameSpeedModifier(string key, float value)
     {
@@ -41,5 +43,6 @@ public static class GameSpeedManager
             Time.timeScale *= modifier.Value;
         }
         Time.fixedDeltaTime = 0.02f * Time.timeScale;
+        OnGameSpeedUpdated.Invoke();
     }
 }
