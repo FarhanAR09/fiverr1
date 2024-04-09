@@ -10,7 +10,7 @@ public interface IGridMover
     /// </summary>
     public Transform Mover { get; set; }
     public Vector2Int Position { get; }
-    public MovementDirection Direction { get; set; }
+    public MovementDirection InputDirection { get; set; }
     public float Speed { get; set; }
     public bool BeenSetUp { get; }
     public bool Enabled { get; }

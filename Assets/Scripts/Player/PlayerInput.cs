@@ -19,11 +19,13 @@ public class PlayerInput : MonoBehaviour
     private Vector2Int initialPosition = Vector2Int.zero;
     [SerializeField]
     private MovementDirection initialDirection = MovementDirection.Right;
-    GridMover gridMover;
-    public MovementDirection Direction { get; private set; }
+    private ResponsiveGridMover gridMover;
+    public MovementDirection StoredDirection { get; private set; }
 
     public UnityEvent OnSpaceDown { get; private set; } = new();
     public UnityEvent OnVDown { get; private set; } = new();
+
+    private bool isMoving = false;
 
     private void Awake()
     {
@@ -36,7 +38,7 @@ public class PlayerInput : MonoBehaviour
         GOInstance = gameObject;
 
         //Movement
-        gridMover = new GameObject("Player Grid Mover", typeof(GridMover)).GetComponent<GridMover>();
+        gridMover = new GameObject("Player Grid Mover", typeof(ResponsiveGridMover)).GetComponent<ResponsiveGridMover>();
         gridMover.transform.parent = transform;
         gridMover.SetUp(transform, speed, initialPosition, initialDirection);
     }
@@ -44,11 +46,14 @@ public class PlayerInput : MonoBehaviour
     private void OnEnable()
     {
         GameEvents.OnPlayerLose.Add(HandleLosing);
+
+        gridMover.OnStartedMoving.AddListener(HandleStartedMoving);
+        gridMover.OnFinishedMoving.AddListener(HandleFinishedMoving);
     }
 
     private void Start()
     {
-        Direction = initialDirection;
+        StoredDirection = initialDirection;
     }
 
     private void Update()
@@ -62,13 +67,13 @@ public class PlayerInput : MonoBehaviour
 
             if (MapHandler.Instance.CheckBoundary(gridPos))
             {
-                Vector2Int checkedPos = Vector2Int.zero;
+                Vector2Int checkedPos;
                 if (Input.GetButton("Up"))
                 {
                     checkedPos = gridPos + Vector2Int.up;
                     if (MapHandler.Instance.CheckBoundary(checkedPos) && MapHandler.Instance.MapGrid.GetGridObject(checkedPos).Walkable)
                     {
-                        gridMover.Direction = MovementDirection.Up;
+                        gridMover.InputDirection = MovementDirection.Up;
                     }
                     //Debug.Log("Up: " + MapHandler.Instance.CheckBoundary(checkedPos) + " " + MapHandler.Instance.MapGrid.GetGridObject(checkedPos).Walkable);
                 }
@@ -77,7 +82,7 @@ public class PlayerInput : MonoBehaviour
                     checkedPos = gridPos + Vector2Int.down;
                     if (MapHandler.Instance.CheckBoundary(checkedPos) && MapHandler.Instance.MapGrid.GetGridObject(checkedPos).Walkable)
                     {
-                        gridMover.Direction = MovementDirection.Down;
+                        gridMover.InputDirection = MovementDirection.Down;
                     }
                     //Debug.Log("Down: " + MapHandler.Instance.CheckBoundary(checkedPos) + " " + MapHandler.Instance.MapGrid.GetGridObject(checkedPos).Walkable);
                 }
@@ -86,7 +91,7 @@ public class PlayerInput : MonoBehaviour
                     checkedPos = gridPos + Vector2Int.left;
                     if (MapHandler.Instance.CheckBoundary(checkedPos) && MapHandler.Instance.MapGrid.GetGridObject(checkedPos).Walkable)
                     {
-                        gridMover.Direction = MovementDirection.Left;
+                        gridMover.InputDirection = MovementDirection.Left;
                     }
                     //Debug.Log("Left: " + MapHandler.Instance.CheckBoundary(checkedPos) + " " + MapHandler.Instance.MapGrid.GetGridObject(checkedPos).Walkable);
                 }
@@ -95,14 +100,19 @@ public class PlayerInput : MonoBehaviour
                     checkedPos = gridPos + Vector2Int.right;
                     if (MapHandler.Instance.CheckBoundary(checkedPos) && MapHandler.Instance.MapGrid.GetGridObject(checkedPos).Walkable)
                     {
-                        gridMover.Direction = MovementDirection.Right;
+                        gridMover.InputDirection = MovementDirection.Right;
                     }
                     //Debug.Log("Right: " + MapHandler.Instance.CheckBoundary(checkedPos) + " " + MapHandler.Instance.MapGrid.GetGridObject(checkedPos).Walkable);
                 }
-                Direction = gridMover.Direction;
+                StoredDirection = gridMover.InputDirection;
+                //else if (DirectionUtils.MovementDirectionToVector2Int(StoredDirection) == -DirectionUtils.MovementDirectionToVector2Int(gridMover.CurrentDirection))
+                //{
+                //   gridMover.ForceMoveTo(gridPos + DirectionUtils.MovementDirectionToVector2Int(StoredDirection));
+                //}
             }
         }
         #endregion
+
         #region Power Up
         if (Input.GetKeyDown(KeyCode.Space))
         {
@@ -119,6 +129,9 @@ public class PlayerInput : MonoBehaviour
     private void OnDisable()
     {
         GameEvents.OnPlayerLose.Remove(HandleLosing);
+
+        gridMover.OnStartedMoving.RemoveListener(HandleStartedMoving);
+        gridMover.OnFinishedMoving.RemoveListener(HandleFinishedMoving);
     }
 
     private void OnDestroy()
@@ -132,5 +145,15 @@ public class PlayerInput : MonoBehaviour
         {
             gridMover.Enabled = enabled;
         }
+    }
+
+    private void HandleStartedMoving()
+    {
+        isMoving = false;
+    }
+
+    private void HandleFinishedMoving()
+    {
+        isMoving = true;
     }
 }

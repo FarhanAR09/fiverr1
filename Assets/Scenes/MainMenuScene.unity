@@ -437,6 +437,11 @@ Transform:
   m_Children: []
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!212 &212357497 stripped
+SpriteRenderer:
+  m_CorrespondingSourceObject: {fileID: 7787149240103822804, guid: 00eb97f7eed782f47b870dc92b4d3716, type: 3}
+  m_PrefabInstance: {fileID: 1585363053}
+  m_PrefabAsset: {fileID: 0}
 --- !u!1 &290388896
 GameObject:
   m_ObjectHideFlags: 0
@@ -6851,9 +6856,9 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_text: 'Speed:
+  m_text: 'Game Speed:
 
-    1'
+    1.00 GHz'
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: a302e75e5f9dbf642891b0f8484effb1, type: 2}
   m_sharedMaterial: {fileID: -845075303953470508, guid: a302e75e5f9dbf642891b0f8484effb1, type: 2}
@@ -6916,7 +6921,7 @@ MonoBehaviour:
   m_VertexBufferAutoSizeReduction: 0
   m_useMaxVisibleDescender: 1
   m_pageToDisplay: 1
-  m_margin: {x: 35.310547, y: 40.961468, z: 159.91284, w: 7.5469437}
+  m_margin: {x: 35.310547, y: 40.961468, z: 139.74646, w: 7.5469437}
   m_isUsingLegacyAnimationComponent: 0
   m_isVolumetricText: 0
   m_hasFontAssetChanged: 0
@@ -11943,6 +11948,10 @@ PrefabInstance:
       value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 8878175845021715147, guid: 00eb97f7eed782f47b870dc92b4d3716, type: 3}
+      propertyPath: spriteRenderer
+      value: 
+      objectReference: {fileID: 212357497}
+    - target: {fileID: 8878175845021715147, guid: 00eb97f7eed782f47b870dc92b4d3716, type: 3}
       propertyPath: initialDirection
       value: 2
       objectReference: {fileID: 0}
@@ -12287,7 +12296,7 @@ MonoBehaviour:
   m_VertexBufferAutoSizeReduction: 0
   m_useMaxVisibleDescender: 1
   m_pageToDisplay: 1
-  m_margin: {x: 0.18078613, y: 1.5986986, z: 752.2007, w: -0.1422329}
+  m_margin: {x: 0.18078613, y: 1.5986986, z: 733.26587, w: -0.1422329}
   m_isUsingLegacyAnimationComponent: 0
   m_isVolumetricText: 0
   m_hasFontAssetChanged: 0

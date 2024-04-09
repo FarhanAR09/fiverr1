@@ -2,7 +2,9 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.SceneManagement;
+#if UNITY_EDITOR
 using static UnityEditor.ShaderGraph.Internal.KeywordDependentCollection;
+#endif
 
 [DefaultExecutionOrder(-9999)]
 public class PlaySceneManager : MonoBehaviour
@@ -39,6 +41,12 @@ public class PlaySceneManager : MonoBehaviour
         if (LoseCanvas != null)
         {
             LoseCanvas.position = StartLosePosition;
+        }
+
+        if (MusicController.instance != null)
+        {
+            MusicController.instance.Stop();
+            MusicController.instance.Play();
         }
     }
 

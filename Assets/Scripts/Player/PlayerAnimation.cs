@@ -57,7 +57,7 @@ public class PlayerAnimation : MonoBehaviour
         {
             spriteTransform.localScale = new(1, 1, 1);
             spriteTransform.rotation = Quaternion.Euler(new Vector3(0, 0, 0));
-            switch (input.Direction)
+            switch (input.StoredDirection)
             {
                 case MovementDirection.Up:
                     spriteTransform.rotation = Quaternion.Euler(new Vector3(0, 0, 90));

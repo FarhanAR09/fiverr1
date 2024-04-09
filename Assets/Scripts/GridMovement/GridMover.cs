@@ -25,7 +25,8 @@ public class GridMover : MonoBehaviour, IGridMover
         } 
         set => _mover = value; 
     }
-    public MovementDirection Direction { get; set; } = MovementDirection.Right;
+    public MovementDirection InputDirection { get; set; } = MovementDirection.Right;
+    public MovementDirection CurrentDirection { get; private set; } = MovementDirection.Right;
     public float Speed { get; set; }
     public bool BeenSetUp { get => beenSetUp; private set => beenSetUp = value; }
     public UnityEvent OnStartedMoving { get; } = new();
@@ -35,12 +36,15 @@ public class GridMover : MonoBehaviour, IGridMover
     private Vector2Int initialPos;
 
     private bool beenSetUp = false;
-    private bool canMove = true;
+    private bool finishedMoving = true;
     public bool Enabled { get; set; } = true;
+
+    private Coroutine tileTraversal;
 
     #region Interface Methods
     public void ForceMoveTo(Vector2Int position)
     {
+        CancelTileTraversal();
         MoveTo(position);
     }
     #endregion
@@ -56,7 +60,7 @@ public class GridMover : MonoBehaviour, IGridMover
         Mover = mover;
         Speed = speed;
         this.initialPos = initialPos;
-        Direction = initialDirection;
+        InputDirection = initialDirection;
         beenSetUp = true;
     }
 
@@ -68,7 +72,8 @@ public class GridMover : MonoBehaviour, IGridMover
         {
             //Debug.Log("Current Direction: " + currentDirection.ToString());
             //Debug.Log("Input");
-            switch (Direction)
+
+            switch (InputDirection)
             {
                 case MovementDirection.Up:
                     RequestMoveTo(new Vector2Int(0, 1));
@@ -85,7 +90,7 @@ public class GridMover : MonoBehaviour, IGridMover
             }
 
             //Debug.Log("Waiting Move Loop...");
-            yield return new WaitUntil(() => canMove && Enabled);
+            yield return new WaitUntil(() => finishedMoving && Enabled);
             yield return new WaitForFixedUpdate();
         }
     }
@@ -98,7 +103,7 @@ public class GridMover : MonoBehaviour, IGridMover
             {
                 if (MapHandler.Instance != null)
                 {
-                    if (canMove)
+                    if (finishedMoving)
                     {
                         //Debug.Log("Current Direction: " + currentDirection.ToString());
 
@@ -111,6 +116,7 @@ public class GridMover : MonoBehaviour, IGridMover
                             if (MapHandler.Instance.MapGrid.GetGridObject(targetPos).Walkable)
                             {
                                 //Debug.Log("Requested");
+                                CurrentDirection = DirectionUtils.Vector2IntToMovementDirection(direction);
                                 MoveTo(targetPos);
 
                                 return true;
@@ -130,9 +136,9 @@ public class GridMover : MonoBehaviour, IGridMover
         {
             if (Mover != null)
             {
-                if (MapHandler.Instance != null && canMove)
+                if (MapHandler.Instance != null && finishedMoving)
                 {
-                    canMove = false;
+                    finishedMoving = false;
 
                     Vector2 worldPosition = MapHandler.Instance.MapGrid.GetWorldPosition(gridPosition.x, gridPosition.y);
 
@@ -159,10 +165,10 @@ public class GridMover : MonoBehaviour, IGridMover
                         }
 
                         OnFinishedMoving.Invoke();
-                        canMove = true;
+                        finishedMoving = true;
                         //Debug.Log("Traverse finished");
                     }
-                    StartCoroutine(TraverseTile());
+                    tileTraversal = StartCoroutine(TraverseTile());
                 }
             }
             else Destroy(gameObject);
@@ -182,5 +188,12 @@ public class GridMover : MonoBehaviour, IGridMover
     private void OnDestroy()
     {
         StopAllCoroutines();
+    }
+
+    private void CancelTileTraversal()
+    {
+        StopCoroutine(tileTraversal);
+        OnFinishedMoving.Invoke();
+        finishedMoving = true;
     }
 }

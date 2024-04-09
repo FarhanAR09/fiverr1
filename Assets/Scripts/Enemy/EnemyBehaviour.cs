@@ -33,6 +33,12 @@ public class EnemyBehaviour : MonoBehaviour, IStunnable
     [SerializeField]
     private AudioClip detectPlayerSFX, stunnedSFX;
 
+    [SerializeField]
+    private SpriteRenderer spriteRenderer;
+
+    [SerializeField]
+    private ParticleSystem psAbsorb;
+
     private void Awake()
     {
         gridMover = new GameObject(name + " Grid Mover", typeof(GridMover)).GetComponent<GridMover>();
@@ -40,6 +46,11 @@ public class EnemyBehaviour : MonoBehaviour, IStunnable
         gridMover.SetUp(transform, speed, initialPosition, initialDirection);
 
         enemyPatrol = GetComponent<EnemyPatrol>();
+    }
+
+    private void Start()
+    {
+        UpdateVisual(Color.cyan);
     }
 
     private void OnEnable()
@@ -78,19 +89,19 @@ public class EnemyBehaviour : MonoBehaviour, IStunnable
                 };
 
                 //Remove reverse from checking
-                directionDistances.Remove(DirectionUtils.Vector2IntToMovementDirection(-DirectionUtils.MovementDirectionToVector2Int(gridMover.Direction)));
+                directionDistances.Remove(DirectionUtils.Vector2IntToMovementDirection(-DirectionUtils.MovementDirectionToVector2Int(gridMover.InputDirection)));
 
                 //Magic minimum search
                 KeyValuePair<MovementDirection, float> minimalDirectionPair = directionDistances.Aggregate((l, r) => l.Value < r.Value ? l : r);
 
                 if (float.IsPositiveInfinity(minimalDirectionPair.Value)) //Default to reversing
                 {
-                    Vector2Int reversedDirection = -DirectionUtils.MovementDirectionToVector2Int(gridMover.Direction);
-                    gridMover.Direction = DirectionUtils.Vector2IntToMovementDirection(reversedDirection);
+                    Vector2Int reversedDirection = -DirectionUtils.MovementDirectionToVector2Int(gridMover.InputDirection);
+                    gridMover.InputDirection = DirectionUtils.Vector2IntToMovementDirection(reversedDirection);
                 }
                 else //Pick least distance
                 {
-                    gridMover.Direction = minimalDirectionPair.Key;
+                    gridMover.InputDirection = minimalDirectionPair.Key;
                 }
             }
         }
@@ -148,9 +159,13 @@ public class EnemyBehaviour : MonoBehaviour, IStunnable
             }
 
             seekState = EnemyBehaviourState.Chasing;
+            UpdateVisual(Color.red);
+
             yield return new WaitForSeconds(8);
             seekState = EnemyBehaviourState.Patrolling;
+            UpdateVisual(Color.cyan);
         }
+        StopCoroutine(HandleChaseState());
         StartCoroutine(HandleChaseState());
     }
 
@@ -210,6 +225,21 @@ public class EnemyBehaviour : MonoBehaviour, IStunnable
         if (gridMover != null)
         {
             gridMover.Enabled = enabled;
+        }
+    }
+
+    private void UpdateVisual(Color color)
+    {
+        if (spriteRenderer != null)
+        {
+            //spriteRenderer.color = color;
+            spriteRenderer.material.SetColor("_Color", color);
+        }
+
+        if (psAbsorb != null)
+        {
+            ParticleSystem.MainModule main = psAbsorb.main;
+            main.startColor = color;
         }
     }
 }

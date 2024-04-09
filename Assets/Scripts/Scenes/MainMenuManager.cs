@@ -16,6 +16,12 @@ public class MainMenuManager : MonoBehaviour
             0;
         if (highscoreDisplay != null)
             highscoreDisplay.SetText($"HIGHSCORE: {highscore}");
+
+        if (MusicController.instance != null)
+        {
+            MusicController.instance.Stop();
+            MusicController.instance.Play();
+        }
     }
 
     public void Play()

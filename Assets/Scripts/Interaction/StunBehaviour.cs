@@ -1,8 +1,10 @@
 using System.Collections;
 using System.Collections.Generic;
-using UnityEditor.U2D.Animation;
 using UnityEngine;
 using UnityEngine.Events;
+#if UNITY_EDITOR
+using UnityEditor.U2D.Animation;
+#endif
 
 public class StunBehaviour : MonoBehaviour, IStunnable
 {

@@ -22,8 +22,12 @@ public class GatesManager : MonoBehaviour
 
     private List<GameObject> spawnedGates = new();
 
+    [SerializeField]
+    private AudioClip speedupSFX;
+
     private void OnDestroy()
     {
+        StopAllCoroutines();
         OnAllGatesCollected.RemoveAllListeners();
     }
 
@@ -77,7 +81,16 @@ public class GatesManager : MonoBehaviour
         collectedGateNumber++;
         if (collectedGateNumber >= spawnedGateNumber)
         {
-            OnAllGatesCollected.Invoke();
+            IEnumerator DelayNextLevel()
+            {
+                yield return new WaitForSeconds(1f);
+                OnAllGatesCollected.Invoke();
+                if (speedupSFX != null && SFXController.Instance != null)
+                    SFXController.Instance.RequestPlay(speedupSFX, 20000);
+
+            }
+            StopCoroutine(DelayNextLevel());
+            StartCoroutine(DelayNextLevel());
         }
 
         switch (collectedGateNumber)

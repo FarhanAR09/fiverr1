@@ -37,7 +37,7 @@ public class ScorePellet : MonoBehaviour, IStunnable
 
             if (pickupSFX != null && SFXController.Instance != null)
             {
-                SFXController.Instance.RequestPlay(pickupSFX, 10000, volumeMultiplier: 0.25f);
+                SFXController.Instance.RequestPlay(pickupSFX, 10000, volumeMultiplier: 0.15f);
             }
 
             Destroy(gameObject, animator != null ? animator.GetCurrentAnimatorStateInfo(0).length : 0);
