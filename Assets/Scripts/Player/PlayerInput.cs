@@ -19,7 +19,7 @@ public class PlayerInput : MonoBehaviour
     private Vector2Int initialPosition = Vector2Int.zero;
     [SerializeField]
     private MovementDirection initialDirection = MovementDirection.Right;
-    private ResponsiveGridMover gridMover;
+    private GridMover gridMover;
     public MovementDirection StoredDirection { get; private set; }
 
     public UnityEvent OnSpaceDown { get; private set; } = new();
@@ -38,7 +38,7 @@ public class PlayerInput : MonoBehaviour
         GOInstance = gameObject;
 
         //Movement
-        gridMover = new GameObject("Player Grid Mover", typeof(ResponsiveGridMover)).GetComponent<ResponsiveGridMover>();
+        gridMover = new GameObject("Player Grid Mover", typeof(GridMover)).GetComponent<GridMover>();
         gridMover.transform.parent = transform;
         gridMover.SetUp(transform, speed, initialPosition, initialDirection);
     }
@@ -61,7 +61,7 @@ public class PlayerInput : MonoBehaviour
         #region Inputs
         #region Movement
         // Translate inputs to direction
-        if (MapHandler.Instance != null && MapHandler.Instance.MapGrid != null)
+        if (!isMoving && MapHandler.Instance != null && MapHandler.Instance.MapGrid != null)
         {
             Vector2Int gridPos = MapHandler.Instance.MapGrid.GetXY(transform.position);
 
@@ -149,11 +149,11 @@ public class PlayerInput : MonoBehaviour
 
     private void HandleStartedMoving()
     {
-        isMoving = false;
+        isMoving = true;
     }
 
     private void HandleFinishedMoving()
     {
-        isMoving = true;
+        isMoving = false;
     }
 }
