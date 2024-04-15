@@ -37,7 +37,7 @@ public class ResponsiveGridMover : MonoBehaviour, IGridMover
     private Vector2Int initialPos;
 
     private bool beenSetUp = false;
-    private bool finishedMoving = true;
+    //private bool finishedMoving = true;
     public bool Enabled { get; set; } = true;
 
     private Rigidbody2D moverRb;
@@ -197,6 +197,6 @@ public class ResponsiveGridMover : MonoBehaviour, IGridMover
     {
         StopCoroutine(tileTraversal);
         OnFinishedMoving.Invoke();
-        finishedMoving = true;
+        //finishedMoving = true;
     }
 }

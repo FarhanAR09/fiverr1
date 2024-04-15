@@ -2,6 +2,9 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
+/// <summary>
+/// Pellets spawner
+/// </summary>
 public class ScoreHandler : MonoBehaviour
 {
     [SerializeField]

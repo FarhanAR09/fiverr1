@@ -2,6 +2,9 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
+/// <summary>
+/// Handles level start and level up (includes triggering spawn)
+/// </summary>
 public class LevelManager : MonoBehaviour
 {
     [SerializeField]
@@ -57,6 +60,8 @@ public class LevelManager : MonoBehaviour
 
     private void LevelUp()
     {
+        GameEvents.OnLevelUp.Publish(true);
+
         level++;
 
         if (gatesManager != null)
