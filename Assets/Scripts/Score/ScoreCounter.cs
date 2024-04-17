@@ -16,12 +16,12 @@ public static class ScoreCounter
     public static void AddScore(int score)
     {
         Score += score;
-        OnScoreUpdated.Invoke(Score);
+        OnScoreUpdated.Invoke(score);
     }
 
     public static void ResetScore()
     {
         Score = 0;
-        OnScoreUpdated.Invoke(Score);
+        OnScoreUpdated.Invoke(0);
     }
 }
