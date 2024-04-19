@@ -23,9 +23,9 @@ public class CacheStorage : MonoBehaviour
 
     private void TrackScore(int addedScore)
     {
-        Debug.Log($"Added score: {addedScore}");
+        //Debug.Log($"Added score: {addedScore}");
         StoredCache += addedScore;
-        Debug.Log($"Stored score: {StoredCache}");
+        //Debug.Log($"Stored score: {StoredCache}");
         if (StoredCache >= OverflowChargeAmount)
         {
             GameEvents.OnCacheOverflowed.Publish(true);

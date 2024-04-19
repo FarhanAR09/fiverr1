@@ -22,7 +22,17 @@ public class ScoreHandler : MonoBehaviour
         height = ScoreMapData.GetHeight();
     }
 
-    public void SpawnPellets()
+    private void OnEnable()
+    {
+        GameEvents.OnLevelUp.Add(SpawnPellets);
+    }
+
+    private void OnDisable()
+    {
+        GameEvents.OnLevelUp.Remove(SpawnPellets);
+    }
+
+    private void SpawnPellets(bool _)
     {
         if (MapHandler.Instance != null && MapHandler.Instance.MapGrid != null)
         {

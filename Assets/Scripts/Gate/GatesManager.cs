@@ -18,20 +18,29 @@ public class GatesManager : MonoBehaviour
 
     private List<Vector2Int> spawnedGatePositions = new();
 
-    public UnityEvent OnAllGatesCollected { get; private set; } = new();
+    //public UnityEvent OnAllGatesCollected { get; private set; } = new();
 
     private List<GameObject> spawnedGates = new();
 
     [SerializeField]
     private AudioClip speedupSFX;
 
+    private void OnEnable()
+    {
+        GameEvents.OnLevelUp.Add(SpawnGates);
+    }
+
+    private void OnDisable()
+    {
+        GameEvents.OnLevelUp.Remove(SpawnGates);
+    }
+
     private void OnDestroy()
     {
         StopAllCoroutines();
-        OnAllGatesCollected.RemoveAllListeners();
     }
 
-    public void SpawnGates()
+    private void SpawnGates(bool _)
     {
         if (MapHandler.Instance != null && MapHandler.Instance.MapGrid != null)
         {
@@ -84,7 +93,7 @@ public class GatesManager : MonoBehaviour
             IEnumerator DelayNextLevel()
             {
                 yield return new WaitForSeconds(1f);
-                OnAllGatesCollected.Invoke();
+                GameEvents.OnAllGatesCollected.Publish(true);
                 if (speedupSFX != null && SFXController.Instance != null)
                     SFXController.Instance.RequestPlay(speedupSFX, 20000);
 
