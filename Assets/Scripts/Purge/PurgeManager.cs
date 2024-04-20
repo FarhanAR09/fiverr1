@@ -46,11 +46,11 @@ public class PurgeManager : MonoBehaviour
     {
         isPurging = true;
         GameEvents.OnPurgeStarted.Publish(true);
-        Debug.Log("----- Purge Started -----");
+        //Debug.Log("----- Purge Started -----");
 
         yield return new WaitForSecondsRealtime(10);
 
         GameEvents.OnPurgeFinished.Publish(true);
-        Debug.Log("----- Purge Finished -----");
+        //Debug.Log("----- Purge Finished -----");
     }
 }

@@ -6387,7 +6387,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 5884999094569864306, guid: 00eb97f7eed782f47b870dc92b4d3716, type: 3}
       propertyPath: m_IsActive
-      value: 1
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 5891407731016912913, guid: 00eb97f7eed782f47b870dc92b4d3716, type: 3}
       propertyPath: m_LocalPosition.x
@@ -19336,7 +19336,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 66647267742b37643a7477096a9f60c3, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  <OverflowChargeAmount>k__BackingField: 200
+  <OverflowChargeAmount>k__BackingField: 2200
 --- !u!4 &1434447514
 Transform:
   m_ObjectHideFlags: 0
@@ -25327,7 +25327,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 5884999094569864306, guid: 00eb97f7eed782f47b870dc92b4d3716, type: 3}
       propertyPath: m_IsActive
-      value: 1
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 5891407731016912913, guid: 00eb97f7eed782f47b870dc92b4d3716, type: 3}
       propertyPath: m_LocalPosition.x
@@ -25600,7 +25600,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 5884999094569864306, guid: 00eb97f7eed782f47b870dc92b4d3716, type: 3}
       propertyPath: m_IsActive
-      value: 1
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 5891407731016912913, guid: 00eb97f7eed782f47b870dc92b4d3716, type: 3}
       propertyPath: m_LocalPosition.x

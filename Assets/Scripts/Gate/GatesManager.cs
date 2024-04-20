@@ -12,36 +12,28 @@ public class GatesManager : MonoBehaviour
     [SerializeField]
     private GateDisplay gateDisplay1, gateDisplay2, gateDisplay3;
 
-    private readonly int maxGateNumber = 3;
-    private int spawnedGateNumber = 0;
-    private int collectedGateNumber = 0;
+    private int orderToCollect = 0;
 
-    private List<Vector2Int> spawnedGatePositions = new();
+    private readonly List<Vector2Int> spawnedGatePositions = new();
 
-    //public UnityEvent OnAllGatesCollected { get; private set; } = new();
-
-    private List<GameObject> spawnedGates = new();
+    private readonly List<GameObject> spawnedGates = new();
 
     [SerializeField]
     private AudioClip speedupSFX;
 
     private void OnEnable()
     {
-        GameEvents.OnLevelUp.Add(SpawnGates);
+        GameEvents.OnLevelUp.Add(ResetGatesLevelUp);
     }
 
     private void OnDisable()
     {
-        GameEvents.OnLevelUp.Remove(SpawnGates);
+        GameEvents.OnLevelUp.Remove(ResetGatesLevelUp);
     }
 
-    private void OnDestroy()
+    private void Start()
     {
-        StopAllCoroutines();
-    }
-
-    private void SpawnGates(bool _)
-    {
+        //Spawn Gate
         if (MapHandler.Instance != null && MapHandler.Instance.MapGrid != null)
         {
             if (GateSpawnableArea != null)
@@ -58,61 +50,94 @@ public class GatesManager : MonoBehaviour
                     gateDisplay2.ChangeState(false);
                     gateDisplay3.ChangeState(false);
 
-                    collectedGateNumber = 0;
-                    spawnedGateNumber = 0;
-                    spawnedGatePositions.Clear();
-                    for (int count = 0; count < maxGateNumber; count++)
-                    {
-                        Vector2Int pickedPosition = TryGetRandomTilePosition();
-                        if (pickedPosition != new Vector2Int(-1, -1))
-                        {
-                            spawnedGateNumber++;
-                            float cellSize = MapHandler.Instance.MapGrid.GetCellSize();
-                            Vector2 worldPosition = (Vector2) MapHandler.Instance.MapGrid.GetWorldPosition(pickedPosition.x, pickedPosition.y) + new Vector2(cellSize/2, cellSize/2);
-                            GatePellet gate = Instantiate(gatePrefab, worldPosition, new Quaternion()).GetComponent<GatePellet>();
-                            gate.OnCollected.AddListener(CountCollected);
-                            spawnedGates.Add(gate.gameObject);
-                        }
-                        else //Failed to get position
-                        {
-                            Debug.LogWarning("Failed to spawn a gate. Gate not spawned");
-                        }
-                    }
+                    orderToCollect = 0;
+
+                    GatePellet gate = Instantiate(gatePrefab, new Vector2(-99999f, -99999f), new Quaternion()).GetComponent<GatePellet>();
+                    gate.Setup(0, gateDisplay1);
+                    gate.OnCollected.AddListener(CheckCollected);
+                    spawnedGates.Add(gate.gameObject);
+
+                    gate = Instantiate(gatePrefab, new Vector2(-99999f, -99999f), new Quaternion()).GetComponent<GatePellet>();
+                    gate.Setup(1, gateDisplay2);
+                    gate.OnCollected.AddListener(CheckCollected);
+                    spawnedGates.Add(gate.gameObject);
+
+                    gate = Instantiate(gatePrefab, new Vector2(-99999f, -99999f), new Quaternion()).GetComponent<GatePellet>();
+                    gate.Setup(2, gateDisplay3);
+                    gate.OnCollected.AddListener(CheckCollected);
+                    spawnedGates.Add(gate.gameObject);
+
+                    MovePelletsRandomly();
+                    GameEvents.OnGatesSequenceUpdate.Publish(orderToCollect);
                 }
-                else Debug.Log("Gate Prefab is null");
+                else Debug.LogWarning("Gate Prefab is null");
             }
             else Debug.LogWarning("Gate Spawnable Area is null");
         }
     }
 
-    private void CountCollected()
+    private void OnDestroy()
     {
-        collectedGateNumber++;
-        if (collectedGateNumber >= spawnedGateNumber)
+        StopAllCoroutines();
+    }
+
+    private void ResetGatesLevelUp(bool _)
+    {
+        orderToCollect = 0;
+
+        gateDisplay1.ChangeState(false);
+        gateDisplay2.ChangeState(false);
+        gateDisplay3.ChangeState(false);
+
+        MovePelletsRandomly();
+    }
+
+    private void CheckCollected(int order)
+    {
+        if (order == orderToCollect)
         {
-            IEnumerator DelayNextLevel()
+            orderToCollect++;
+            switch (order)
             {
-                yield return new WaitForSeconds(1f);
-                GameEvents.OnAllGatesCollected.Publish(true);
-                if (speedupSFX != null && SFXController.Instance != null)
-                    SFXController.Instance.RequestPlay(speedupSFX, 20000);
-
+                case 0:
+                    gateDisplay1.ChangeState(true);
+                    break;
+                case 1:
+                    gateDisplay2.ChangeState(true);
+                    break;
+                case 2:
+                    gateDisplay3.ChangeState(true);
+                    break;
             }
-            StopCoroutine(DelayNextLevel());
-            StartCoroutine(DelayNextLevel());
-        }
 
-        switch (collectedGateNumber)
+            GameEvents.OnGatesSequenceUpdate.Publish(orderToCollect);
+
+            //All gates collected
+            if (orderToCollect >= spawnedGates.Count)
+            {
+                IEnumerator DelayNextLevel()
+                {
+                    yield return new WaitForSeconds(1f);
+
+                    GameEvents.OnAllGatesCollected.Publish(true);
+                    orderToCollect = 0;
+                    if (speedupSFX != null && SFXController.Instance != null)
+                        SFXController.Instance.RequestPlay(speedupSFX, 20000);
+                    GameEvents.OnGatesSequenceUpdate.Publish(0);
+                }
+                StopCoroutine(DelayNextLevel());
+                StartCoroutine(DelayNextLevel());
+            }
+        }
+        else
         {
-            case 1:
-                gateDisplay1.ChangeState(true);
-                break;
-            case 2:
-                gateDisplay2.ChangeState(true);
-                break;
-            case 3:
-                gateDisplay3.ChangeState(true);
-                break;
+            orderToCollect = 0;
+            GameEvents.OnGatesSequenceUpdate.Publish(0);
+            GameEvents.OnGatesWrongSequence.Publish(true);
+
+            gateDisplay1.ChangeState(false);
+            gateDisplay2.ChangeState(false);
+            gateDisplay3.ChangeState(false);
         }
     }
 
@@ -134,5 +159,29 @@ public class GatesManager : MonoBehaviour
             }
         }
         return new Vector2Int(-1, -1);
+    }
+
+    private void MovePelletsRandomly()
+    {
+        spawnedGatePositions.Clear();
+        foreach (GameObject gate in spawnedGates)
+        {
+            if (gate != null)
+            {
+                Vector2Int pickedPosition = TryGetRandomTilePosition();
+                if (pickedPosition != new Vector2Int(-1, -1))
+                {
+                    //spawnedGateNumber++;
+                    float cellSize = MapHandler.Instance.MapGrid.GetCellSize();
+                    Vector2 worldPosition = (Vector2)MapHandler.Instance.MapGrid.GetWorldPosition(pickedPosition.x, pickedPosition.y) + new Vector2(cellSize / 2, cellSize / 2);
+                    gate.transform.position = worldPosition;
+                }
+                else //Failed to get position
+                {
+                    Debug.LogWarning("Failed to spawn a gate. Gate not moved");
+                }
+            }
+            else Debug.LogWarning("Gate pellet is null");
+        }
     }
 }
