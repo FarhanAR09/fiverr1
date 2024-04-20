@@ -44,6 +44,9 @@ TagManager:
   - name: Collectibles
     uniqueID: 3895284757
     locked: 0
+  - name: Projectiles
+    uniqueID: 4044061803
+    locked: 0
   - name: Overlay
     uniqueID: 1225238365
     locked: 0

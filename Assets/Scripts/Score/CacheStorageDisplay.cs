@@ -17,18 +17,28 @@ public class CacheStorageDisplay : MonoBehaviour
 
     private float normalizedCache = 0;
 
+    private Material glow;
+    private bool inPurge = false;
+    [SerializeField]
+    private float flickerFrequency = 4;
+
     private void Awake()
     {
         if (TryGetComponent(out SpriteRenderer sr))
         {
             spriteRenderer = sr;
+            if (sr.material != null)
+            {
+                glow = sr.material;
+            }
         }
     }
 
     private void OnEnable()
     {
         ScoreCounter.OnScoreUpdated.AddListener(UpdateDisplay);
-        GameEvents.OnCacheOverflowed.Add(HandleOverflow);
+        GameEvents.OnPurgeStarted.Add(GlowRedPurge);
+        GameEvents.OnPurgeFinished.Add(GlowGreenPurge);
     }
 
 
@@ -45,14 +55,23 @@ public class CacheStorageDisplay : MonoBehaviour
     private void OnDisable()
     {
         ScoreCounter.OnScoreUpdated.RemoveListener(UpdateDisplay);
-        GameEvents.OnCacheOverflowed.Remove(HandleOverflow);
+        GameEvents.OnPurgeStarted.Remove(GlowRedPurge);
+        GameEvents.OnPurgeFinished.Remove(GlowGreenPurge);
+    }
+
+    private void Update()
+    {
+        if (inPurge && glow != null)
+        {
+            glow.SetFloat("_Intensity", glowIntensity + 1f * Mathf.Sin(flickerFrequency * Time.time));
+        }
     }
 
     private void UpdateDisplay(int _)
     {
         if (cacheStorage != null)
         {
-            normalizedCache = (float) cacheStorage.StoredCache / cacheStorage.OverflowChargeAmount;
+            normalizedCache = (cacheStorage.StoredCache + 10f) / cacheStorage.OverflowChargeAmount;
             //Debug.Log($"Cache Display Normalized: {normalizedCache}");
             if (spriteRenderer != null && spriteRenderer.material != null)
             {
@@ -62,8 +81,22 @@ public class CacheStorageDisplay : MonoBehaviour
         else Debug.LogWarning("CacheStorage is null");
     }
 
-    private void HandleOverflow(bool _)
+    private void GlowRedPurge(bool _)
     {
-        Debug.Log("--------------------------------------------\n!!!!!!!!!!!!!!  Cache Overflow  !!!!!!!!!!!!\n--------------------------------------------");
+        inPurge = true;
+        if (glow != null)
+        {
+            glow.SetColor("_Color", Color.red);
+        }
+    }
+
+    private void GlowGreenPurge(bool _)
+    {
+        inPurge = false;
+        if (glow != null)
+        {
+            glow.SetColor("_Color", glowColor);
+            spriteRenderer.material.SetFloat("_Intensity", glowIntensity);
+        }
     }
 }

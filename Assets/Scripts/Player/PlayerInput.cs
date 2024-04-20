@@ -10,6 +10,7 @@ public class PlayerInput : MonoBehaviour
 {
     //Singleton
     public static GameObject GOInstance { get; private set; }
+    public bool Lost { get; private set; } = false;
 
     //Movement
     [SerializeField]
@@ -41,6 +42,8 @@ public class PlayerInput : MonoBehaviour
         gridMover = new GameObject("Player Grid Mover", typeof(GridMover)).GetComponent<GridMover>();
         gridMover.transform.parent = transform;
         gridMover.SetUp(transform, speed, initialPosition, initialDirection);
+
+        Lost = false;
     }
 
     private void OnEnable()
@@ -145,6 +148,7 @@ public class PlayerInput : MonoBehaviour
         {
             gridMover.Enabled = enabled;
         }
+        Lost = true;
     }
 
     private void HandleStartedMoving()

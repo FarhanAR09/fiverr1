@@ -39,6 +39,10 @@ public class EnemyBehaviour : MonoBehaviour, IStunnable
     [SerializeField]
     private ParticleSystem psAbsorb;
 
+    private Animator animator;
+
+    private bool playerLost = false;
+
     private void Awake()
     {
         gridMover = new GameObject(name + " Grid Mover", typeof(GridMover)).GetComponent<GridMover>();
@@ -46,6 +50,9 @@ public class EnemyBehaviour : MonoBehaviour, IStunnable
         gridMover.SetUp(transform, speed, initialPosition, initialDirection);
 
         enemyPatrol = GetComponent<EnemyPatrol>();
+
+        TryGetComponent(out animator);
+            
     }
 
     private void Start()
@@ -63,6 +70,9 @@ public class EnemyBehaviour : MonoBehaviour, IStunnable
             GameEvents.OnPlayerLose.Add(HandleLosing);
         }
         enemyPatrol.OnPlayerDetected.AddListener(EnterChaseStateTemporarily);
+
+        GameEvents.OnPurgeStarted.Add(DisableByPurge);
+        GameEvents.OnPurgeFinished.Add(EnableByPurge);
     }
 
     private void FixedUpdate()
@@ -128,6 +138,9 @@ public class EnemyBehaviour : MonoBehaviour, IStunnable
             GameEvents.OnPlayerLose.Remove(HandleLosing);
         }
         enemyPatrol.OnPlayerDetected.RemoveListener(EnterChaseStateTemporarily);
+
+        GameEvents.OnPurgeStarted.Remove(DisableByPurge);
+        GameEvents.OnPurgeFinished.Remove(EnableByPurge);
     }
 
     private void OnDestroy()
@@ -151,6 +164,9 @@ public class EnemyBehaviour : MonoBehaviour, IStunnable
 
     private void EnterChaseStateTemporarily()
     {
+        if (isStunned)
+            return;
+
         IEnumerator HandleChaseState()
         {
             if (detectPlayerSFX != null && SFXController.Instance != null)
@@ -162,6 +178,7 @@ public class EnemyBehaviour : MonoBehaviour, IStunnable
             UpdateVisual(Color.red);
 
             yield return new WaitForSeconds(8);
+
             seekState = EnemyBehaviourState.Patrolling;
             UpdateVisual(Color.cyan);
         }
@@ -198,12 +215,23 @@ public class EnemyBehaviour : MonoBehaviour, IStunnable
 
     public void Stun(float duration)
     {
+        if (playerLost)
+            return;
+
         if (gridMover != null)
         {
             //Restarts stun
             if (stunCoroutine != null)
+            {
                 StopCoroutine(stunCoroutine);
-            IEnumerator StunTiming()
+
+                //Stunned by outside factors? Don't restart
+                if (isStunned)
+                {
+                    return;
+                }
+            }
+            IEnumerator StunBehavior()
             {
                 if (stunnedSFX != null && SFXController.Instance != null)
                 {
@@ -216,16 +244,24 @@ public class EnemyBehaviour : MonoBehaviour, IStunnable
                 gridMover.Enabled = true;
                 isStunned = false;
             }
-            stunCoroutine = StartCoroutine(StunTiming());
+            stunCoroutine = StartCoroutine(StunBehavior());
         }
     }
 
     private void HandleLosing(bool enabled)
     {
+        if (playerLost)
+            return;
+
+        if (stunCoroutine != null)
+            StopCoroutine(stunCoroutine);
+
         if (gridMover != null)
         {
             gridMover.Enabled = enabled;
         }
+
+        playerLost = true;
     }
 
     private void UpdateVisual(Color color)
@@ -241,5 +277,37 @@ public class EnemyBehaviour : MonoBehaviour, IStunnable
             ParticleSystem.MainModule main = psAbsorb.main;
             main.startColor = color;
         }
+    }
+
+    private void DisableByPurge(bool _)
+    {
+        if (playerLost)
+            return;
+
+        if (stunCoroutine != null)
+            StopCoroutine(stunCoroutine);
+        gridMover.Enabled = false;
+        isStunned = true;
+
+        if (animator != null)
+            animator.Play("enemy_disappear", -1);
+
+        if (psAbsorb != null)
+            psAbsorb.Stop();
+    }
+
+    private void EnableByPurge(bool _)
+    {
+        if (playerLost)
+            return;
+
+        gridMover.Enabled = true;
+        isStunned = false;
+
+        if (animator != null)
+            animator.Play("enemy_spawn", -1);
+
+        if (psAbsorb != null)
+            psAbsorb.Play();
     }
 }

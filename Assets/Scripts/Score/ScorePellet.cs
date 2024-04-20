@@ -26,6 +26,24 @@ public class ScorePellet : MonoBehaviour, IStunnable
             animator = _animator;
     }
 
+    private void Start()
+    {
+        if (animator != null)
+            animator.Play("pellet_spawn");
+    }
+
+    private void OnEnable()
+    {
+        GameEvents.OnPurgeStarted.Add(DisablePelletPurge);
+        GameEvents.OnPurgeFinished.Add(EnablePelletPurge);
+    }
+
+    private void OnDisable()
+    {
+        GameEvents.OnPurgeStarted.Remove(DisablePelletPurge);
+        GameEvents.OnPurgeFinished.Remove(EnablePelletPurge);
+    }
+
     private void OnTriggerEnter2D(Collider2D collision)
     {
         if (canBePicked && collision.gameObject.Equals(PlayerInput.GOInstance))
@@ -56,5 +74,25 @@ public class ScorePellet : MonoBehaviour, IStunnable
             animationTime = psDischarge.main.duration;
         }
         Destroy(gameObject, animationTime);
+    }
+
+    private void DisablePelletPurge(bool _)
+    {
+        canBePicked = false;
+        //if (spriteRenderer != null)
+        //    spriteRenderer.enabled = false;
+
+        if (animator != null)
+            animator.Play("pellet_picked");
+    }
+
+    private void EnablePelletPurge(bool _)
+    {
+        canBePicked = true;
+        if (spriteRenderer != null)
+            spriteRenderer.enabled = true;
+
+        if (animator != null)
+            animator.Play("pellet_spawn");
     }
 }
