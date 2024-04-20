@@ -52,7 +52,7 @@ SpriteRenderer:
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
-  - {fileID: 2100000, guid: 06bcbcf180e1021438b0ab724b907b2a, type: 2}
+  - {fileID: -876546973899608171, guid: 5404ced536e253e46979b5cad1b3f1ef, type: 3}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0
@@ -167,6 +167,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   pickedSFX: {fileID: 8300000, guid: 647d60d0c324b17488f9bc177700b8bf, type: 3}
+  spriteRenderer: {fileID: 90420907092509882}
+  deactivatedSprite: {fileID: -940672566, guid: 23faebc0157124f4ea11a6174c981df4, type: 3}
 --- !u!95 &7083935111469741573
 Animator:
   serializedVersion: 5

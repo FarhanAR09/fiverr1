@@ -23,6 +23,11 @@ public class GatePellet : MonoBehaviour
     private int order = -1;
     private GateDisplay gateDisplay;
 
+    [SerializeField]
+    private SpriteRenderer spriteRenderer;
+    [SerializeField]
+    private Sprite deactivatedSprite;
+
     private void Awake()
     {
         CircleCollider2D circleCollider = GetComponent<CircleCollider2D>();
@@ -100,14 +105,50 @@ public class GatePellet : MonoBehaviour
         if (currentOrder > order)
         {
             state = State.Activated;
+            if (spriteRenderer != null)
+            {
+                if (gateDisplay != null)
+                {
+                    spriteRenderer.sprite = gateDisplay.activeSprite;
+                    spriteRenderer.color = Color.green;
+                }
+                if (spriteRenderer.material != null)
+                {
+                    spriteRenderer.material.SetFloat("_Intensity", 2);
+                } 
+            }
         }
         else if (currentOrder == order)
         {
             state = State.Available;
+            if (spriteRenderer != null)
+            {
+                if (gateDisplay != null)
+                {
+                    spriteRenderer.sprite = deactivatedSprite;
+                    spriteRenderer.color = Color.white;
+                }
+                if (spriteRenderer.material != null)
+                {
+                    spriteRenderer.material.SetFloat("_Intensity", 3);
+                }
+            }
         }
         else
         {
             state = State.DontCollect;
+            if (spriteRenderer != null)
+            {
+                if (gateDisplay != null)
+                {
+                    spriteRenderer.sprite = deactivatedSprite;
+                    spriteRenderer.color = new Color(0.7f, 0.7f, 0.7f, 1f);
+                }
+                if (spriteRenderer.material != null)
+                {
+                    spriteRenderer.material.SetFloat("_Intensity", 1);
+                }
+            }
         }
     }
 }

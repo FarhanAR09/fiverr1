@@ -10,7 +10,8 @@ public class GateDisplay : MonoBehaviour
     [SerializeField]
     private ParticleSystem psAbsorb, psExplode;
     [SerializeField]
-    private Sprite inactiveSprite, activeSprite;
+    private Sprite inactiveSprite;
+    public Sprite activeSprite;
 
     private void Awake()
     {
