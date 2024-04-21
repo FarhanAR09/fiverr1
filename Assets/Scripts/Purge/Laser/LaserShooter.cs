@@ -24,6 +24,11 @@ public class LaserShooter : MonoBehaviour
         get => shootDelayReal * Time.timeScale;
     }
 
+    private void OnDestroy()
+    {
+        StopAllCoroutines();
+    }
+
     private void OnEnable()
     {
         GameEvents.OnPurgeStarted.Add(StartShooting);
@@ -93,9 +98,15 @@ public class LaserShooter : MonoBehaviour
 
     private void StartShooting(bool _)
     {
-        isPurging = true;
-        shootTime = 0;
-        shootAmount = 0;
+        IEnumerator DelayShooting()
+        {
+            yield return new WaitForSecondsRealtime(3f);
+            isPurging = true;
+            shootTime = 0;
+            shootAmount = 0;
+        }
+        StopCoroutine(DelayShooting());
+        StartCoroutine(DelayShooting());
     }
 
     private void StopShooting(bool _)

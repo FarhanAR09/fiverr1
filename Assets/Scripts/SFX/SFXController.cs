@@ -5,9 +5,25 @@ using UnityEngine;
 using static UnityEditor.ShaderGraph.Internal.KeywordDependentCollection;
 #endif
 
+/// <summary>
+/// To play SFX from everywhere
+/// </summary>
+[DefaultExecutionOrder(-4999)]
 public class SFXController : MonoBehaviour
 {
-    public static SFXController Instance { get; private set; }
+    private static SFXController instance;
+    public static SFXController Instance {
+        get
+        {
+            if (instance == null)
+                Debug.LogWarning("No SFXController instance");
+            return instance;
+        }
+        private set
+        {
+            instance = value;
+        }
+    }
 
     [SerializeField]
     private GameObject SFXPlayerPrefab;

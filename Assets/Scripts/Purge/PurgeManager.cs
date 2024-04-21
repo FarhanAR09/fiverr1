@@ -7,6 +7,9 @@ public class PurgeManager : MonoBehaviour
     private bool isPurging = false;
     private Coroutine purgeCoroutine;
 
+    [SerializeField]
+    private AudioClip purgeWarningSFX;
+
     private void OnEnable()
     {
         GameEvents.OnCacheOverflowed.Add(StartPurge);
@@ -38,6 +41,10 @@ public class PurgeManager : MonoBehaviour
         {
             GameEvents.OnPurgeFinished.Publish(true);
         }
+        if (MusicController.instance != null)
+        {
+            MusicController.instance.UnPause();
+        }
         isPurging = false;
         
     }
@@ -46,11 +53,21 @@ public class PurgeManager : MonoBehaviour
     {
         isPurging = true;
         GameEvents.OnPurgeStarted.Publish(true);
-        //Debug.Log("----- Purge Started -----");
+        if (SFXController.Instance != null && purgeWarningSFX != null)
+        {
+            SFXController.Instance.RequestPlay(purgeWarningSFX, 20000, timePitching: false);
+        }
+        if (MusicController.instance != null)
+        {
+            MusicController.instance.Pause();
+        }
 
-        yield return new WaitForSecondsRealtime(10);
+        yield return new WaitForSecondsRealtime(13);
 
         GameEvents.OnPurgeFinished.Publish(true);
-        //Debug.Log("----- Purge Finished -----");
+        if (MusicController.instance != null)
+        {
+            MusicController.instance.UnPause();
+        }
     }
 }

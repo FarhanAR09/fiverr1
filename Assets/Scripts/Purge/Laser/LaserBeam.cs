@@ -14,6 +14,9 @@ public class LaserBeam : MonoBehaviour
     private Animator animator;
     private BoxCollider2D boxCollider;
 
+    [SerializeField]
+    private AudioClip shootSFX;
+
     private void Awake()
     {
         TryGetComponent(out animator);
@@ -36,7 +39,6 @@ public class LaserBeam : MonoBehaviour
         //Detect player
         if (Equals(collision.gameObject, PlayerInput.GOInstance) && !PlayerInput.GOInstance.GetComponent<PlayerInput>().Lost)
         {
-            Debug.Log("Player lost");
             GameEvents.OnPlayerLose.Publish(false);
         }
     }
@@ -85,6 +87,8 @@ public class LaserBeam : MonoBehaviour
                 boxCollider.enabled = true;
             if (animator != null)
                 animator.Play("laserbeam_active");
+            if (shootSFX != null && SFXController.Instance != null)
+                SFXController.Instance.RequestPlay(shootSFX, 19000, timePitching: false);
             Destroy(gameObject, activeDuration);
         }
         StartCoroutine(LaserTiming());

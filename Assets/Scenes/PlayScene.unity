@@ -5567,6 +5567,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: daabdcbfba2bc3e4b9302c8580193811, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  purgeWarningSFX: {fileID: 8300000, guid: 5347324498cb4494e995cf5190dc6fbc, type: 3}
 --- !u!1 &464693677
 GameObject:
   m_ObjectHideFlags: 0

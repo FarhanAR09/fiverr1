@@ -167,3 +167,4 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   prepareDuration: 1.5
   activeDuration: 1.5
+  shootSFX: {fileID: 8300000, guid: 651757ba0de8c52428f0a7948000d145, type: 3}
