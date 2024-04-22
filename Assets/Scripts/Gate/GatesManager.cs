@@ -23,12 +23,12 @@ public class GatesManager : MonoBehaviour
 
     private void OnEnable()
     {
-        GameEvents.OnLevelUp.Add(ResetGatesLevelUp);
+        GameEvents.OnLevelUp.Add(PrepareLevelUp);
     }
 
     private void OnDisable()
     {
-        GameEvents.OnLevelUp.Remove(ResetGatesLevelUp);
+        GameEvents.OnLevelUp.Remove(PrepareLevelUp);
     }
 
     private void Start()
@@ -81,17 +81,6 @@ public class GatesManager : MonoBehaviour
         StopAllCoroutines();
     }
 
-    private void ResetGatesLevelUp(bool _)
-    {
-        orderToCollect = 0;
-
-        gateDisplay1.ChangeState(false);
-        gateDisplay2.ChangeState(false);
-        gateDisplay3.ChangeState(false);
-
-        MovePelletsRandomly();
-    }
-
     private void CheckCollected(int order)
     {
         if (order == orderToCollect)
@@ -115,18 +104,7 @@ public class GatesManager : MonoBehaviour
             //All gates collected
             if (orderToCollect >= spawnedGates.Count)
             {
-                IEnumerator DelayNextLevel()
-                {
-                    yield return new WaitForSeconds(1f);
-
-                    GameEvents.OnAllGatesCollected.Publish(true);
-                    orderToCollect = 0;
-                    if (speedupSFX != null && SFXController.Instance != null)
-                        SFXController.Instance.RequestPlay(speedupSFX, 20000);
-                    GameEvents.OnGatesSequenceUpdate.Publish(0);
-                }
-                StopCoroutine(DelayNextLevel());
-                StartCoroutine(DelayNextLevel());
+                GameEvents.OnAllGatesCollected.Publish(true);
             }
         }
         else
@@ -183,5 +161,18 @@ public class GatesManager : MonoBehaviour
             }
             else Debug.LogWarning("Gate pellet is null");
         }
+    }
+
+    private void PrepareLevelUp(bool _)
+    {
+        orderToCollect = 0;
+        gateDisplay1.ChangeState(false);
+        gateDisplay2.ChangeState(false);
+        gateDisplay3.ChangeState(false);
+        MovePelletsRandomly();
+
+        if (speedupSFX != null && SFXController.Instance != null)
+            SFXController.Instance.RequestPlay(speedupSFX, 20000);
+        GameEvents.OnGatesSequenceUpdate.Publish(0);
     }
 }

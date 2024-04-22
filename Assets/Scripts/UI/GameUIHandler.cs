@@ -28,10 +28,10 @@ public class GameUIHandler : MonoBehaviour
         GameEvents.OnPlayerLose.Remove(UpdateLoseDisplay);
     }
 
-    private void UpdateScoreDisplay(int score)
+    private void UpdateScoreDisplay(int addedScore)
     {
         if (scoreDisplay != null)
-            scoreDisplay.SetText("Score:\n" + score.ToString());
+            scoreDisplay.SetText("Score:\n" + ScoreCounter.Score.ToString());
     }
 
     private void UpdateGameSpeedDisplay()

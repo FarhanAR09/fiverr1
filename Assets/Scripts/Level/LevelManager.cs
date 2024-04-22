@@ -15,7 +15,7 @@ public class LevelManager : MonoBehaviour
         get => 1 + level * levelUpSpeedUp;
     }
 
-    private int level = 0;
+    private int level = -1;
 
     private void OnEnable()
     {
@@ -24,7 +24,7 @@ public class LevelManager : MonoBehaviour
 
     private void Start()
     {
-        LevelUp(true);
+        InstantLevelUp();
     }
 
     private void OnDisable()
@@ -38,6 +38,18 @@ public class LevelManager : MonoBehaviour
     }
 
     private void LevelUp(bool _)
+    {
+        IEnumerator DelayLevelUp()
+        {
+            yield return new WaitForSecondsRealtime(1f);
+
+            InstantLevelUp();
+        }
+        StopCoroutine(DelayLevelUp());
+        StartCoroutine(DelayLevelUp());
+    }
+
+    private void InstantLevelUp()
     {
         level++;
 

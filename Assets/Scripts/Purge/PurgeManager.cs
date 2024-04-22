@@ -57,17 +57,9 @@ public class PurgeManager : MonoBehaviour
         {
             SFXController.Instance.RequestPlay(purgeWarningSFX, 20000, timePitching: false);
         }
-        if (MusicController.instance != null)
-        {
-            MusicController.instance.Pause();
-        }
 
         yield return new WaitForSecondsRealtime(13);
 
         GameEvents.OnPurgeFinished.Publish(true);
-        if (MusicController.instance != null)
-        {
-            MusicController.instance.UnPause();
-        }
     }
 }

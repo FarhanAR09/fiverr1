@@ -22,6 +22,9 @@ public class CacheStorageDisplay : MonoBehaviour
     [SerializeField]
     private float flickerFrequency = 4;
 
+    [SerializeField]
+    private ParticleSystem psFlush;
+
     private void Awake()
     {
         if (TryGetComponent(out SpriteRenderer sr))
@@ -39,6 +42,7 @@ public class CacheStorageDisplay : MonoBehaviour
         ScoreCounter.OnScoreUpdated.AddListener(UpdateDisplay);
         GameEvents.OnPurgeStarted.Add(GlowRedPurge);
         GameEvents.OnPurgeFinished.Add(GlowGreenPurge);
+        GameEvents.OnAllGatesCollected.Add(FlushCache);
     }
 
 
@@ -57,6 +61,7 @@ public class CacheStorageDisplay : MonoBehaviour
         ScoreCounter.OnScoreUpdated.RemoveListener(UpdateDisplay);
         GameEvents.OnPurgeStarted.Remove(GlowRedPurge);
         GameEvents.OnPurgeFinished.Remove(GlowGreenPurge);
+        GameEvents.OnAllGatesCollected.Remove(FlushCache);
     }
 
     private void Update()
@@ -97,6 +102,14 @@ public class CacheStorageDisplay : MonoBehaviour
         {
             glow.SetColor("_Color", glowColor);
             spriteRenderer.material.SetFloat("_Intensity", glowIntensity);
+        }
+    }
+
+    private void FlushCache(bool _)
+    {
+        if (psFlush != null && cacheStorage != null)
+        {
+            psFlush.Emit(Mathf.CeilToInt(50f * Mathf.Min(1f, (float) cacheStorage.StoredCache / cacheStorage.OverflowChargeAmount)));
         }
     }
 }
