@@ -52,6 +52,7 @@ public class LaserShooter : MonoBehaviour
     private void StopShooting(bool _)
     {
         isPurging = false;
+        StopCoroutine(ShootLoop());
     }
 
     private void HandleLosing(bool _)
@@ -60,8 +61,8 @@ public class LaserShooter : MonoBehaviour
     }
 
     IEnumerator ShootLoop() {
-        yield return new WaitForSecondsRealtime(3f);
         isPurging = true;
+        yield return new WaitForSecondsRealtime(3f);
         shootTime = 0;
         shootAmount = 0;
 

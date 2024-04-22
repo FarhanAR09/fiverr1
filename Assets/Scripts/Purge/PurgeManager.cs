@@ -40,7 +40,6 @@ public class PurgeManager : MonoBehaviour
         }
         if (isPurging)
         {
-            Debug.Log("Purge resets");
             GameEvents.OnPurgeFinished.Publish(true);
         }
         if (MusicController.instance != null)
@@ -53,7 +52,6 @@ public class PurgeManager : MonoBehaviour
 
     private IEnumerator Purge ()
     {
-        Debug.Log("Purge starts");
         isPurging = true;
         levelPurged = true;
         GameEvents.OnPurgeStarted.Publish(true);
@@ -66,6 +64,5 @@ public class PurgeManager : MonoBehaviour
 
         GameEvents.OnPurgeFinished.Publish(true);
         isPurging = false;
-        Debug.Log("Purge finished");
     }
 }
