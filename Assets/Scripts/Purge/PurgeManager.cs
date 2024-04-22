@@ -4,7 +4,7 @@ using UnityEngine;
 
 public class PurgeManager : MonoBehaviour
 {
-    private bool isPurging = false;
+    private bool isPurging = false, levelPurged = false;
     private Coroutine purgeCoroutine;
 
     [SerializeField]
@@ -24,9 +24,8 @@ public class PurgeManager : MonoBehaviour
 
     private void StartPurge(bool _)
     {
-        if (!isPurging)
+        if (!isPurging && !levelPurged)
         {
-            isPurging = true;
             if (purgeCoroutine != null)
                 StopCoroutine(purgeCoroutine);
             purgeCoroutine = StartCoroutine(Purge());
@@ -36,9 +35,12 @@ public class PurgeManager : MonoBehaviour
     private void ResetPurge(bool _)
     {
         if (purgeCoroutine != null)
+        {
             StopCoroutine(purgeCoroutine);
+        }
         if (isPurging)
         {
+            Debug.Log("Purge resets");
             GameEvents.OnPurgeFinished.Publish(true);
         }
         if (MusicController.instance != null)
@@ -46,12 +48,14 @@ public class PurgeManager : MonoBehaviour
             MusicController.instance.UnPause();
         }
         isPurging = false;
-        
+        levelPurged = false;
     }
 
     private IEnumerator Purge ()
     {
+        Debug.Log("Purge starts");
         isPurging = true;
+        levelPurged = true;
         GameEvents.OnPurgeStarted.Publish(true);
         if (SFXController.Instance != null && purgeWarningSFX != null)
         {
@@ -61,5 +65,7 @@ public class PurgeManager : MonoBehaviour
         yield return new WaitForSecondsRealtime(13);
 
         GameEvents.OnPurgeFinished.Publish(true);
+        isPurging = false;
+        Debug.Log("Purge finished");
     }
 }

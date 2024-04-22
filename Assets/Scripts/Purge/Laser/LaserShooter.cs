@@ -43,10 +43,29 @@ public class LaserShooter : MonoBehaviour
         GameEvents.OnPlayerLose.Remove(HandleLosing);
     }
 
-    private void FixedUpdate()
+    private void StartShooting(bool _)
     {
-        //Shooting
-        if (isPurging && !playerLost)
+        StopCoroutine(ShootLoop());
+        StartCoroutine(ShootLoop());
+    }
+
+    private void StopShooting(bool _)
+    {
+        isPurging = false;
+    }
+
+    private void HandleLosing(bool _)
+    {
+        playerLost = true;
+    }
+
+    IEnumerator ShootLoop() {
+        yield return new WaitForSecondsRealtime(3f);
+        isPurging = true;
+        shootTime = 0;
+        shootAmount = 0;
+
+        while (isPurging && !playerLost)
         {
             if (shootTime < ShootDelay)
             {
@@ -93,29 +112,7 @@ public class LaserShooter : MonoBehaviour
                     }
                 }
             }
+            yield return new WaitForFixedUpdate();
         }
-    }
-
-    private void StartShooting(bool _)
-    {
-        IEnumerator DelayShooting()
-        {
-            yield return new WaitForSecondsRealtime(3f);
-            isPurging = true;
-            shootTime = 0;
-            shootAmount = 0;
-        }
-        StopCoroutine(DelayShooting());
-        StartCoroutine(DelayShooting());
-    }
-
-    private void StopShooting(bool _)
-    {
-        isPurging = false;
-    }
-
-    private void HandleLosing(bool _)
-    {
-        playerLost = true;
     }
 }
