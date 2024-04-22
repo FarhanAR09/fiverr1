@@ -25,6 +25,11 @@ public class CacheStorageDisplay : MonoBehaviour
     [SerializeField]
     private ParticleSystem psFlush;
 
+    /// <summary>
+    /// Time after all gates collected and before leveling up
+    /// </summary>
+    private bool isFlushing = false;
+
     private void Awake()
     {
         if (TryGetComponent(out SpriteRenderer sr))
@@ -43,6 +48,9 @@ public class CacheStorageDisplay : MonoBehaviour
         GameEvents.OnPurgeStarted.Add(GlowRedPurge);
         GameEvents.OnPurgeFinished.Add(GlowGreenPurge);
         GameEvents.OnAllGatesCollected.Add(FlushCache);
+
+        GameEvents.OnAllGatesCollected.Add(StartFlushing);
+        GameEvents.OnLevelUp.Add(FinishFlushing);
     }
 
 
@@ -62,6 +70,9 @@ public class CacheStorageDisplay : MonoBehaviour
         GameEvents.OnPurgeStarted.Remove(GlowRedPurge);
         GameEvents.OnPurgeFinished.Remove(GlowGreenPurge);
         GameEvents.OnAllGatesCollected.Remove(FlushCache);
+
+        GameEvents.OnAllGatesCollected.Remove(StartFlushing);
+        GameEvents.OnLevelUp.Remove(FinishFlushing);
     }
 
     private void Update()
@@ -76,8 +87,16 @@ public class CacheStorageDisplay : MonoBehaviour
     {
         if (cacheStorage != null)
         {
-            normalizedCache = (cacheStorage.StoredCache + 10f) / cacheStorage.OverflowChargeAmount;
-            //Debug.Log($"Cache Display Normalized: {normalizedCache}");
+            if (!isFlushing)
+            {
+                normalizedCache = (cacheStorage.StoredCache + 10f) / cacheStorage.OverflowChargeAmount;
+                
+            }
+            else
+            {
+                normalizedCache = 0f;
+            }
+
             if (spriteRenderer != null && spriteRenderer.material != null)
             {
                 spriteRenderer.material.SetFloat("_Reveal", normalizedCache);
@@ -109,7 +128,21 @@ public class CacheStorageDisplay : MonoBehaviour
     {
         if (psFlush != null && cacheStorage != null)
         {
-            psFlush.Emit(Mathf.CeilToInt(50f * Mathf.Min(1f, (float) cacheStorage.StoredCache / cacheStorage.OverflowChargeAmount)));
+            psFlush.Emit(Mathf.CeilToInt(40f * Mathf.Pow(Mathf.Min(1f, (float)cacheStorage.StoredCache / cacheStorage.OverflowChargeAmount),2)));
         }
+    }
+
+    private void StartFlushing(bool _)
+    {
+        isFlushing = true;
+        if (spriteRenderer != null && spriteRenderer.material != null)
+        {
+            spriteRenderer.material.SetFloat("_Reveal", 0f);
+        }
+    }
+
+    private void FinishFlushing(bool _)
+    {
+        isFlushing = false;
     }
 }
