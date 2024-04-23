@@ -19339,7 +19339,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 66647267742b37643a7477096a9f60c3, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  <OverflowChargeAmount>k__BackingField: 2200
+  <OverflowChargeAmount>k__BackingField: 1000
 --- !u!4 &1434447514
 Transform:
   m_ObjectHideFlags: 0

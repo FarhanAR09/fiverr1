@@ -62,7 +62,7 @@ public class LaserShooter : MonoBehaviour
 
     IEnumerator ShootLoop() {
         isPurging = true;
-        yield return new WaitForSecondsRealtime(3f);
+        //yield return new WaitForSecondsRealtime(3f);
         shootTime = 0;
         shootAmount = 0;
 

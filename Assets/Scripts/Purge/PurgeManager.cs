@@ -54,13 +54,17 @@ public class PurgeManager : MonoBehaviour
     {
         isPurging = true;
         levelPurged = true;
-        GameEvents.OnPurgeStarted.Publish(true);
+        GameEvents.OnPurgeWarning.Publish(true);
         if (SFXController.Instance != null && purgeWarningSFX != null)
         {
             SFXController.Instance.RequestPlay(purgeWarningSFX, 20000, timePitching: false);
         }
 
-        yield return new WaitForSecondsRealtime(13);
+        yield return new WaitForSecondsRealtime(3);
+
+        GameEvents.OnPurgeStarted.Publish(true);
+
+        yield return new WaitForSecondsRealtime(10);
 
         GameEvents.OnPurgeFinished.Publish(true);
         isPurging = false;

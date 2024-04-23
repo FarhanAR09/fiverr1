@@ -1,5 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
+using System.Runtime.CompilerServices;
 using UnityEngine;
 using UnityEngine.Events;
 
@@ -28,55 +29,41 @@ public class GatePellet : MonoBehaviour
     [SerializeField]
     private Sprite deactivatedSprite;
 
+    [SerializeField]
+    private ParticleSystem psExplode;
+
+    private bool inPurge = false;
+
+    private Animator animator;
+
     private void Awake()
     {
         CircleCollider2D circleCollider = GetComponent<CircleCollider2D>();
         circleCollider.isTrigger = true;
         circleCollider.radius = 0.25f;
+
+        TryGetComponent(out animator);
     }
 
     private void OnEnable()
     {
         GameEvents.OnGatesSequenceUpdate.Add(UpdateGateState);
+        GameEvents.OnPurgeWarning.Add(PurgeShiverMeTimbers);
+        GameEvents.OnPurgeStarted.Add(DisableOnPurge);
+        GameEvents.OnPurgeFinished.Add(EnableOnPurge);
     }
 
     private void OnDisable()
     {
         GameEvents.OnGatesSequenceUpdate.Remove(UpdateGateState);
-    }
-
-    private void Update()
-    {
-        switch (order)
-        {
-            case 0:
-                Debug.DrawRay(transform.position, Vector3.up, Color.red);
-                break;
-            case 1:
-                Debug.DrawRay(transform.position, Vector3.up, Color.yellow);
-                break;
-            case 2:
-                Debug.DrawRay(transform.position, Vector3.up, Color.green);
-                break;
-        }
-
-        switch (state)
-        {
-            case State.DontCollect:
-                Debug.DrawRay(transform.position, Vector3.left, Color.red);
-                break;
-            case State.Available:
-                Debug.DrawRay(transform.position, Vector3.left, Color.yellow);
-                break;
-            case State.Activated:
-                Debug.DrawRay(transform.position, Vector3.left, Color.green);
-                break;
-        }
+        GameEvents.OnPurgeWarning.Remove(PurgeShiverMeTimbers);
+        GameEvents.OnPurgeStarted.Remove(DisableOnPurge);
+        GameEvents.OnPurgeFinished.Remove(EnableOnPurge);
     }
 
     private void OnTriggerEnter2D(Collider2D collision)
     {
-        if (beenSetUp && state != State.Activated)
+        if (beenSetUp && !inPurge && state != State.Activated)
         {
             if (collision.gameObject.Equals(PlayerInput.GOInstance))
             {
@@ -86,8 +73,6 @@ public class GatePellet : MonoBehaviour
                 }
 
                 OnCollected.Invoke(order);
-                //OnCollected.RemoveAllListeners();
-                //Destroy(gameObject);
             }
         }
     }
@@ -149,6 +134,38 @@ public class GatePellet : MonoBehaviour
                     spriteRenderer.material.SetFloat("_Intensity", 1);
                 }
             }
+        }
+    }
+
+    private void PurgeShiverMeTimbers(bool _)
+    {
+        if (animator != null)
+        {
+            animator.Play("gate_shaking");
+        }
+    }
+
+    private void DisableOnPurge(bool _)
+    {
+        inPurge = true;
+        if (spriteRenderer != null)
+            spriteRenderer.enabled = false;
+        if (psExplode != null)
+        {
+            var main = psExplode.main;
+            main.startColor = state == State.Activated ? Color.green : Color.white;
+            psExplode.Emit(15);
+        }
+    }
+
+    private void EnableOnPurge(bool _)
+    {
+        inPurge = false;
+        if (spriteRenderer != null)
+            spriteRenderer.enabled = true;
+        if (animator != null)
+        {
+            animator.Play("gate_noshake");
         }
     }
 }

@@ -4,6 +4,7 @@ using UnityEngine;
 
 public partial class GameEvents
 {
+    public static GameEvent<bool> OnPurgeWarning = new();
     public static GameEvent<bool> OnPurgeStarted = new();
     public static GameEvent<bool> OnPurgeFinished = new();
 }

@@ -71,7 +71,7 @@ public class EnemyBehaviour : MonoBehaviour, IStunnable
         }
         enemyPatrol.OnPlayerDetected.AddListener(EnterChaseStateTemporarily);
 
-        GameEvents.OnPurgeStarted.Add(DisableByPurge);
+        GameEvents.OnPurgeWarning.Add(DisableByPurge);
         GameEvents.OnPurgeFinished.Add(EnableByPurge);
     }
 
@@ -139,7 +139,7 @@ public class EnemyBehaviour : MonoBehaviour, IStunnable
         }
         enemyPatrol.OnPlayerDetected.RemoveListener(EnterChaseStateTemporarily);
 
-        GameEvents.OnPurgeStarted.Remove(DisableByPurge);
+        GameEvents.OnPurgeWarning.Remove(DisableByPurge);
         GameEvents.OnPurgeFinished.Remove(EnableByPurge);
     }
 

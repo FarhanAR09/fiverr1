@@ -34,13 +34,13 @@ public class ScorePellet : MonoBehaviour, IStunnable
 
     private void OnEnable()
     {
-        GameEvents.OnPurgeStarted.Add(DisablePelletPurge);
+        GameEvents.OnPurgeWarning.Add(DisablePelletPurge);
         GameEvents.OnPurgeFinished.Add(EnablePelletPurge);
     }
 
     private void OnDisable()
     {
-        GameEvents.OnPurgeStarted.Remove(DisablePelletPurge);
+        GameEvents.OnPurgeWarning.Remove(DisablePelletPurge);
         GameEvents.OnPurgeFinished.Remove(EnablePelletPurge);
     }
 

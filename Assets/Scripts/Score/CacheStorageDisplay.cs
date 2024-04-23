@@ -45,7 +45,7 @@ public class CacheStorageDisplay : MonoBehaviour
     private void OnEnable()
     {
         ScoreCounter.OnScoreUpdated.AddListener(UpdateDisplay);
-        GameEvents.OnPurgeStarted.Add(GlowRedPurge);
+        GameEvents.OnPurgeWarning.Add(GlowRedPurge);
         GameEvents.OnPurgeFinished.Add(GlowGreenPurge);
         GameEvents.OnAllGatesCollected.Add(FlushCache);
 
@@ -67,7 +67,7 @@ public class CacheStorageDisplay : MonoBehaviour
     private void OnDisable()
     {
         ScoreCounter.OnScoreUpdated.RemoveListener(UpdateDisplay);
-        GameEvents.OnPurgeStarted.Remove(GlowRedPurge);
+        GameEvents.OnPurgeWarning.Remove(GlowRedPurge);
         GameEvents.OnPurgeFinished.Remove(GlowGreenPurge);
         GameEvents.OnAllGatesCollected.Remove(FlushCache);
 
