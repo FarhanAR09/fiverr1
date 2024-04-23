@@ -7,19 +7,23 @@ using UnityEngine;
 /// </summary>
 public class LevelManager : MonoBehaviour
 {
-    [SerializeField]
-    private float levelUpSpeedUp = 0.1f;
+    private static readonly float levelUpSpeedUp = 0.1f;
     private const string LEVELSPEEDKEY = "LevelTimeSpeedUp";
-    private float CurrentSpeed
+    public static float CurrentLevelSpeed
     {
-        get => 1 + level * levelUpSpeedUp;
+        get => 1f + level * levelUpSpeedUp;
     }
 
-    private int level = -1;
+    private static int level = -1;
 
     private void OnEnable()
     {
         GameEvents.OnAllGatesCollected.Add(LevelUp);
+    }
+
+    private void Awake()
+    {
+        level = -1;
     }
 
     private void Start()
@@ -55,7 +59,7 @@ public class LevelManager : MonoBehaviour
 
         GameEvents.OnLevelUp.Publish(true);
 
-        if (!GameSpeedManager.TryModifyGameSpeedModifier(LEVELSPEEDKEY, CurrentSpeed))
-            GameSpeedManager.TryAddGameSpeedModifier(LEVELSPEEDKEY, CurrentSpeed);
+        if (!GameSpeedManager.TryModifyGameSpeedModifier(LEVELSPEEDKEY, CurrentLevelSpeed))
+            GameSpeedManager.TryAddGameSpeedModifier(LEVELSPEEDKEY, CurrentLevelSpeed);
     }
 }

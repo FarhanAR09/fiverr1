@@ -113,8 +113,8 @@ public class PlaySceneManager : MonoBehaviour
 
     private void SetHighscore()
     {
-        int currentHighscore = PlayerPrefs.HasKey("highscore") ? Mathf.Max(PlayerPrefs.GetInt("highscore"), ScoreCounter.Score) : 0;
-        PlayerPrefs.SetInt("highscore", currentHighscore);
+        float currentHighscore = PlayerPrefs.HasKey("highscore") ? Mathf.Max(PlayerPrefs.GetFloat("highscore"), ScoreCounter.Score) : 0;
+        PlayerPrefs.SetFloat("highscore", currentHighscore);
         PlayerPrefs.Save();
     }
 }

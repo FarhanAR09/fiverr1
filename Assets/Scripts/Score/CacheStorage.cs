@@ -5,8 +5,8 @@ using UnityEngine;
 public class CacheStorage : MonoBehaviour
 {
     [field: SerializeField]
-    public int OverflowChargeAmount { get; private set; } = int.MaxValue;
-    public int StoredCache { get; private set; } = 0;
+    public float OverflowChargeAmount { get; private set; } = int.MaxValue;
+    public float StoredCache { get; private set; } = 0;
 
     private void OnEnable()
     {
@@ -21,7 +21,7 @@ public class CacheStorage : MonoBehaviour
         GameEvents.OnLevelUp.Remove(ResetStorage);
     }
 
-    private void TrackScore(int addedScore)
+    private void TrackScore(float addedScore)
     {
         //Debug.Log($"Added score: {addedScore}");
         StoredCache += addedScore;
@@ -34,6 +34,6 @@ public class CacheStorage : MonoBehaviour
 
     private void ResetStorage(bool _)
     {
-        StoredCache = 0;
+        StoredCache = 0f;
     }
 }

@@ -11,11 +11,11 @@ public class MainMenuManager : MonoBehaviour
 
     private void Start()
     {
-        int highscore = PlayerPrefs.HasKey("highscore") ?
-            PlayerPrefs.GetInt("highscore") :
+        float highscore = PlayerPrefs.HasKey("highscore") ?
+            PlayerPrefs.GetFloat("highscore") :
             0;
         if (highscoreDisplay != null)
-            highscoreDisplay.SetText($"HIGHSCORE: {highscore}");
+            highscoreDisplay.SetText($"HIGHSCORE: {string.Format("{0:0.##}", highscore)}");
 
         if (MusicController.instance != null)
         {

@@ -18,31 +18,31 @@ public class SFXPlayer : MonoBehaviour
         audioSource = GetComponent<AudioSource>();
     }
 
-    public bool RequestPlay(AudioClip clip, int priority, bool timePitching, float volumeMultiplier)
+    public bool RequestPlay(AudioClip clip, int priority, bool timePitching, float volumeMultiplier, float pitchMultiplier)
     {
         if (audioSource.isPlaying)
         {
             if (CurrentPriority < priority)
             {
-                PlayAudio(clip, priority, timePitching, volumeMultiplier);
+                PlayAudio(clip, priority, timePitching, volumeMultiplier, pitchMultiplier);
                 return true;
             }
         }
         else
         {
-            PlayAudio(clip, priority, timePitching, volumeMultiplier);
+            PlayAudio(clip, priority, timePitching, volumeMultiplier, pitchMultiplier);
             return true;
         }
         return false;
     }
 
-    private void PlayAudio(AudioClip clip, int priority, bool timePitching, float volumeMultiplier)
+    private void PlayAudio(AudioClip clip, int priority, bool timePitching, float volumeMultiplier, float pitchMultiplier)
     {
         CurrentPriority = priority;
         audioSource.Stop();
         audioSource.clip = clip;
         audioSource.volume = Mathf.Max(0, Mathf.Min(1, volumeMultiplier));
-        audioSource.pitch = timePitching ? Time.timeScale : 1;
+        audioSource.pitch = (timePitching ? Time.timeScale : 1) * pitchMultiplier;
         audioSource.Play();
     }
 }

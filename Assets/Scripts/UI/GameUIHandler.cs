@@ -28,7 +28,7 @@ public class GameUIHandler : MonoBehaviour
         GameEvents.OnPlayerLose.Remove(UpdateLoseDisplay);
     }
 
-    private void UpdateScoreDisplay(int addedScore)
+    private void UpdateScoreDisplay(float addedScore)
     {
         if (scoreDisplay != null)
             scoreDisplay.SetText("Score:\n" + ScoreCounter.Score.ToString());
@@ -42,10 +42,10 @@ public class GameUIHandler : MonoBehaviour
 
     private void UpdateLoseDisplay(bool s)
     {
-        int highscore = PlayerPrefs.HasKey("highscore") && PlayerPrefs.GetInt("highscore") > ScoreCounter.Score ?
-            PlayerPrefs.GetInt("highscore") :
+        float highscore = PlayerPrefs.HasKey("highscore") && PlayerPrefs.GetFloat("highscore") > ScoreCounter.Score ?
+            PlayerPrefs.GetFloat("highscore") :
             ScoreCounter.Score;
         if (loseScoreDisplay != null)
-            loseScoreDisplay.SetText($"SCORE:\t\t{ScoreCounter.Score}\r\nHIGHSCORE:\t{highscore}");
+            loseScoreDisplay.SetText($"SCORE:\t\t{ScoreCounter.Score}\r\nHIGHSCORE:\t{string.Format("{0:0.##}", highscore)}");
     }
 }

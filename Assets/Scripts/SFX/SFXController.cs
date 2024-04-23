@@ -71,11 +71,11 @@ public class SFXController : MonoBehaviour
     /// </summary>
     /// <param name="clip"></param>
     /// <param name="priority"></param>
-    public bool RequestPlay(AudioClip clip, int priority, bool timePitching = true, float volumeMultiplier = 1)
+    public bool RequestPlay(AudioClip clip, int priority, bool timePitching = true, float volumeMultiplier = 1, float pitchMultiplier = 1)
     {
         foreach (SFXPlayer player in sfxPlayers)
         {
-            if (player.RequestPlay(clip, priority, timePitching, volumeMultiplier))
+            if (player.RequestPlay(clip, priority, timePitching, volumeMultiplier, pitchMultiplier))
             {
                 return true;
             }

@@ -83,14 +83,18 @@ public class CacheStorageDisplay : MonoBehaviour
         }
     }
 
-    private void UpdateDisplay(int _)
+    private void UpdateDisplay(float addedScore)
     {
         if (cacheStorage != null)
         {
             if (!isFlushing)
             {
                 normalizedCache = (cacheStorage.StoredCache + 10f) / cacheStorage.OverflowChargeAmount;
-                
+                if (addedScore < 0)
+                {
+                    StopCoroutine(FlashRedCorruption());
+                    StartCoroutine(FlashRedCorruption());
+                }
             }
             else
             {
@@ -107,6 +111,7 @@ public class CacheStorageDisplay : MonoBehaviour
 
     private void GlowRedPurge(bool _)
     {
+        StopCoroutine(FlashRedCorruption());
         inPurge = true;
         if (glow != null)
         {
@@ -116,6 +121,7 @@ public class CacheStorageDisplay : MonoBehaviour
 
     private void GlowGreenPurge(bool _)
     {
+        StopCoroutine(FlashRedCorruption());
         inPurge = false;
         if (glow != null)
         {
@@ -144,5 +150,14 @@ public class CacheStorageDisplay : MonoBehaviour
     private void FinishFlushing(bool _)
     {
         isFlushing = false;
+    }
+
+    private IEnumerator FlashRedCorruption()
+    {
+        if (glow != null)
+            glow.SetColor("_Color", Color.red);
+        yield return new WaitForSecondsRealtime(0.3f);
+        if (glow != null)
+            glow.SetColor("_Color", glowColor);
     }
 }
