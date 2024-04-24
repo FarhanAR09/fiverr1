@@ -37,6 +37,16 @@ public static class GameSpeedManager
         UpdateTimeScale();
     }
 
+    /// <summary>
+    /// Returns game speed modifier. If fails, returns -1.
+    /// </summary>
+    /// <param name="key"></param>
+    /// <returns></returns>
+    public static float TryGetGameSpeedModifier(string key)
+    {
+        return activeModifiers.ContainsKey(key) ? activeModifiers[key] : -1f;
+    }
+
     private static void UpdateTimeScale()
     {
         Time.timeScale = 1;

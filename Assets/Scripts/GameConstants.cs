@@ -1,0 +1,12 @@
+using System.Collections;
+using System.Collections.Generic;
+using UnityEngine;
+
+public static class GameConstants
+{
+    #region Cache Flush Speed Up
+    public const string LEVELSPEEDKEY = "LevelTimeSpeedUp";
+    public const float LEVELUPSPEEDUP = 0.1f;
+    public const float PLAYERSTOPSLOWDOWN = 0.1f;
+    #endregion
+}

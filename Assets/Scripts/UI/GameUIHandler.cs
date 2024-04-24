@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using TMPro;
+using Unity.VisualScripting;
 #if UNITY_EDITOR
 using UnityEditor.ShaderGraph.Internal;
 #endif
@@ -12,12 +13,21 @@ public class GameUIHandler : MonoBehaviour
     [SerializeField]
     private TextMeshProUGUI scoreDisplay, gameSpeedDisplay, loseScoreDisplay;
 
+    private Animator gameSpeedDisplayAnimator;
+
+    private void Start()
+    {
+        gameSpeedDisplay.TryGetComponent(out gameSpeedDisplayAnimator);
+    }
+
     private void OnEnable()
     {
         ScoreCounter.OnScoreUpdated.AddListener(UpdateScoreDisplay);
         GameSpeedManager.OnGameSpeedUpdated.AddListener(UpdateGameSpeedDisplay);
 
         GameEvents.OnPlayerLose.Add(UpdateLoseDisplay);
+
+        GameEvents.OnPlayerStopSlowDown.Add(FlashRedReduceGameSpeed);
     }
 
     private void OnDisable()
@@ -26,6 +36,8 @@ public class GameUIHandler : MonoBehaviour
         GameSpeedManager.OnGameSpeedUpdated.RemoveListener(UpdateGameSpeedDisplay);
 
         GameEvents.OnPlayerLose.Remove(UpdateLoseDisplay);
+
+        GameEvents.OnPlayerStopSlowDown.Remove(FlashRedReduceGameSpeed);
     }
 
     private void UpdateScoreDisplay(float addedScore)
@@ -46,6 +58,12 @@ public class GameUIHandler : MonoBehaviour
             PlayerPrefs.GetFloat("highscore") :
             ScoreCounter.Score;
         if (loseScoreDisplay != null)
-            loseScoreDisplay.SetText($"SCORE:\t\t{ScoreCounter.Score}\r\nHIGHSCORE:\t{string.Format("{0:0.##}", highscore)}");
+            loseScoreDisplay.SetText($"SCORE:\t\t{ScoreCounter.Score}\r\nHIGHSCORE:\t{highscore:F2}");
+    }
+
+    private void FlashRedReduceGameSpeed(bool _)
+    {
+        if (gameSpeedDisplayAnimator != null)
+            gameSpeedDisplayAnimator.Play("gamespeed_flicker");
     }
 }

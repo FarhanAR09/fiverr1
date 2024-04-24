@@ -28,6 +28,11 @@ public class PlayerInput : MonoBehaviour
 
     private bool isMoving = false;
 
+    //Reduce GameSpeed by Stopping
+    private Vector2 lastFramePos = Vector2.zero;
+    private float playerStoppedTimer;
+    private readonly float reduceGameSpeedStopDuration = 1f;
+
     private void Awake()
     {
         //Singleton
@@ -127,6 +132,35 @@ public class PlayerInput : MonoBehaviour
         }
         #endregion
         #endregion
+    }
+
+    private void FixedUpdate()
+    {
+        if ((lastFramePos - (Vector2)transform.position).sqrMagnitude < 0.01f)
+        {
+            if (playerStoppedTimer < reduceGameSpeedStopDuration)
+            {
+                playerStoppedTimer += Time.fixedDeltaTime;
+            }
+            else
+            {
+                playerStoppedTimer = 0;
+                float currentSpeed = GameSpeedManager.TryGetGameSpeedModifier(GameConstants.LEVELSPEEDKEY);
+                float reducedGameSpeed = Mathf.Max(currentSpeed - GameConstants.PLAYERSTOPSLOWDOWN, 1f);
+                GameSpeedManager.TryModifyGameSpeedModifier(GameConstants.LEVELSPEEDKEY, reducedGameSpeed);
+                if (currentSpeed - reducedGameSpeed > 0f)
+                {
+                    GameEvents.OnPlayerStopSlowDown.Publish(true);
+                }
+            }
+        }
+        else
+        {
+            playerStoppedTimer = 0;
+        }
+
+        //Please keep at the end of FixedUpdate
+        lastFramePos = transform.position;
     }
 
     private void OnDisable()

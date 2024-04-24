@@ -15,7 +15,8 @@ public static class ScoreCounter
     
     public static void AddScore(float addedScore)
     {
-        Score += addedScore * LevelManager.CurrentLevelSpeed;
+        float gameSpeed = GameSpeedManager.TryGetGameSpeedModifier(GameConstants.LEVELSPEEDKEY);
+        Score += addedScore * (gameSpeed >= 0f ? gameSpeed : 1f);
         OnScoreUpdated.Invoke(addedScore);
     }
 

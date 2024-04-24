@@ -7,13 +7,6 @@ using UnityEngine;
 /// </summary>
 public class LevelManager : MonoBehaviour
 {
-    private static readonly float levelUpSpeedUp = 0.1f;
-    private const string LEVELSPEEDKEY = "LevelTimeSpeedUp";
-    public static float CurrentLevelSpeed
-    {
-        get => 1f + level * levelUpSpeedUp;
-    }
-
     private static int level = -1;
 
     private void OnEnable()
@@ -38,7 +31,7 @@ public class LevelManager : MonoBehaviour
 
     private void OnDestroy()
     {
-        GameSpeedManager.RemoveGameSpeedModifier(LEVELSPEEDKEY);
+        GameSpeedManager.RemoveGameSpeedModifier(GameConstants.LEVELSPEEDKEY);
     }
 
     private void LevelUp(bool _)
@@ -59,7 +52,7 @@ public class LevelManager : MonoBehaviour
 
         GameEvents.OnLevelUp.Publish(true);
 
-        if (!GameSpeedManager.TryModifyGameSpeedModifier(LEVELSPEEDKEY, CurrentLevelSpeed))
-            GameSpeedManager.TryAddGameSpeedModifier(LEVELSPEEDKEY, CurrentLevelSpeed);
+        if (!GameSpeedManager.TryModifyGameSpeedModifier(GameConstants.LEVELSPEEDKEY, GameSpeedManager.TryGetGameSpeedModifier(GameConstants.LEVELSPEEDKEY) + GameConstants.LEVELUPSPEEDUP))
+            GameSpeedManager.TryAddGameSpeedModifier(GameConstants.LEVELSPEEDKEY, 1f + level * GameConstants.LEVELUPSPEEDUP);
     }
 }
