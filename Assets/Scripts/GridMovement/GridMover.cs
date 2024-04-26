@@ -31,6 +31,7 @@ public class GridMover : MonoBehaviour, IGridMover
     public bool BeenSetUp { get => beenSetUp; private set => beenSetUp = value; }
     public UnityEvent OnStartedMoving { get; } = new();
     public UnityEvent OnFinishedMoving { get; } = new();
+    public UnityEvent OnDeniedMoving { get; } = new();
     #endregion
 
     private Vector2Int initialPos;
@@ -121,6 +122,14 @@ public class GridMover : MonoBehaviour, IGridMover
 
                                 return true;
                             }
+                            else
+                            {
+                                OnDeniedMoving.Invoke();
+                            }
+                        }
+                        else
+                        {
+                            OnDeniedMoving.Invoke();
                         }
                     }
                 }

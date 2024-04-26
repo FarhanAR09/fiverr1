@@ -26,6 +26,13 @@ public class PlayerPowerUpManager : MonoBehaviour
     [SerializeField]
     private AudioClip fillChargeSFX;
 
+    //Boost
+    private bool boostStarted;
+    private float boostTime = 0f;
+    private readonly float boostDuration = 3f;
+    public UnityEvent OnBoostStart { get; private set; } = new();
+    public UnityEvent OnBoostEnd { get; private set; } = new();
+
     private void Awake()
     {
         if (TryGetComponent(out PlayerInput _playerInput))
@@ -34,23 +41,22 @@ public class PlayerPowerUpManager : MonoBehaviour
         }
     }
 
+    private void Start()
+    {
+        GameSpeedManager.TryAddGameSpeedModifier(BULLETTIME, 1f);
+    }
+
     private void OnEnable()
     {
         if (playerInput != null)
         {
             playerInput.OnSpaceDown.AddListener(BulletTime);
             playerInput.OnVDown.AddListener(ThrowEMP);
+
+            playerInput.OnBoostDown.AddListener(StartBoost);
+            playerInput.OnBoostUp.AddListener(EndBoost);
+            playerInput.OnHitWall.AddListener(EndBoost);
         }
-    }
-
-    private void Start()
-    {
-        GameSpeedManager.TryAddGameSpeedModifier(BULLETTIME, 1f);
-    }
-
-    private void FixedUpdate()
-    {
-        //Debug.Log("Player Charge: " + AvailableCharge);
     }
 
     private void OnDisable()
@@ -59,6 +65,10 @@ public class PlayerPowerUpManager : MonoBehaviour
         {
             playerInput.OnSpaceDown.RemoveListener(BulletTime);
             playerInput.OnVDown.RemoveListener(ThrowEMP);
+
+            playerInput.OnBoostDown.RemoveListener(StartBoost);
+            playerInput.OnBoostUp.RemoveListener(EndBoost);
+            playerInput.OnHitWall.RemoveListener(EndBoost);
         }
 
         if (bulletTimeCoroutine != null)
@@ -143,6 +153,45 @@ public class PlayerPowerUpManager : MonoBehaviour
                 Destroy(emp, 2f);
                 OnEMPThrown.Invoke();
             }
+        }
+    }
+
+    private void StartBoost()
+    {
+        Debug.Log("Boost Start");
+        boostStarted = true;
+        StopCoroutine(BoostTimer());
+        StartCoroutine(BoostTimer());
+
+        OnBoostStart.Invoke();
+    }
+
+    private void EndBoost()
+    {
+        if (boostStarted)
+        {
+            Debug.Log("Boost End");
+            boostStarted = false;
+            StopCoroutine(BoostTimer());
+
+            OnBoostEnd.Invoke();
+        }
+    }
+
+    private IEnumerator BoostTimer()
+    {
+        boostTime = 0;
+        while (true)
+        {
+            if (boostTime >= boostDuration)
+            {
+                EndBoost();
+                break;
+            }
+
+            boostTime += Time.fixedDeltaTime;
+
+            yield return new WaitForFixedUpdate();
         }
     }
 }

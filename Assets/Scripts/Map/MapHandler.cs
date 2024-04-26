@@ -43,6 +43,11 @@ public class MapHandler : MonoBehaviour
         else Debug.LogWarning("Map Data is null");
     }
 
+    /// <summary>
+    /// Is checked position within grid?
+    /// </summary>
+    /// <param name="positionInGrid"></param>
+    /// <returns></returns>
     public bool CheckBoundary(Vector2Int positionInGrid)
     {
         if (positionInGrid.x >= 0 && positionInGrid.x < MapGrid.GetWidth() && positionInGrid.y >= 0 && positionInGrid.y < MapGrid.GetHeight())

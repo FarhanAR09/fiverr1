@@ -23,8 +23,12 @@ public class PlayerInput : MonoBehaviour
     private GridMover gridMover;
     public MovementDirection StoredDirection { get; private set; }
 
+    //Input Events
     public UnityEvent OnSpaceDown { get; private set; } = new();
     public UnityEvent OnVDown { get; private set; } = new();
+    public UnityEvent OnBoostDown { get; private set; } = new();
+    public UnityEvent OnBoostUp { get; private set; } = new();
+    public UnityEvent OnHitWall { get; private set; } = new();
 
     private bool isMoving = false;
 
@@ -32,6 +36,16 @@ public class PlayerInput : MonoBehaviour
     private Vector2 lastFramePos = Vector2.zero;
     private float playerStoppedTimer;
     private readonly float reduceGameSpeedStopDuration = 1f;
+
+    //Hit Wall
+    bool wallHit = false;
+
+    //Boost Override
+    private bool isBoosting = false;
+    private MovementDirection boostDirection;
+    private PlayerPowerUpManager powerManager;
+    private float boostSpeedMultiplier = 1.4f;
+    private float speedBeforeBoost;
 
     private void Awake()
     {
@@ -49,6 +63,8 @@ public class PlayerInput : MonoBehaviour
         gridMover.SetUp(transform, speed, initialPosition, initialDirection);
 
         Lost = false;
+
+        TryGetComponent(out powerManager);
     }
 
     private void OnEnable()
@@ -57,6 +73,15 @@ public class PlayerInput : MonoBehaviour
 
         gridMover.OnStartedMoving.AddListener(HandleStartedMoving);
         gridMover.OnFinishedMoving.AddListener(HandleFinishedMoving);
+        
+        gridMover.OnStartedMoving.AddListener(HitWallStateFalse);
+        gridMover.OnDeniedMoving.AddListener(InvokeHitWall);
+
+        if (powerManager != null)
+        {
+            powerManager.OnBoostStart.AddListener(StartBoostMovementOverride);
+            powerManager.OnBoostEnd.AddListener(EndBoostMovementOverride);
+        }
     }
 
     private void Start()
@@ -69,7 +94,7 @@ public class PlayerInput : MonoBehaviour
         #region Inputs
         #region Movement
         // Translate inputs to direction
-        if (!isMoving && MapHandler.Instance != null && MapHandler.Instance.MapGrid != null)
+        if (!isMoving && !isBoosting && MapHandler.Instance != null && MapHandler.Instance.MapGrid != null)
         {
             Vector2Int gridPos = MapHandler.Instance.MapGrid.GetXY(transform.position);
 
@@ -126,9 +151,19 @@ public class PlayerInput : MonoBehaviour
         {
             OnSpaceDown.Invoke();
         }
+
         if (Input.GetKeyDown(KeyCode.V))
         {
             OnVDown.Invoke();
+        }
+
+        if (Input.GetKeyDown(KeyCode.LeftShift))
+        {
+            OnBoostDown.Invoke();
+        }
+        else if (Input.GetKeyUp(KeyCode.LeftShift))
+        {
+            OnBoostUp.Invoke();
         }
         #endregion
         #endregion
@@ -136,6 +171,7 @@ public class PlayerInput : MonoBehaviour
 
     private void FixedUpdate()
     {
+        #region Player Stop Slow Down
         if ((lastFramePos - (Vector2)transform.position).sqrMagnitude < 0.01f)
         {
             if (playerStoppedTimer < reduceGameSpeedStopDuration)
@@ -158,6 +194,7 @@ public class PlayerInput : MonoBehaviour
         {
             playerStoppedTimer = 0;
         }
+        #endregion
 
         //Please keep at the end of FixedUpdate
         lastFramePos = transform.position;
@@ -169,6 +206,15 @@ public class PlayerInput : MonoBehaviour
 
         gridMover.OnStartedMoving.RemoveListener(HandleStartedMoving);
         gridMover.OnFinishedMoving.RemoveListener(HandleFinishedMoving);
+        
+        gridMover.OnStartedMoving.RemoveListener(HitWallStateFalse);
+        gridMover.OnDeniedMoving.RemoveListener(InvokeHitWall);
+
+        if (powerManager != null)
+        {
+            powerManager.OnBoostStart.RemoveListener(StartBoostMovementOverride);
+            powerManager.OnBoostEnd.RemoveListener(EndBoostMovementOverride);
+        }
     }
 
     private void OnDestroy()
@@ -193,5 +239,38 @@ public class PlayerInput : MonoBehaviour
     private void HandleFinishedMoving()
     {
         isMoving = false;
+    }
+
+    private void HitWallStateFalse()
+    {
+        wallHit = false;
+    }
+
+    private void InvokeHitWall()
+    {
+        if (!wallHit)
+        {
+            wallHit = true;
+            OnHitWall.Invoke();
+        }
+    }
+
+    private void StartBoostMovementOverride()
+    {
+        if (powerManager != null)
+        {
+            isBoosting = true;
+            speedBeforeBoost = gridMover.Speed;
+            gridMover.Speed *= boostSpeedMultiplier;
+        }
+    }
+
+    private void EndBoostMovementOverride()
+    {
+        if (isBoosting)
+        {
+            isBoosting = false;
+            gridMover.Speed = speedBeforeBoost;
+        }
     }
 }
