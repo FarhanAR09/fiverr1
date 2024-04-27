@@ -15,8 +15,6 @@ public class SFXController : MonoBehaviour
     public static SFXController Instance {
         get
         {
-            if (instance == null)
-                Debug.LogWarning("No SFXController instance");
             return instance;
         }
         private set

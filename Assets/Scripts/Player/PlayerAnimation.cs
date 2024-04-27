@@ -54,6 +54,10 @@ public class PlayerAnimation : MonoBehaviour
         {
             boostTrailRenderer.emitting = false;
         }
+        if (psBoostTrail != null)
+        {
+            psBoostTrail.Stop();
+        }
     }
 
     private void OnEnable()

@@ -38,6 +38,9 @@ public class PlayerPowerUpManager : MonoBehaviour
     private GameObject purgingTrailPrefab;
     private float layPurgeTime = 0f;
     private readonly float layPurgeCooldown = 0.08f;
+    [SerializeField]
+    private GameObject purgingPlayerBodyPrefab;
+    private GameObject purgingPlayerBody;
 
     private void Awake()
     {
@@ -193,6 +196,12 @@ public class PlayerPowerUpManager : MonoBehaviour
         OnBoostStart.Invoke();
 
         layPurgeTime = 0f;
+
+        if (purgingPlayerBodyPrefab != null)
+        {
+            purgingPlayerBody = Instantiate(purgingPlayerBodyPrefab, transform);
+            purgingPlayerBody.transform.localPosition = Vector3.zero;
+        }
     }
 
     private void EndBoost()
@@ -203,6 +212,11 @@ public class PlayerPowerUpManager : MonoBehaviour
             StopCoroutine(BoostTimer());
 
             OnBoostEnd.Invoke();
+
+            if (purgingPlayerBody != null)
+            {
+                Destroy(purgingPlayerBody);
+            }
         }
     }
 

@@ -43,7 +43,7 @@ public class GameUIHandler : MonoBehaviour
     private void UpdateScoreDisplay(float addedScore)
     {
         if (scoreDisplay != null)
-            scoreDisplay.SetText("Score:\n" + ScoreCounter.Score.ToString());
+            scoreDisplay.SetText("Score:\n" + ScoreCounter.Score.ToString("F0"));
     }
 
     private void UpdateGameSpeedDisplay()
@@ -58,7 +58,7 @@ public class GameUIHandler : MonoBehaviour
             PlayerPrefs.GetFloat("highscore") :
             ScoreCounter.Score;
         if (loseScoreDisplay != null)
-            loseScoreDisplay.SetText($"SCORE:\t\t{ScoreCounter.Score}\r\nHIGHSCORE:\t{highscore:F2}");
+            loseScoreDisplay.SetText($"SCORE:\t\t{ScoreCounter.Score}\r\nHIGHSCORE:\t{highscore:F0}");
     }
 
     private void FlashRedReduceGameSpeed(bool _)

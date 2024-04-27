@@ -2,7 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class PurgingTrail : MonoBehaviour
+public class PlayerBoostPurge : MonoBehaviour
 {
     [SerializeField]
     private Hitbox hitbox;

@@ -257,6 +257,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   empControllerPrefab: {fileID: 1040852023235066639, guid: 4e3040043adfd454a8d2b7d910500c06, type: 3}
   fillChargeSFX: {fileID: 8300000, guid: 68039fa7a5d39ff4586712064cf71768, type: 3}
+  purgingTrailPrefab: {fileID: 905431398823177360, guid: c89b5f54e6a65094e85d5680a12af3e8, type: 3}
+  purgingPlayerBodyPrefab: {fileID: 905431398823177360, guid: f2466025f32d2334b8ae7a7a30ed2c0e, type: 3}
 --- !u!95 &67915723
 Animator:
   serializedVersion: 5
@@ -37484,12 +37486,12 @@ ParticleSystem:
         m_RotationOrder: 4
     inWorldSpace: 0
   InheritVelocityModule:
-    enabled: 0
+    enabled: 1
     m_Mode: 0
     m_Curve:
       serializedVersion: 2
       minMaxState: 0
-      scalar: 0
+      scalar: -0.5
       minScalar: 0
       maxCurve:
         serializedVersion: 2
