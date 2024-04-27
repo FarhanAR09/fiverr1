@@ -1,8 +1,10 @@
 using System.Collections;
 using System.Collections.Generic;
+using System.Runtime.CompilerServices;
 using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.Events;
+using UnityEngine.UIElements;
 using static Unity.Burst.Intrinsics.X86.Avx;
 
 public class PlayerPowerUpManager : MonoBehaviour
@@ -32,6 +34,10 @@ public class PlayerPowerUpManager : MonoBehaviour
     private readonly float boostDuration = 3f;
     public UnityEvent OnBoostStart { get; private set; } = new();
     public UnityEvent OnBoostEnd { get; private set; } = new();
+    [SerializeField]
+    private GameObject purgingTrailPrefab;
+    private float layPurgeTime = 0f;
+    private readonly float layPurgeCooldown = 0.08f;
 
     private void Awake()
     {
@@ -84,6 +90,28 @@ public class PlayerPowerUpManager : MonoBehaviour
         OnBulletTimeActivated.RemoveAllListeners();
         OnBulletTimeDeactivated.RemoveAllListeners();
         OnEMPThrown.RemoveAllListeners();
+    }
+
+    private void FixedUpdate()
+    {
+     //Lay Purge   
+        if (boostStarted)
+        {
+            if (layPurgeTime > 0)
+            {
+                layPurgeTime -= Time.fixedDeltaTime;
+            }
+            else
+            {
+                layPurgeTime = layPurgeCooldown;
+
+                //Lay Purge Trail
+                if (purgingTrailPrefab != null)
+                {
+                    Destroy(Instantiate(purgingTrailPrefab, transform.position, new Quaternion()), 0.5f);
+                }
+            }
+        }
     }
 
     public void FillCharge(int amount)
@@ -158,19 +186,19 @@ public class PlayerPowerUpManager : MonoBehaviour
 
     private void StartBoost()
     {
-        Debug.Log("Boost Start");
         boostStarted = true;
         StopCoroutine(BoostTimer());
         StartCoroutine(BoostTimer());
 
         OnBoostStart.Invoke();
+
+        layPurgeTime = 0f;
     }
 
     private void EndBoost()
     {
         if (boostStarted)
         {
-            Debug.Log("Boost End");
             boostStarted = false;
             StopCoroutine(BoostTimer());
 

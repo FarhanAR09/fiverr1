@@ -25,6 +25,11 @@ public class PlayerAnimation : MonoBehaviour
     [SerializeField]
     private AudioClip playerDeathSFX, playerEmpSFX, playerSlowSFX;
 
+    [SerializeField]
+    private TrailRenderer boostTrailRenderer;
+    [SerializeField]
+    private ParticleSystem psBoostTrail, psBoostExplode;
+
     private void Awake()
     {
         input = GetComponent<PlayerInput>();
@@ -43,11 +48,22 @@ public class PlayerAnimation : MonoBehaviour
         }
     }
 
+    private void Start()
+    {
+        if (boostTrailRenderer != null)
+        {
+            boostTrailRenderer.emitting = false;
+        }
+    }
+
     private void OnEnable()
     {
         powerManager.OnBulletTimeActivated.AddListener(Explode);
         powerManager.OnEMPThrown.AddListener(EmpSFX);
         GameEvents.OnPlayerLose.Add(DeathSFX);
+
+        powerManager.OnBoostStart.AddListener(StartBoostEffects);
+        powerManager.OnBoostEnd.AddListener(EndBoostEffects);
     }
 
     private void Update()
@@ -105,6 +121,9 @@ public class PlayerAnimation : MonoBehaviour
         powerManager.OnBulletTimeActivated.RemoveListener(Explode);
         powerManager.OnEMPThrown.RemoveListener(EmpSFX);
         GameEvents.OnPlayerLose.Remove(DeathSFX);
+
+        powerManager.OnBoostStart.RemoveListener(StartBoostEffects);
+        powerManager.OnBoostEnd.RemoveListener(EndBoostEffects);
     }
 
     private void Explode()
@@ -140,6 +159,38 @@ public class PlayerAnimation : MonoBehaviour
         if (playerEmpSFX != null && SFXController.Instance != null)
         {
             SFXController.Instance.RequestPlay(playerEmpSFX, 19999);
+        }
+    }
+
+    private void StartBoostEffects()
+    {
+        if (boostTrailRenderer != null)
+        {
+            boostTrailRenderer.emitting = true;
+        }
+        if (psBoostTrail != null)
+        {
+            psBoostTrail.Play();
+        }
+        if (psBoostExplode != null)
+        {
+            psBoostExplode.Emit(20);
+        }
+    }
+
+    private void EndBoostEffects()
+    {
+        if (boostTrailRenderer != null)
+        {
+            boostTrailRenderer.emitting = false;
+        }
+        if (psBoostTrail != null)
+        {
+            psBoostTrail.Stop();
+        }
+        if (psBoostExplode != null)
+        {
+            psBoostExplode.Emit(20);
         }
     }
 }
