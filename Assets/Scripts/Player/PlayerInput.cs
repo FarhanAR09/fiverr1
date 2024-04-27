@@ -43,7 +43,7 @@ public class PlayerInput : MonoBehaviour
     //Boost Override
     private bool isBoosting = false;
     private PlayerPowerUpManager powerManager;
-    private readonly float boostSpeedMultiplier = 1.5f;
+    private readonly float boostSpeedMultiplier = 2f;
     private float speedBeforeBoost;
 
     private void Awake()

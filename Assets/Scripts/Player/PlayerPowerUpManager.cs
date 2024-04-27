@@ -189,18 +189,24 @@ public class PlayerPowerUpManager : MonoBehaviour
 
     private void StartBoost()
     {
-        boostStarted = true;
-        StopCoroutine(BoostTimer());
-        StartCoroutine(BoostTimer());
-
-        OnBoostStart.Invoke();
-
-        layPurgeTime = 0f;
-
-        if (purgingPlayerBodyPrefab != null)
+        int usedCharge = 1;
+        if (AvailableCharge >= usedCharge)
         {
-            purgingPlayerBody = Instantiate(purgingPlayerBodyPrefab, transform);
-            purgingPlayerBody.transform.localPosition = Vector3.zero;
+            AvailableCharge -= usedCharge;
+
+            boostStarted = true;
+            StopCoroutine(BoostTimer());
+            StartCoroutine(BoostTimer());
+
+            OnBoostStart.Invoke();
+
+            layPurgeTime = 0f;
+
+            if (purgingPlayerBodyPrefab != null)
+            {
+                purgingPlayerBody = Instantiate(purgingPlayerBodyPrefab, transform);
+                purgingPlayerBody.transform.localPosition = Vector3.zero;
+            }
         }
     }
 
