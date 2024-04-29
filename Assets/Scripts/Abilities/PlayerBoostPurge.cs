@@ -6,6 +6,8 @@ public class PlayerBoostPurge : MonoBehaviour
 {
     [SerializeField]
     private Hitbox hitbox;
+    [SerializeField]
+    private AudioClip purgeHitSfx;
 
     private void OnEnable()
     {
@@ -23,7 +25,11 @@ public class PlayerBoostPurge : MonoBehaviour
     {
         if (collider.TryGetComponent(out IPurgable purgable) && !collider.gameObject.Equals(PlayerInput.GOInstance))
         {
-            purgable.Purge();
+            bool purged = purgable.TryPurge();
+            if (purged && purgeHitSfx != null && SFXController.Instance != null)
+            {
+                SFXController.Instance.RequestPlay(purgeHitSfx, 15000);
+            }
         }
     }
 }

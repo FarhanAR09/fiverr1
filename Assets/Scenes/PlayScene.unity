@@ -259,6 +259,8 @@ MonoBehaviour:
   fillChargeSFX: {fileID: 8300000, guid: 68039fa7a5d39ff4586712064cf71768, type: 3}
   purgingTrailPrefab: {fileID: 905431398823177360, guid: c89b5f54e6a65094e85d5680a12af3e8, type: 3}
   purgingPlayerBodyPrefab: {fileID: 905431398823177360, guid: f2466025f32d2334b8ae7a7a30ed2c0e, type: 3}
+  boostStartSfx: {fileID: 8300000, guid: 37a80d5ef38c9264db56d6d8715762ca, type: 3}
+  boostEndSfx: {fileID: 8300000, guid: e4d50e52c09d55342914af42da53c66c, type: 3}
 --- !u!95 &67915723
 Animator:
   serializedVersion: 5
@@ -5546,7 +5548,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!4 &461945983
 Transform:
   m_ObjectHideFlags: 0

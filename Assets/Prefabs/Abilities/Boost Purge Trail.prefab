@@ -47,6 +47,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   hitbox: {fileID: 4834906211569128179}
+  purgeHitSfx: {fileID: 8300000, guid: 978336dbcd94d6f42a37444a1ac339f1, type: 3}
 --- !u!1 &2484419452656936231
 GameObject:
   m_ObjectHideFlags: 0

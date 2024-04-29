@@ -41,6 +41,8 @@ public class PlayerPowerUpManager : MonoBehaviour
     [SerializeField]
     private GameObject purgingPlayerBodyPrefab;
     private GameObject purgingPlayerBody;
+    [SerializeField]
+    private AudioClip boostStartSfx, boostEndSfx;
 
     private void Awake()
     {
@@ -207,6 +209,11 @@ public class PlayerPowerUpManager : MonoBehaviour
                 purgingPlayerBody = Instantiate(purgingPlayerBodyPrefab, transform);
                 purgingPlayerBody.transform.localPosition = Vector3.zero;
             }
+
+            if (boostStartSfx != null && SFXController.Instance != null)
+            {
+                SFXController.Instance.RequestPlay(boostStartSfx, 15000);
+            }
         }
     }
 
@@ -222,6 +229,11 @@ public class PlayerPowerUpManager : MonoBehaviour
             if (purgingPlayerBody != null)
             {
                 Destroy(purgingPlayerBody);
+            }
+
+            if (boostEndSfx != null && SFXController.Instance != null)
+            {
+                SFXController.Instance.RequestPlay(boostEndSfx, 15000);
             }
         }
     }

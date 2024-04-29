@@ -4,5 +4,5 @@ using UnityEngine;
 
 public interface IPurgable
 {
-    public void Purge();
+    public bool TryPurge();
 }

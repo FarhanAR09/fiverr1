@@ -173,7 +173,7 @@ public class EnemyBehaviour : MonoBehaviour, IStunnable, IPurgable
 
     private void EnterChaseStateTemporarily()
     {
-        if (isStunned)
+        if (isStunned || isRespawning)
             return;
 
         IEnumerator HandleChaseState()
@@ -322,14 +322,17 @@ public class EnemyBehaviour : MonoBehaviour, IStunnable, IPurgable
             psAbsorb.Play();
     }
 
-    public void Purge()
+    public bool TryPurge()
     {
+        if (isRespawning)
+            return false;
         if (stunCoroutine != null)
             StopCoroutine(stunCoroutine);
         if (animator != null)
             animator.Play("enemy_disappear", -1);
         StopCoroutine(Respawn());
         StartCoroutine(Respawn());
+        return true;
     }
 
     private IEnumerator Respawn()
@@ -348,7 +351,7 @@ public class EnemyBehaviour : MonoBehaviour, IStunnable, IPurgable
             emission.rateOverTime = new ParticleSystem.MinMaxCurve(absorbInitialRate * 4);
         }
 
-        yield return new WaitForSeconds(3f);
+        yield return new WaitForSeconds(12f);
 
         isRespawning = false;
         if (gridMover != null)
