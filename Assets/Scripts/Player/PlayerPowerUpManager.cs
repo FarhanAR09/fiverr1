@@ -189,7 +189,7 @@ public class PlayerPowerUpManager : MonoBehaviour
 
     private void StartBoost()
     {
-        int usedCharge = 1;
+        int usedCharge = 0;
         if (AvailableCharge >= usedCharge)
         {
             AvailableCharge -= usedCharge;

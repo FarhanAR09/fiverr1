@@ -11,7 +11,7 @@ public enum EnemyBehaviourState
 }
 
 [RequireComponent(typeof(EnemyPatrol))]
-public class EnemyBehaviour : MonoBehaviour, IStunnable
+public class EnemyBehaviour : MonoBehaviour, IStunnable, IPurgable
 {
     [SerializeField]
     private float speed = 2.2f;
@@ -38,10 +38,13 @@ public class EnemyBehaviour : MonoBehaviour, IStunnable
 
     [SerializeField]
     private ParticleSystem psAbsorb;
+    private float absorbInitialRate;
 
     private Animator animator;
 
     private bool playerLost = false;
+
+    private bool isRespawning = false;
 
     private void Awake()
     {
@@ -58,6 +61,12 @@ public class EnemyBehaviour : MonoBehaviour, IStunnable
     private void Start()
     {
         UpdateVisual(Color.cyan);
+
+        //Particle System
+        if (psAbsorb != null)
+        {
+            absorbInitialRate = psAbsorb.emission.rateOverTime.constant;
+        }
     }
 
     private void OnEnable()
@@ -119,7 +128,7 @@ public class EnemyBehaviour : MonoBehaviour, IStunnable
 
     private void OnTriggerEnter2D(Collider2D collision)
     {
-        if (!isStunned && PlayerInput.GOInstance != null && collision.gameObject.Equals(PlayerInput.GOInstance))
+        if (!isStunned && !isRespawning && PlayerInput.GOInstance != null && collision.gameObject.Equals(PlayerInput.GOInstance))
         {
             if (PlaySceneManager.Instance != null)
             {
@@ -286,7 +295,8 @@ public class EnemyBehaviour : MonoBehaviour, IStunnable
 
         if (stunCoroutine != null)
             StopCoroutine(stunCoroutine);
-        gridMover.Enabled = false;
+        //gridMover.Enabled = false;
+        gridMover.SetActiveState(false);
         isStunned = true;
 
         if (animator != null)
@@ -301,7 +311,8 @@ public class EnemyBehaviour : MonoBehaviour, IStunnable
         if (playerLost)
             return;
 
-        gridMover.Enabled = true;
+        //gridMover.Enabled = true;
+        gridMover.SetActiveState(true);
         isStunned = false;
 
         if (animator != null)
@@ -309,5 +320,50 @@ public class EnemyBehaviour : MonoBehaviour, IStunnable
 
         if (psAbsorb != null)
             psAbsorb.Play();
+    }
+
+    public void Purge()
+    {
+        if (stunCoroutine != null)
+            StopCoroutine(stunCoroutine);
+        if (animator != null)
+            animator.Play("enemy_disappear", -1);
+        StopCoroutine(Respawn());
+        StartCoroutine(Respawn());
+    }
+
+    private IEnumerator Respawn()
+    {
+        isRespawning = true;
+        if (gridMover != null)
+        {
+            gridMover.ForceMoveTo(initialPosition);
+            //gridMover.Enabled = false;
+            gridMover.SetActiveState(false);
+        }
+
+        if (psAbsorb != null)
+        {
+            var emission = psAbsorb.emission;
+            emission.rateOverTime = new ParticleSystem.MinMaxCurve(absorbInitialRate * 4);
+        }
+
+        yield return new WaitForSeconds(3f);
+
+        isRespawning = false;
+        if (gridMover != null)
+        {
+            //gridMover.Enabled = true;
+            gridMover.SetActiveState(true);
+        }
+
+        if (animator != null)
+            animator.Play("enemy_spawn", -1);
+
+        if (psAbsorb != null)
+        {
+            var emission = psAbsorb.emission;
+            emission.rateOverTime = new ParticleSystem.MinMaxCurve(absorbInitialRate);
+        }
     }
 }

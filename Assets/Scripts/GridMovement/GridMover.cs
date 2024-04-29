@@ -205,4 +205,16 @@ public class GridMover : MonoBehaviour, IGridMover
         OnFinishedMoving.Invoke();
         finishedMoving = true;
     }
+
+    public void SetActiveState(bool active)
+    {
+        IEnumerator WaitingForMovement()
+        {
+            if (!active)
+                yield return new WaitUntil(() => finishedMoving);
+            Enabled = active;
+        }
+        StopCoroutine(WaitingForMovement());
+        StartCoroutine(WaitingForMovement());
+    }
 }
