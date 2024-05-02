@@ -191,7 +191,7 @@ public class PlayerPowerUpManager : MonoBehaviour
 
     private void StartBoost()
     {
-        int usedCharge = 0;
+        int usedCharge = 1;
         if (AvailableCharge >= usedCharge)
         {
             AvailableCharge -= usedCharge;
@@ -212,7 +212,7 @@ public class PlayerPowerUpManager : MonoBehaviour
 
             if (boostStartSfx != null && SFXController.Instance != null)
             {
-                SFXController.Instance.RequestPlay(boostStartSfx, 15000);
+                SFXController.Instance.RequestPlay(boostStartSfx, 15000, volumeMultiplier: 0.3f);
             }
         }
     }
@@ -233,7 +233,7 @@ public class PlayerPowerUpManager : MonoBehaviour
 
             if (boostEndSfx != null && SFXController.Instance != null)
             {
-                SFXController.Instance.RequestPlay(boostEndSfx, 15000);
+                SFXController.Instance.RequestPlay(boostEndSfx, 15000, volumeMultiplier: 0.3f);
             }
         }
     }

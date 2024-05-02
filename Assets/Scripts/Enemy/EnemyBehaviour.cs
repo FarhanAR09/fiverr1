@@ -45,6 +45,7 @@ public class EnemyBehaviour : MonoBehaviour, IStunnable, IPurgable
     private bool playerLost = false;
 
     private bool isRespawning = false;
+    private bool inPurge = false;
 
     private void Awake()
     {
@@ -290,6 +291,8 @@ public class EnemyBehaviour : MonoBehaviour, IStunnable, IPurgable
 
     private void DisableByPurge(bool _)
     {
+        inPurge = true;
+
         if (playerLost)
             return;
 
@@ -308,6 +311,8 @@ public class EnemyBehaviour : MonoBehaviour, IStunnable, IPurgable
 
     private void EnableByPurge(bool _)
     {
+        inPurge = false;
+
         if (playerLost)
             return;
 
@@ -352,6 +357,7 @@ public class EnemyBehaviour : MonoBehaviour, IStunnable, IPurgable
         }
 
         yield return new WaitForSeconds(12f);
+        yield return new WaitUntil(() => !inPurge);
 
         isRespawning = false;
         if (gridMover != null)
