@@ -4,7 +4,7 @@ using System.Linq;
 using UnityEngine;
 using UnityEngine.LowLevel;
 
-public class BitsEaterBehaviour : MonoBehaviour, IStunnable, IPurgable
+public class BitsEaterBehaviour : MonoBehaviour, IStunnable, IPurgable, IScoreCollector
 {
     //Grid Mover Properties
     [SerializeField]
@@ -23,6 +23,10 @@ public class BitsEaterBehaviour : MonoBehaviour, IStunnable, IPurgable
     private bool inPurge = false;
 
     private Animator animator;
+
+    //Score Collection
+    public bool CanEatUncorrupted { get; } = false;
+    public bool CanEatCorrupted { get; } = true;
 
     private void Awake()
     {

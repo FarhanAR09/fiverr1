@@ -7,7 +7,7 @@ using UnityEngine.Events;
 using UnityEngine.UIElements;
 using static Unity.Burst.Intrinsics.X86.Avx;
 
-public class PlayerPowerUpManager : MonoBehaviour
+public class PlayerPowerUpManager : MonoBehaviour, IScoreCollector
 {
     private const string BULLETTIME = "BulletTimeSpeed";
     private Coroutine bulletTimeCoroutine;
@@ -43,6 +43,10 @@ public class PlayerPowerUpManager : MonoBehaviour
     private GameObject purgingPlayerBody;
     [SerializeField]
     private AudioClip boostStartSfx, boostEndSfx;
+
+    //Score Collection
+    public bool CanEatUncorrupted { get; } = true;
+    public bool CanEatCorrupted { get; } = true;
 
     private void Awake()
     {

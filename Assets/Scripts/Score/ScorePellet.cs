@@ -48,7 +48,7 @@ public class ScorePellet : MonoBehaviour, IStunnable
 
     private void OnTriggerEnter2D(Collider2D collision)
     {
-        if (canBePicked && collision.gameObject.Equals(PlayerInput.GOInstance))
+        if (canBePicked && collision.TryGetComponent(out IScoreCollector collector) && ((collector.CanEatUncorrupted && !corrupted) || (collector.CanEatCorrupted && corrupted)))
         {
             if (animator != null)
                 animator.Play("pellet_picked");
