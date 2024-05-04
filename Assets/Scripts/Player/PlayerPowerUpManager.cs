@@ -258,4 +258,9 @@ public class PlayerPowerUpManager : MonoBehaviour, IScoreCollector
             yield return new WaitForFixedUpdate();
         }
     }
+
+    public void NotifyBitEaten()
+    {
+        //Do nothing
+    }
 }

@@ -50,6 +50,7 @@ public class ScorePellet : MonoBehaviour, IStunnable
     {
         if (canBePicked && collision.TryGetComponent(out IScoreCollector collector) && ((collector.CanEatUncorrupted && !corrupted) || (collector.CanEatCorrupted && corrupted)))
         {
+            collector.NotifyBitEaten();
             if (animator != null)
                 animator.Play("pellet_picked");
             canBePicked = false;

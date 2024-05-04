@@ -23,6 +23,8 @@ public class BitsEaterBehaviour : MonoBehaviour, IStunnable, IPurgable, IScoreCo
     private bool inPurge = false;
 
     private Animator animator;
+    [SerializeField]
+    private ParticleSystem psEatBit;
 
     //Score Collection
     public bool CanEatUncorrupted { get; } = false;
@@ -246,5 +248,13 @@ public class BitsEaterBehaviour : MonoBehaviour, IStunnable, IPurgable, IScoreCo
 
         //if (psAbsorb != null)
         //    psAbsorb.Play();
+    }
+
+    public void NotifyBitEaten()
+    {
+        if (psEatBit != null)
+        {
+            psEatBit.Emit(8);
+        }
     }
 }

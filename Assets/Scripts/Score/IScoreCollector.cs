@@ -6,4 +6,5 @@ public interface IScoreCollector
 {
     public bool CanEatUncorrupted { get; }
     public bool CanEatCorrupted { get; }
+    public void NotifyBitEaten();
 }
