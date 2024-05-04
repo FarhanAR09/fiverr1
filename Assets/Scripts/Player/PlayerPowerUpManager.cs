@@ -176,7 +176,7 @@ public class PlayerPowerUpManager : MonoBehaviour
 
     private void ThrowEMP()
     {
-        int usedCharge = 1;
+        int usedCharge = 0;
         if (AvailableCharge >= usedCharge)
         {
             if (empControllerPrefab != null)

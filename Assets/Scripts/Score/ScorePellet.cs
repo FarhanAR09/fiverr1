@@ -66,18 +66,23 @@ public class ScorePellet : MonoBehaviour, IStunnable
 
     public void Stun(float duration)
     {
-        if (spriteRenderer != null)
+        if (!corrupted)
         {
-            //spriteRenderer.enabled = false;
-            spriteRenderer.color = Color.red;
+            if (spriteRenderer != null)
+            {
+                //spriteRenderer.enabled = false;
+                spriteRenderer.color = Color.red;
+            }
+            float animationTime = 0;
+            if (psDischarge != null)
+            {
+                psDischarge.Emit(1);
+                animationTime = psDischarge.main.startLifetime.constant;
+            }
+            corrupted = true;
+
+            GameEvents.OnBitCorrupted.Publish(this);
         }
-        float animationTime = 0;
-        if (psDischarge != null)
-        {   
-            psDischarge.Emit(1);
-            animationTime = psDischarge.main.startLifetime.constant;
-        }
-        corrupted = true;
         //Destroy(gameObject, animationTime);
     }
 

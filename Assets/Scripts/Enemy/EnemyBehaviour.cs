@@ -76,11 +76,10 @@ public class EnemyBehaviour : MonoBehaviour, IStunnable, IPurgable
         {
             gridMover.OnFinishedMoving.AddListener(FinishedMoving);
             gridMover.OnStartedMoving.AddListener(StartedMoving);
-
-            GameEvents.OnPlayerLose.Add(HandleLosing);
         }
         enemyPatrol.OnPlayerDetected.AddListener(EnterChaseStateTemporarily);
 
+        GameEvents.OnPlayerLose.Add(HandleLosing);
         GameEvents.OnPurgeWarning.Add(DisableByPurge);
         GameEvents.OnPurgeFinished.Add(EnableByPurge);
     }
@@ -144,11 +143,10 @@ public class EnemyBehaviour : MonoBehaviour, IStunnable, IPurgable
         {
             gridMover.OnFinishedMoving.RemoveListener(FinishedMoving);
             gridMover.OnStartedMoving.RemoveListener(StartedMoving);
-
-            GameEvents.OnPlayerLose.Remove(HandleLosing);
         }
         enemyPatrol.OnPlayerDetected.RemoveListener(EnterChaseStateTemporarily);
 
+        GameEvents.OnPlayerLose.Remove(HandleLosing);
         GameEvents.OnPurgeWarning.Remove(DisableByPurge);
         GameEvents.OnPurgeFinished.Remove(EnableByPurge);
     }
