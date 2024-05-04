@@ -223,7 +223,7 @@ public class EnemyBehaviour : MonoBehaviour, IStunnable, IPurgable
 
     public void Stun(float duration)
     {
-        if (playerLost)
+        if (playerLost || isRespawning)
             return;
 
         if (gridMover != null)
@@ -232,12 +232,8 @@ public class EnemyBehaviour : MonoBehaviour, IStunnable, IPurgable
             if (stunCoroutine != null)
             {
                 StopCoroutine(stunCoroutine);
-
-                //Stunned by outside factors? Don't restart
-                if (isStunned)
-                {
-                    return;
-                }
+                gridMover.Enabled = true;
+                isStunned = false;
             }
             IEnumerator StunBehavior()
             {
