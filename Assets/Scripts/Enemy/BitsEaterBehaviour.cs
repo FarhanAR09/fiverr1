@@ -24,7 +24,9 @@ public class BitsEaterBehaviour : MonoBehaviour, IStunnable, IPurgable, IScoreCo
 
     private Animator animator;
     [SerializeField]
-    private ParticleSystem psEatBit;
+    private ParticleSystem psEatBit, psSpawning;
+    [SerializeField]
+    private SpriteRenderer spriteRenderer;
 
     //Score Collection
     public bool CanEatUncorrupted { get; } = false;
@@ -37,6 +39,18 @@ public class BitsEaterBehaviour : MonoBehaviour, IStunnable, IPurgable, IScoreCo
         gridMover.SetUp(transform, speed, initialPosition, initialDirection);
 
         TryGetComponent(out animator);
+
+        if (spriteRenderer != null)
+        {
+            spriteRenderer.material.SetFloat("_Intensity", 4);
+            spriteRenderer.material.SetColor("_Color", Color.red);
+        }
+
+        if (psSpawning != null)
+        {
+            var emission = psSpawning.emission;
+            emission.enabled = false;
+        }
     }
 
     private void OnEnable()
@@ -189,6 +203,11 @@ public class BitsEaterBehaviour : MonoBehaviour, IStunnable, IPurgable, IScoreCo
             //gridMover.Enabled = false;
             gridMover.SetActiveState(false);
         }
+        if (psSpawning != null)
+        {
+            var emission = psSpawning.emission;
+            emission.enabled = true;
+        }
 
         //if (psAbsorb != null)
         //{
@@ -208,6 +227,12 @@ public class BitsEaterBehaviour : MonoBehaviour, IStunnable, IPurgable, IScoreCo
 
         if (animator != null)
             animator.Play("enemy_spawn", -1);
+
+        if (psSpawning != null)
+        {
+            var emission = psSpawning.emission;
+            emission.enabled = false;
+        }
 
         //if (psAbsorb != null)
         //{

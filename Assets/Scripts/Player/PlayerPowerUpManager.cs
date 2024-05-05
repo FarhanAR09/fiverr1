@@ -180,7 +180,7 @@ public class PlayerPowerUpManager : MonoBehaviour, IScoreCollector
 
     private void ThrowEMP()
     {
-        int usedCharge = 0;
+        int usedCharge = 1;
         if (AvailableCharge >= usedCharge)
         {
             if (empControllerPrefab != null)
