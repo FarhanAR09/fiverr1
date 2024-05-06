@@ -1,9 +1,13 @@
 using System.Collections;
 using System.Collections.Generic;
+using TMPro;
 using UnityEngine;
 using UnityEngine.SceneManagement;
+using UnityEngine.UI;
+using UnityEngine.UIElements;
 #if UNITY_EDITOR
 using static UnityEditor.ShaderGraph.Internal.KeywordDependentCollection;
+using static UnityEngine.Rendering.DebugUI;
 #endif
 
 [DefaultExecutionOrder(-9999)]
@@ -13,6 +17,10 @@ public class PlaySceneManager : MonoBehaviour
 
     [SerializeField]
     private Transform LoseCanvas;
+    [SerializeField]
+    private GameObject panelLose, panelLeaderboardInput;
+    [SerializeField]
+    private TMP_InputField nameInput;
     [SerializeField]
     private AnimationCurve LoseAnimation;
     private readonly Vector2 StartLosePosition = new(14.4f, 32f), EndLosePosition = new(14.4f, 7.2f);
@@ -28,6 +36,11 @@ public class PlaySceneManager : MonoBehaviour
             return;
         }
         Instance = this;
+
+        if (LoseCanvas != null)
+        {
+            LoseCanvas.gameObject.SetActive(false);
+        }
     }
 
     private void OnEnable()
@@ -41,6 +54,15 @@ public class PlaySceneManager : MonoBehaviour
         if (LoseCanvas != null)
         {
             LoseCanvas.position = StartLosePosition;
+        }
+
+        if (panelLose != null)
+        {
+            panelLose.SetActive(true);
+        }
+        if (panelLeaderboardInput != null)
+        {
+            panelLeaderboardInput.SetActive(false);
         }
 
         if (MusicController.instance != null)
@@ -70,6 +92,18 @@ public class PlaySceneManager : MonoBehaviour
 
             if (LoseCanvas != null)
             {
+                LoseCanvas.gameObject.SetActive(true);
+
+                bool newLeaderMade = LeaderboardDataManager.CheckLeaderboardEligibility(ScoreCounter.Score);
+                if (panelLose != null)
+                {
+                    panelLose.SetActive(!newLeaderMade);
+                }
+                if (panelLeaderboardInput != null)
+                {
+                    panelLeaderboardInput.SetActive(newLeaderMade);
+                }
+
                 if (LoseAnimation != null)
                 {
                     IEnumerator AnimationLoop()
@@ -116,5 +150,24 @@ public class PlaySceneManager : MonoBehaviour
         float currentHighscore = PlayerPrefs.HasKey("highscore") ? Mathf.Max(PlayerPrefs.GetFloat("highscore"), ScoreCounter.Score) : 0;
         PlayerPrefs.SetFloat("highscore", currentHighscore);
         PlayerPrefs.Save();
+    }
+
+    public void UpdateLeaderboard()
+    {
+        string name = "Unnamed";
+        if (nameInput != null && nameInput.text != "")
+        {
+            name = nameInput.text;
+        }
+        LeaderboardDataManager.TryAddToList(name, ScoreCounter.Score);
+
+        if (panelLose != null)
+        {
+            panelLose.SetActive(true);
+        }
+        if (panelLeaderboardInput != null)
+        {
+            panelLeaderboardInput.SetActive(false);
+        }
     }
 }

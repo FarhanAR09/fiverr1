@@ -11,7 +11,7 @@ using UnityEngine.SocialPlatforms.Impl;
 public class GameUIHandler : MonoBehaviour
 {
     [SerializeField]
-    private TextMeshProUGUI scoreDisplay, gameSpeedDisplay, loseScoreDisplay;
+    private TextMeshProUGUI scoreDisplay, gameSpeedDisplay, loseScoreDisplay, leaderboardScoreDisplay;
 
     private Animator gameSpeedDisplayAnimator;
 
@@ -26,6 +26,7 @@ public class GameUIHandler : MonoBehaviour
         GameSpeedManager.OnGameSpeedUpdated.AddListener(UpdateGameSpeedDisplay);
 
         GameEvents.OnPlayerLose.Add(UpdateLoseDisplay);
+        GameEvents.OnPlayerLose.Add(UpdateLeaderboardScoreDisplay);
 
         GameEvents.OnPlayerStopSlowDown.Add(FlashRedReduceGameSpeed);
     }
@@ -36,6 +37,7 @@ public class GameUIHandler : MonoBehaviour
         GameSpeedManager.OnGameSpeedUpdated.RemoveListener(UpdateGameSpeedDisplay);
 
         GameEvents.OnPlayerLose.Remove(UpdateLoseDisplay);
+        GameEvents.OnPlayerLose.Remove(UpdateLeaderboardScoreDisplay);
 
         GameEvents.OnPlayerStopSlowDown.Remove(FlashRedReduceGameSpeed);
     }
@@ -65,5 +67,13 @@ public class GameUIHandler : MonoBehaviour
     {
         if (gameSpeedDisplayAnimator != null)
             gameSpeedDisplayAnimator.Play("gamespeed_flicker");
+    }
+
+    private void UpdateLeaderboardScoreDisplay(bool _)
+    {
+        if (leaderboardScoreDisplay != null)
+        {
+            leaderboardScoreDisplay.SetText($"{ScoreCounter.Score:F0}");
+        }
     }
 }
