@@ -10,7 +10,7 @@ public class MainMenuManager : MonoBehaviour
     [SerializeField]
     private TextMeshProUGUI highscoreDisplay;
     [SerializeField]
-    private GameObject panelMainMenu, panelLeaderboard, panelHowToPlay;
+    private GameObject panelMainMenu, panelLeaderboard, panelHowToPlay, panelSettings;
     [SerializeField]
     private TextMeshProUGUI leaderNamesDisplay, leaderScoresDisplay;
 
@@ -39,6 +39,10 @@ public class MainMenuManager : MonoBehaviour
         if (panelHowToPlay != null)
         {
             panelHowToPlay.SetActive(false);
+        }
+        if (panelSettings != null)
+        {
+            panelSettings.SetActive(false);
         }
     }
 
@@ -105,5 +109,21 @@ public class MainMenuManager : MonoBehaviour
             panelMainMenu.SetActive(true);
         if (panelHowToPlay != null)
             panelHowToPlay.SetActive(false);
+    }
+
+    public void OpenSettings()
+    {
+        if (panelSettings != null)
+            panelSettings.SetActive(true);
+        if (panelMainMenu != null)
+            panelMainMenu.SetActive(false);
+    }
+
+    public  void CloseSettings()
+    {
+        if (panelSettings != null)
+            panelSettings.SetActive(false);
+        if (panelMainMenu != null)
+            panelMainMenu.SetActive(true);
     }
 }
