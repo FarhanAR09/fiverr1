@@ -1200,7 +1200,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_text: SETTINGS
+  m_text: HOW TO PLAY
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: a302e75e5f9dbf642891b0f8484effb1, type: 2}
   m_sharedMaterial: {fileID: 2100000, guid: 96165a62d80b1374d86f092139d5f990, type: 2}
@@ -7740,7 +7740,7 @@ GameObject:
   - component: {fileID: 994989377}
   - component: {fileID: 994989376}
   m_Layer: 5
-  m_Name: Description
+  m_Name: Mechanics Description
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -7984,7 +7984,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!224 &1063568005
 RectTransform:
   m_ObjectHideFlags: 0
@@ -8109,7 +8109,7 @@ MonoBehaviour:
   m_Colors:
     m_NormalColor: {r: 1, g: 1, b: 1, a: 1}
     m_HighlightedColor: {r: 0.9607843, g: 0.9607843, b: 0.9607843, a: 1}
-    m_PressedColor: {r: 0.78431374, g: 0.78431374, b: 0.78431374, a: 1}
+    m_PressedColor: {r: 0.3773585, g: 0.3773585, b: 0.3773585, a: 1}
     m_SelectedColor: {r: 0.9607843, g: 0.9607843, b: 0.9607843, a: 1}
     m_DisabledColor: {r: 0.78431374, g: 0.78431374, b: 0.78431374, a: 0.5019608}
     m_ColorMultiplier: 1
@@ -8129,7 +8129,19 @@ MonoBehaviour:
   m_TargetGraphic: {fileID: 1070255728}
   m_OnClick:
     m_PersistentCalls:
-      m_Calls: []
+      m_Calls:
+      - m_Target: {fileID: 2055922799}
+        m_TargetAssemblyTypeName: HowToPlayPageManager, Assembly-CSharp
+        m_MethodName: GoToNextHowTo
+        m_Mode: 1
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
 --- !u!114 &1070255728
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -8387,7 +8399,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!224 &1270967080
 RectTransform:
   m_ObjectHideFlags: 0
@@ -8681,7 +8693,7 @@ GameObject:
   - component: {fileID: 1334461698}
   - component: {fileID: 1334461697}
   m_Layer: 5
-  m_Name: Image
+  m_Name: Mechanics Image
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -8701,10 +8713,10 @@ RectTransform:
   m_Children: []
   m_Father: {fileID: 1860375377}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
-  m_AnchorMin: {x: 0.3, y: 0.45}
-  m_AnchorMax: {x: 0.3, y: 0.45}
-  m_AnchoredPosition: {x: 0, y: 0}
-  m_SizeDelta: {x: 237, y: 228}
+  m_AnchorMin: {x: 0, y: 0.5}
+  m_AnchorMax: {x: 1, y: 0.5}
+  m_AnchoredPosition: {x: -6.39702, y: -0.9018402}
+  m_SizeDelta: {x: 205.0149, y: 228}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &1334461697
 MonoBehaviour:
@@ -8922,7 +8934,7 @@ MonoBehaviour:
       m_Calls:
       - m_Target: {fileID: 2071818249}
         m_TargetAssemblyTypeName: MainMenuManager, Assembly-CSharp
-        m_MethodName: CloseLeaderboard
+        m_MethodName: CloseHowToPlay
         m_Mode: 1
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
@@ -14224,7 +14236,7 @@ MonoBehaviour:
   m_Colors:
     m_NormalColor: {r: 1, g: 1, b: 1, a: 1}
     m_HighlightedColor: {r: 0.9607843, g: 0.9607843, b: 0.9607843, a: 1}
-    m_PressedColor: {r: 0.78431374, g: 0.78431374, b: 0.78431374, a: 1}
+    m_PressedColor: {r: 0.3773585, g: 0.3773585, b: 0.3773585, a: 1}
     m_SelectedColor: {r: 0.9607843, g: 0.9607843, b: 0.9607843, a: 1}
     m_DisabledColor: {r: 0.78431374, g: 0.78431374, b: 0.78431374, a: 0.5019608}
     m_ColorMultiplier: 1
@@ -14244,7 +14256,19 @@ MonoBehaviour:
   m_TargetGraphic: {fileID: 1784741622}
   m_OnClick:
     m_PersistentCalls:
-      m_Calls: []
+      m_Calls:
+      - m_Target: {fileID: 2055922799}
+        m_TargetAssemblyTypeName: HowToPlayPageManager, Assembly-CSharp
+        m_MethodName: GoToPreviousHowTo
+        m_Mode: 1
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
 --- !u!114 &1784741622
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -14378,7 +14402,7 @@ GameObject:
   - component: {fileID: 1873817631}
   - component: {fileID: 1873817630}
   m_Layer: 5
-  m_Name: Settings Button
+  m_Name: How to Play Button
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -14450,7 +14474,7 @@ MonoBehaviour:
       m_Calls:
       - m_Target: {fileID: 2071818249}
         m_TargetAssemblyTypeName: MainMenuManager, Assembly-CSharp
-        m_MethodName: OpenSettings
+        m_MethodName: OpenHowToPlay
         m_Mode: 1
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
@@ -14862,6 +14886,60 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 86caa2b83b5a902409be3c7a7184428d, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+--- !u!1 &2055922798
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 2055922800}
+  - component: {fileID: 2055922799}
+  m_Layer: 0
+  m_Name: HowToPlayPageManager
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!114 &2055922799
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2055922798}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 5807beef02b8adf45a8f34f674b31edc, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  pageData:
+  - title: Movement
+    desc: keys aaaaaaaaaaaaaaaa
+    imageSprite: {fileID: 21300000, guid: b5fcddcc9f7c9e249800b81c990ca598, type: 3}
+  - title: Batpery
+    desc: spooky scary enemiessss aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa
+    imageSprite: {fileID: 21300000, guid: 64d508f8db6e303448286182ccbf7846, type: 3}
+  titleDisplay: {fileID: 2087325663}
+  descDisplay: {fileID: 994989376}
+  imageDisplay: {fileID: 1334461697}
+--- !u!4 &2055922800
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2055922798}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 14.686652, y: 10.005326, z: 0.105034046}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1001 &2070894147
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -14951,6 +15029,7 @@ MonoBehaviour:
   highscoreDisplay: {fileID: 290388897}
   panelMainMenu: {fileID: 1063568004}
   panelLeaderboard: {fileID: 1270967079}
+  panelHowToPlay: {fileID: 1860375376}
   leaderNamesDisplay: {fileID: 135129281}
   leaderScoresDisplay: {fileID: 291287484}
 --- !u!4 &2071818250
@@ -14980,7 +15059,7 @@ GameObject:
   - component: {fileID: 2087325664}
   - component: {fileID: 2087325663}
   m_Layer: 5
-  m_Name: Mechanics
+  m_Name: Mechanics Titile
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -15193,3 +15272,4 @@ SceneRoots:
   - {fileID: 2070894147}
   - {fileID: 571947131}
   - {fileID: 627532266}
+  - {fileID: 2055922800}

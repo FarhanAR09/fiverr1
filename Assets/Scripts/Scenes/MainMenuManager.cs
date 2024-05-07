@@ -10,7 +10,7 @@ public class MainMenuManager : MonoBehaviour
     [SerializeField]
     private TextMeshProUGUI highscoreDisplay;
     [SerializeField]
-    private GameObject panelMainMenu, panelLeaderboard;
+    private GameObject panelMainMenu, panelLeaderboard, panelHowToPlay;
     [SerializeField]
     private TextMeshProUGUI leaderNamesDisplay, leaderScoresDisplay;
 
@@ -36,6 +36,10 @@ public class MainMenuManager : MonoBehaviour
         {
             panelLeaderboard.SetActive(false);
         }
+        if (panelHowToPlay != null)
+        {
+            panelHowToPlay.SetActive(false);
+        }
     }
 
     public void Play()
@@ -50,14 +54,18 @@ public class MainMenuManager : MonoBehaviour
 
     public void CloseLeaderboard()
     {
-        panelMainMenu.SetActive(true);
-        panelLeaderboard.SetActive(false);
+        if (panelMainMenu != null)
+            panelMainMenu.SetActive(true);
+        if (panelLeaderboard != null)
+            panelLeaderboard.SetActive(false);
     }
 
     public void OpenLeaderboard()
     {
-        panelMainMenu.SetActive(false);
-        panelLeaderboard.SetActive(true);
+        if (panelMainMenu != null)
+            panelMainMenu.SetActive(false);
+        if (panelLeaderboard != null)
+            panelLeaderboard.SetActive(true);
         List<KeyValuePair<string, float>> namesAndScores = LeaderboardDataManager.GetListSorted();
         if (leaderNamesDisplay)
         {
@@ -79,8 +87,23 @@ public class MainMenuManager : MonoBehaviour
         }
     }
 
-    public void OpenSettings()
+    public void OpenHowToPlay()
     {
-        Debug.LogWarning("Settings Unimplemented");
+        if (panelMainMenu != null)
+        {
+            panelMainMenu.SetActive(false);
+        }
+        if (panelHowToPlay != null)
+        {
+            panelHowToPlay.SetActive(true);
+        }
+    }
+
+    public void CloseHowToPlay()
+    {
+        if (panelMainMenu != null)
+            panelMainMenu.SetActive(true);
+        if (panelHowToPlay != null)
+            panelHowToPlay.SetActive(false);
     }
 }
