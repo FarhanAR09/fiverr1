@@ -9,4 +9,9 @@ public static class GameConstants
     public const float LEVELUPSPEEDUP = 0.1f;
     public const float PLAYERSTOPSLOWDOWN = 0.1f;
     #endregion
+
+    #region Settings
+    public const string SOUNDVOLUME = "soundVolume";
+    public const string MUSICVOLUME = "musicVolume";
+    #endregion
 }

@@ -5,15 +5,28 @@ using UnityEngine;
 [RequireComponent(typeof(AudioSource))]
 public class MusicController : MonoBehaviour
 {
-    public static MusicController instance;
+    private static float settingsVolumeMultiplier = 1f;
+    public static float SettingsVolumeMultiplier
+    {
+        get
+        {
+            return Mathf.Clamp(settingsVolumeMultiplier, 0f, 1f);
+        }
+        set
+        {
+            settingsVolumeMultiplier = Mathf.Clamp(value, 0f, 1f);
+        }
+    }
+
+    public static MusicController Instance;
     private AudioSource src;
 
     private void Awake()
     {
         //Singleton
-        if (instance == null && instance != this)
+        if (Instance == null && Instance != this)
         {
-            instance = this;
+            Instance = this;
             DontDestroyOnLoad(gameObject);
         }
         else
@@ -32,6 +45,7 @@ public class MusicController : MonoBehaviour
 
     public void Play()
     {
+        UpdateVolume();
         src.Play();
     }
 
@@ -48,5 +62,10 @@ public class MusicController : MonoBehaviour
     public void Stop()
     {
         src.Stop();
+    }
+
+    public void UpdateVolume()
+    {
+        src.volume = SettingsVolumeMultiplier;
     }
 }

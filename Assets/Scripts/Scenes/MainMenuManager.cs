@@ -22,10 +22,10 @@ public class MainMenuManager : MonoBehaviour
         if (highscoreDisplay != null)
             highscoreDisplay.SetText($"HIGHSCORE: {string.Format("{0:0.##}", highscore)}");
 
-        if (MusicController.instance != null)
+        if (MusicController.Instance != null)
         {
-            MusicController.instance.Stop();
-            MusicController.instance.Play();
+            MusicController.Instance.Stop();
+            MusicController.Instance.Play();
         }
 
         if (panelMainMenu != null)

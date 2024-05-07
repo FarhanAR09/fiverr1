@@ -65,10 +65,10 @@ public class PlaySceneManager : MonoBehaviour
             panelLeaderboardInput.SetActive(false);
         }
 
-        if (MusicController.instance != null)
+        if (MusicController.Instance != null)
         {
-            MusicController.instance.Stop();
-            MusicController.instance.Play();
+            MusicController.Instance.Stop();
+            MusicController.Instance.Play();
         }
     }
 

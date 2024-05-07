@@ -41,7 +41,7 @@ public class SFXPlayer : MonoBehaviour
         CurrentPriority = priority;
         audioSource.Stop();
         audioSource.clip = clip;
-        audioSource.volume = Mathf.Max(0, Mathf.Min(1, volumeMultiplier));
+        audioSource.volume = Mathf.Clamp(volumeMultiplier, 0f, 1f) * SFXController.SettingsVolumeMultiplier;
         audioSource.pitch = (timePitching ? Time.timeScale : 1) * pitchMultiplier;
         audioSource.Play();
     }

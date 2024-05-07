@@ -11,6 +11,17 @@ using static UnityEditor.ShaderGraph.Internal.KeywordDependentCollection;
 [DefaultExecutionOrder(-4999)]
 public class SFXController : MonoBehaviour
 {
+    private static float settingsVolumeMultiplier = 1f;
+    public static float SettingsVolumeMultiplier
+    {
+        get { 
+            return Mathf.Clamp(settingsVolumeMultiplier, 0f, 1f);
+        }
+        set { 
+            settingsVolumeMultiplier = Mathf.Clamp(value, 0f, 1f);
+        }
+    }
+
     private static SFXController instance;
     public static SFXController Instance {
         get

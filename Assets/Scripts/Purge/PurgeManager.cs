@@ -45,9 +45,9 @@ public class PurgeManager : MonoBehaviour
         {
             GameEvents.OnPurgeFinished.Publish(true);
         }
-        if (MusicController.instance != null)
+        if (MusicController.Instance != null)
         {
-            MusicController.instance.UnPause();
+            MusicController.Instance.UnPause();
         }
         if (audioSource != null)
         {
