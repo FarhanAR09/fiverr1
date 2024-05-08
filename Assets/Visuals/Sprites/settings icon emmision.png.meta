@@ -1,5 +1,5 @@
 fileFormatVersion: 2
-guid: 41d890cc61c59f245873b773e3a9ff8e
+guid: 117615217da287b428abebcf5b31bffc
 TextureImporter:
   internalIDToNameTable: []
   externalObjects: {}
@@ -131,9 +131,7 @@ TextureImporter:
     indices: 
     edges: []
     weights: []
-    secondaryTextures:
-    - texture: {fileID: 2800000, guid: 117615217da287b428abebcf5b31bffc, type: 3}
-      name: _Emmision
+    secondaryTextures: []
     nameFileIdTable: {}
   mipmapLimitGroupName: 
   pSDRemoveMatte: 0
