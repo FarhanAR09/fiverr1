@@ -14,7 +14,7 @@ public class BitsEaterBehaviour : MonoBehaviour, IStunnable, IPurgable, IScoreCo
     [SerializeField]
     private MovementDirection initialDirection = MovementDirection.Right;
     private GridMover gridMover;
-    private bool finishedMoving = true;
+    //private bool finishedMoving = true;
 
     private Transform targetTransform = null;
     
@@ -81,12 +81,12 @@ public class BitsEaterBehaviour : MonoBehaviour, IStunnable, IPurgable, IScoreCo
 
     private void StartedMoving()
     {
-        finishedMoving = false;
+        //finishedMoving = false;
     }
 
     private void FinishedMoving()
     {
-        finishedMoving = true;
+        //finishedMoving = true;
     }
 
     private void DetermineDirection()
