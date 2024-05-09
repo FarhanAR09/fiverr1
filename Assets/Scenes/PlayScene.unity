@@ -24753,7 +24753,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_Sprite: {fileID: 21300000, guid: 41d890cc61c59f245873b773e3a9ff8e, type: 3}
+  m_Sprite: {fileID: 21300000, guid: a84e99f2321139341b1e744f994c80a7, type: 3}
   m_Type: 0
   m_PreserveAspect: 1
   m_FillCenter: 1
@@ -24847,7 +24847,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_Sprite: {fileID: 21300000, guid: 41d890cc61c59f245873b773e3a9ff8e, type: 3}
+  m_Sprite: {fileID: 21300000, guid: 94a1663ca5a8b3746a9bb25450817e43, type: 3}
   m_Type: 0
   m_PreserveAspect: 1
   m_FillCenter: 1
@@ -26376,7 +26376,7 @@ Canvas:
   m_AdditionalShaderChannelsFlag: 25
   m_UpdateRectTransformForStandalone: 0
   m_SortingLayerID: 0
-  m_SortingOrder: 20000
+  m_SortingOrder: 19000
   m_TargetDisplay: 0
 --- !u!224 &1931331308
 RectTransform:
@@ -42067,7 +42067,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_Sprite: {fileID: 21300000, guid: 41d890cc61c59f245873b773e3a9ff8e, type: 3}
+  m_Sprite: {fileID: 21300000, guid: 3bca4d844ca02984fbf394882ac58d27, type: 3}
   m_Type: 0
   m_PreserveAspect: 1
   m_FillCenter: 1
