@@ -123,6 +123,33 @@ public class EnemyBehaviour : MonoBehaviour, IStunnable, IPurgable
                     gridMover.InputDirection = minimalDirectionPair.Key;
                 }
             }
+
+            spriteRenderer.transform.localRotation = gridMover.InputDirection == MovementDirection.Left ? Quaternion.Euler(0f, 180f, 0f) : Quaternion.Euler(0f, 0f, 0f);
+            if (animator != null)
+            {
+                if (gridMover.InputDirection == MovementDirection.Left || gridMover.InputDirection == MovementDirection.Right)
+                {
+                    if (seekState == EnemyBehaviourState.Patrolling)
+                        animator.Play("enemy_idle", -1);
+                    else
+                        animator.Play("enemy_chase", -1);
+
+                }
+                else if (gridMover.InputDirection == MovementDirection.Up)
+                {
+                    if (seekState == EnemyBehaviourState.Patrolling)
+                        animator.Play("enemy_idle_up", -1);
+                    else
+                        animator.Play("enemy_chase_up", -1);
+                }
+                else
+                {
+                    if (seekState == EnemyBehaviourState.Patrolling)
+                        animator.Play("enemy_idle_down", -1);
+                    else
+                        animator.Play("enemy_chase_down", -1);
+                }
+            }
         }
     }
 
