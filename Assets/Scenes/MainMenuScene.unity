@@ -16269,48 +16269,47 @@ MonoBehaviour:
     desc: Player can move with the ARROW KEYS or WASD. Avoid the enemies!
     imageSprite: {fileID: 21300000, guid: b5fcddcc9f7c9e249800b81c990ca598, type: 3}
   - title: Bits and Cache
-    desc: Collect the bits to earn SCORE!\nBits is collected as CACHE into CACHE
-      STORAGE
-    imageSprite: {fileID: 21300000, guid: 64d508f8db6e303448286182ccbf7846, type: 3}
+    desc: Collect the bits to earn SCORE! Bits is collected as CACHE into CACHE STORAGE
+    imageSprite: {fileID: 21300000, guid: 28948192960a14540b658e398d32af92, type: 3}
   - title: Flushing the Cache
     desc: Player needs to FLUSH the CACHE by activating the gates in order. Flushing
       will increase the GAME SPEED that multiplies the score you get.
-    imageSprite: {fileID: 21300000, guid: 64d508f8db6e303448286182ccbf7846, type: 3}
+    imageSprite: {fileID: 21300000, guid: c4dbc616d02bcdd40b77ddbdc9f53b4c, type: 3}
   - title: Purge
     desc: If the CACHE STORAGE is full, it will release its cache as lasers that
       can kill you in the PURGE.
-    imageSprite: {fileID: 21300000, guid: 64d508f8db6e303448286182ccbf7846, type: 3}
+    imageSprite: {fileID: 21300000, guid: a1b393b7e30b0c7459fbee389ff836fc, type: 3}
   - title: Reduce Game Speed
     desc: "If you don\u2019t move, the GAME SPEED is reduced 0.1 every second. Remember
       that the GAME SPEED multiplies the score you get."
-    imageSprite: {fileID: 21300000, guid: 64d508f8db6e303448286182ccbf7846, type: 3}
+    imageSprite: {fileID: 21300000, guid: 4ba1092b0fe2a3d49b05fbe3d6f5c92a, type: 3}
   - title: 'Enemy: Electric Ghost'
     desc: They patrols the map or chase you if you are close enough. EMP stuns them
       and BOOST kills them. They will respawn after a while.
-    imageSprite: {fileID: 21300000, guid: 64d508f8db6e303448286182ccbf7846, type: 3}
+    imageSprite: {fileID: 21300000, guid: a796d4fbb4fc1f445823159cddf6a89f, type: 3}
   - title: 'Enemy: Bits Eater'
     desc: They patrols the map to look for CORRUPTED BITS to be eaten. They will
       collect them for you (and reduce your score). How kind.
-    imageSprite: {fileID: 21300000, guid: 64d508f8db6e303448286182ccbf7846, type: 3}
+    imageSprite: {fileID: 21300000, guid: ff5aaa7ac284a19469b675cf5c0752aa, type: 3}
   - title: 'Power Up: Battery and Charge'
     desc: To activate your powers, you need a CHARGE collected from these batteries.
       One BATTERIES contain one CHARGE. Batteries will be FULLY CHARGED after 10
       seconds.
-    imageSprite: {fileID: 21300000, guid: 64d508f8db6e303448286182ccbf7846, type: 3}
+    imageSprite: {fileID: 21300000, guid: cf3126c4aa39b9d4ea17a8f6071e0df5, type: 3}
   - title: 'Power Up: Cooldown'
     desc: Your powers is available if they are not on COOLDOWN. Every power has different
       cooldown time.
-    imageSprite: {fileID: 21300000, guid: 64d508f8db6e303448286182ccbf7846, type: 3}
+    imageSprite: {fileID: 21300000, guid: 731c1172c9ffa52449d673714c7489be, type: 3}
   - title: 'Power Up: EMP'
     desc: Press V to Throw an EMP into an area. EMP stays in that area for a while.
-    imageSprite: {fileID: 21300000, guid: 64d508f8db6e303448286182ccbf7846, type: 3}
+    imageSprite: {fileID: 21300000, guid: 1722cd65e1d6c2e4da998fc311db14f8, type: 3}
   - title: 'Power Up: Bullet Time'
     desc: Toggle with SPACE to slow down time 10 times to give you time to think.
-    imageSprite: {fileID: 21300000, guid: 64d508f8db6e303448286182ccbf7846, type: 3}
+    imageSprite: {fileID: 21300000, guid: 6cb7b87c5a3368a42ac68b907d5a945f, type: 3}
   - title: 'Power Up: Boost'
     desc: Dash quickly into a straight line and kills anything that touches you or
       your trails.
-    imageSprite: {fileID: 21300000, guid: 64d508f8db6e303448286182ccbf7846, type: 3}
+    imageSprite: {fileID: 21300000, guid: 7b2f3f97c2ab4e04fb72ba0d4972962a, type: 3}
   titleDisplay: {fileID: 2087325663}
   descDisplay: {fileID: 994989376}
   imageDisplay: {fileID: 1334461697}
