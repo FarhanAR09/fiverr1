@@ -49,31 +49,45 @@ public class PlayerPowerUpManager : MonoBehaviour, IScoreCollector
     public bool CanEatCorrupted { get; } = true;
 
     //EMP Cooldown
-    private readonly float empCdDuration = 3f;
-    private float empCdTime = 0;
+    private float EmpCdDuration
+    {
+        get => powersHaveCooldown? 3f : powerInstantCooldownDuration;
+    }
+private float empCdTime = 0;
     private bool empCdProgressing = true;
     private float EmpCdProgress
     {
-        get => Mathf.Clamp(empCdTime / empCdDuration, 0f, 1f);
+        get => Mathf.Clamp(empCdTime / EmpCdDuration, 0f, 1f);
     }
 
     //Bullet Time Cooldown
-    private readonly float bullettimeCdDuration = 1f;
+    private float BullettimeCdDuration
+    {
+        get => powersHaveCooldown ? 1f : powerInstantCooldownDuration;
+    }
     private float bullettimeCdTime = 0;
     private bool bullettimeCdProgressing = true;
     private float BullettimeCdProgress
     {
-        get => Mathf.Clamp(bullettimeCdTime / bullettimeCdDuration, 0f, 1f);
+        get => Mathf.Clamp(bullettimeCdTime / BullettimeCdDuration, 0f, 1f);
     }
 
     //Boost Cooldown
-    private readonly float boostCdDuration = 8f;
+    private float BoostCdDuration
+    {
+        get => powersHaveCooldown ? 8f : powerInstantCooldownDuration;
+    }
     private float boostCdTime = 0;
     private bool boostCdProgressing = true;
     private float BoostCdProgress
     {
-        get => Mathf.Clamp(boostCdTime / boostCdDuration, 0f, 1f);
+        get => Mathf.Clamp(boostCdTime / BoostCdDuration, 0f, 1f);
     }
+
+    //Debugging
+    private bool powersRequireCharge = true;
+    private bool powersHaveCooldown = true;
+    private readonly float powerInstantCooldownDuration = 0.1f;
 
     private void Awake()
     {
@@ -101,6 +115,9 @@ public class PlayerPowerUpManager : MonoBehaviour, IScoreCollector
         }
 
         GameEvents.OnPlayerLose.Add(DeactivateBulletTime);
+
+        GameEvents.OnSwitchRequireCharge.Add(PowerRequireChargeState);
+        GameEvents.OnSwitchPowersCooldown.Add(PowersHaveCooldownState);
     }
 
     private void OnDisable()
@@ -122,6 +139,9 @@ public class PlayerPowerUpManager : MonoBehaviour, IScoreCollector
         }
 
         GameEvents.OnPlayerLose.Remove(DeactivateBulletTime);
+
+        GameEvents.OnSwitchRequireCharge.Remove(PowerRequireChargeState);
+        GameEvents.OnSwitchPowersCooldown.Remove(PowersHaveCooldownState);
     }
 
     private void OnDestroy()
@@ -138,7 +158,7 @@ public class PlayerPowerUpManager : MonoBehaviour, IScoreCollector
         //EMP Cooldown
         if (empCdProgressing)
         {
-            if (empCdTime < empCdDuration)
+            if (empCdTime < EmpCdDuration)
             {
                 empCdTime += Time.fixedDeltaTime;
                 GameEvents.OnEMPCooldownUpdated.Publish(EmpCdProgress);
@@ -153,7 +173,7 @@ public class PlayerPowerUpManager : MonoBehaviour, IScoreCollector
         //Bullet Time Cooldown
         if (bullettimeCdProgressing)
         {
-            if (bullettimeCdTime < bullettimeCdDuration)
+            if (bullettimeCdTime < BullettimeCdDuration)
             {
                 bullettimeCdTime += Time.fixedDeltaTime;
                 GameEvents.OnBulletTimeCooldownUpdated.Publish(BullettimeCdProgress);
@@ -169,7 +189,7 @@ public class PlayerPowerUpManager : MonoBehaviour, IScoreCollector
         //Boost Cooldown
         if (boostCdProgressing)
         {
-            if (boostCdTime < boostCdDuration)
+            if (boostCdTime < BoostCdDuration)
             {
                 boostCdTime += Time.fixedDeltaTime;
                 GameEvents.OnBoostCooldownUpdated.Publish(BoostCdProgress);
@@ -233,6 +253,10 @@ public class PlayerPowerUpManager : MonoBehaviour, IScoreCollector
     private void BulletTime()
     {
         int usedCharge = 1;
+        
+        if (!powersRequireCharge)
+            usedCharge = 0;
+
         if (!bulletTimeActive)
         {
             if (AvailableCharge >= usedCharge && BullettimeCdProgress >= 1f)
@@ -265,6 +289,10 @@ public class PlayerPowerUpManager : MonoBehaviour, IScoreCollector
     private void ThrowEMP()
     {
         int usedCharge = 1;
+
+        if (!powersRequireCharge)
+            usedCharge = 0;
+
         if (AvailableCharge >= usedCharge && EmpCdProgress >= 1f)
         {
             if (empControllerPrefab != null)
@@ -285,6 +313,10 @@ public class PlayerPowerUpManager : MonoBehaviour, IScoreCollector
     private void StartBoost()
     {
         int usedCharge = 1;
+
+        if (!powersRequireCharge)
+            usedCharge = 0;
+
         if (AvailableCharge >= usedCharge && BoostCdProgress >= 1f)
         {
             AvailableCharge -= usedCharge;
@@ -355,5 +387,15 @@ public class PlayerPowerUpManager : MonoBehaviour, IScoreCollector
     public void NotifyBitEaten()
     {
         //Do nothing
+    }
+
+    //Debugging
+    private void PowerRequireChargeState(bool state)
+    {
+        powersRequireCharge = state;
+    }
+    private void PowersHaveCooldownState(bool state)
+    {
+        powersHaveCooldown = state;
     }
 }

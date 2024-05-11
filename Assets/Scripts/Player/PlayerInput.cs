@@ -46,6 +46,9 @@ public class PlayerInput : MonoBehaviour
     private readonly float boostSpeedMultiplier = 2f;
     private float speedBeforeBoost;
 
+    //Debugging
+    private bool canSlowDown = true;
+
     private void Awake()
     {
         //Singleton
@@ -81,6 +84,8 @@ public class PlayerInput : MonoBehaviour
             powerManager.OnBoostStart.AddListener(StartBoostMovementOverride);
             powerManager.OnBoostEnd.AddListener(EndBoostMovementOverride);
         }
+
+        GameEvents.OnSwitchSlowDown.Add(SlowDownState);
     }
 
     private void Start()
@@ -180,12 +185,15 @@ public class PlayerInput : MonoBehaviour
             else
             {
                 playerStoppedTimer = 0;
-                float currentSpeed = GameSpeedManager.TryGetGameSpeedModifier(GameConstants.LEVELSPEEDKEY);
-                float reducedGameSpeed = Mathf.Max(currentSpeed - GameConstants.PLAYERSTOPSLOWDOWN, 1f);
-                GameSpeedManager.TryModifyGameSpeedModifier(GameConstants.LEVELSPEEDKEY, reducedGameSpeed);
-                if (currentSpeed - reducedGameSpeed > 0f)
+                if (canSlowDown)
                 {
-                    GameEvents.OnPlayerStopSlowDown.Publish(true);
+                    float currentSpeed = GameSpeedManager.TryGetGameSpeedModifier(GameConstants.LEVELSPEEDKEY);
+                    float reducedGameSpeed = Mathf.Max(currentSpeed - GameConstants.PLAYERSTOPSLOWDOWN, 1f);
+                    GameSpeedManager.TryModifyGameSpeedModifier(GameConstants.LEVELSPEEDKEY, reducedGameSpeed);
+                    if (currentSpeed - reducedGameSpeed > 0f)
+                    {
+                        GameEvents.OnPlayerStopSlowDown.Publish(true);
+                    }
                 }
             }
         }
@@ -214,6 +222,8 @@ public class PlayerInput : MonoBehaviour
             powerManager.OnBoostStart.RemoveListener(StartBoostMovementOverride);
             powerManager.OnBoostEnd.RemoveListener(EndBoostMovementOverride);
         }
+
+        GameEvents.OnSwitchSlowDown.Remove(SlowDownState);
     }
 
     private void OnDestroy()
@@ -271,5 +281,10 @@ public class PlayerInput : MonoBehaviour
             isBoosting = false;
             gridMover.Speed = speedBeforeBoost;
         }
+    }
+
+    private void SlowDownState(bool state)
+    {
+        canSlowDown = state;
     }
 }

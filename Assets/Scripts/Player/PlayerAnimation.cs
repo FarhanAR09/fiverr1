@@ -64,6 +64,7 @@ public class PlayerAnimation : MonoBehaviour
     {
         powerManager.OnBulletTimeActivated.AddListener(Explode);
         powerManager.OnEMPThrown.AddListener(EmpSFX);
+        powerManager.OnEMPThrown.AddListener(PlayerDisappear);
         GameEvents.OnPlayerLose.Add(DeathSFX);
 
         powerManager.OnBoostStart.AddListener(StartBoostEffects);
@@ -124,6 +125,7 @@ public class PlayerAnimation : MonoBehaviour
     {
         powerManager.OnBulletTimeActivated.RemoveListener(Explode);
         powerManager.OnEMPThrown.RemoveListener(EmpSFX);
+        powerManager.OnEMPThrown.RemoveListener(PlayerDisappear);
         GameEvents.OnPlayerLose.Remove(DeathSFX);
 
         powerManager.OnBoostStart.RemoveListener(StartBoostEffects);
@@ -164,6 +166,21 @@ public class PlayerAnimation : MonoBehaviour
         {
             SFXController.Instance.RequestPlay(playerEmpSFX, 19999);
         }
+    }
+
+    private void PlayerDisappear()
+    {
+        IEnumerator Timing()
+        {
+            if (spriteRenderer != null)
+            {
+                spriteRenderer.enabled = false;
+                yield return new WaitForSeconds(0.5f);
+                spriteRenderer.enabled = true;
+            }
+        }
+        StopCoroutine(Timing());
+        StartCoroutine(Timing());
     }
 
     private void StartBoostEffects()

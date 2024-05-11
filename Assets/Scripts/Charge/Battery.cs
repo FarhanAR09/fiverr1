@@ -1,5 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
+using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.Events;
 
@@ -13,7 +14,18 @@ public class Battery : MonoBehaviour, IStunnable
     /// </summary>
     public float CurrentCharge { get; private set; } = 0;
 
-    private const float chargeDuration = 10f;
+    private bool hasCooldown = true;
+    private const float instantChargeDuration = 0.5f;
+    private float ChargeDuration
+    {
+        get
+        {
+            if (hasCooldown)
+                return 10f;
+            else
+                return instantChargeDuration;
+        }
+    }
 
     [SerializeField]
     private List<Sprite> stateSprites = new ();
@@ -40,13 +52,23 @@ public class Battery : MonoBehaviour, IStunnable
         }
     }
 
+    private void OnEnable()
+    {
+        GameEvents.OnSwitchCooldownCharge.Add(HasCooldownState);
+    }
+
+    private void OnDisable()
+    {
+        GameEvents.OnSwitchCooldownCharge.Remove(HasCooldownState);
+    }
+
     private void FixedUpdate()
     {
         if (AllowCharging)
         {
             if (CurrentCharge < 1f)
             {
-                CurrentCharge += Time.fixedDeltaTime / chargeDuration;
+                CurrentCharge += Time.fixedDeltaTime / ChargeDuration;
                 previouslyNotFull = true;
             }
             else
@@ -110,5 +132,10 @@ public class Battery : MonoBehaviour, IStunnable
             psDischarge.Emit(15);
         }
         CurrentCharge = 0f;
+    }
+
+    private void HasCooldownState(bool state)
+    {
+        hasCooldown = state;
     }
 }

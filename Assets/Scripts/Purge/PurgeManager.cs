@@ -13,21 +13,27 @@ public class PurgeManager : MonoBehaviour
     [SerializeField]
     private AudioSource audioSource;
 
+    private bool featureSwitchEnabled = true;
+
     private void OnEnable()
     {
         GameEvents.OnCacheOverflowed.Add(StartPurge);
         GameEvents.OnLevelUp.Add(ResetPurge);
+
+        GameEvents.OnSwitchPurge.Add(HandleSwitch);
     }
 
     private void OnDisable()
     {
         GameEvents.OnCacheOverflowed.Remove(StartPurge);
         GameEvents.OnLevelUp.Remove(ResetPurge);
+
+        GameEvents.OnSwitchPurge.Remove(HandleSwitch);
     }
 
     private void StartPurge(bool _)
     {
-        if (!isPurging && !levelPurged)
+        if (featureSwitchEnabled && !isPurging && !levelPurged)
         {
             if (purgeCoroutine != null)
                 StopCoroutine(purgeCoroutine);
@@ -77,5 +83,10 @@ public class PurgeManager : MonoBehaviour
 
         GameEvents.OnPurgeFinished.Publish(true);
         isPurging = false;
+    }
+
+    private void HandleSwitch(bool state)
+    {
+        featureSwitchEnabled = state;
     }
 }
