@@ -17,7 +17,7 @@ public class ScorePellet : MonoBehaviour, IStunnable
     [SerializeField]
     private AudioClip pickupSFX;
 
-    private bool corrupted = false;
+    public bool Corrupted { get; private set; } = false;
 
     private void Awake()
     {
@@ -48,26 +48,35 @@ public class ScorePellet : MonoBehaviour, IStunnable
 
     private void OnTriggerEnter2D(Collider2D collision)
     {
-        if (canBePicked && collision.TryGetComponent(out IScoreCollector collector) && ((collector.CanEatUncorrupted && !corrupted) || (collector.CanEatCorrupted && corrupted)))
+        if (canBePicked && collision.TryGetComponent(out IScoreCollector collector) && ((collector.CanEatUncorrupted && !Corrupted) || (collector.CanEatCorrupted && Corrupted)))
         {
-            collector.NotifyBitEaten();
-            if (animator != null)
-                animator.Play("pellet_picked");
-            canBePicked = false;
-            ScoreCounter.AddScore(10 * (corrupted ? -2 : 1));
-
-            if (pickupSFX != null && SFXController.Instance != null)
+            if (collector.CanCorruptBit)
             {
-                SFXController.Instance.RequestPlay(pickupSFX, 10000, volumeMultiplier: 0.15f, pitchMultiplier: corrupted ? 0.5f : 1f);
+                Stun();
             }
+            else
+            {
+                collector.NotifyBitEaten();
+                if (animator != null)
+                    animator.Play("pellet_picked");
+                canBePicked = false;
 
-            Destroy(gameObject, animator != null ? animator.GetCurrentAnimatorStateInfo(0).length : 0);
+                if (collector.EatingBitProduceScore)
+                    ScoreCounter.AddScore(10 * (Corrupted ? -2 : 1));
+
+                if (pickupSFX != null && SFXController.Instance != null)
+                {
+                    SFXController.Instance.RequestPlay(pickupSFX, 10000, volumeMultiplier: 0.15f, pitchMultiplier: Corrupted ? 0.5f : 1f);
+                }
+
+                Destroy(gameObject, animator != null ? animator.GetCurrentAnimatorStateInfo(0).length : 0);
+            }
         }
     }
 
-    public void Stun(float duration)
+    public void Stun(float duration = 0)
     {
-        if (!corrupted)
+        if (!Corrupted)
         {
             if (spriteRenderer != null)
             {
@@ -80,7 +89,7 @@ public class ScorePellet : MonoBehaviour, IStunnable
                 psDischarge.Emit(1);
                 animationTime = psDischarge.main.startLifetime.constant;
             }
-            corrupted = true;
+            Corrupted = true;
 
             GameEvents.OnBitCorrupted.Publish(this);
         }

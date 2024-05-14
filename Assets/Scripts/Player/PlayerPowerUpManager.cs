@@ -47,6 +47,8 @@ public class PlayerPowerUpManager : MonoBehaviour, IScoreCollector
     //Score Collection
     public bool CanEatUncorrupted { get; } = true;
     public bool CanEatCorrupted { get; } = true;
+    public bool EatingBitProduceScore { get; } = true;
+    public bool CanCorruptBit { get; } = false;
 
     //EMP Cooldown
     private float EmpCdDuration

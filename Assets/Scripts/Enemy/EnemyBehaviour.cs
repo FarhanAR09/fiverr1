@@ -16,7 +16,7 @@ public class EnemyBehaviour : MonoBehaviour, IStunnable, IPurgable
     [SerializeField]
     private float speed = 2.2f;
     [SerializeField]
-    private Vector2Int initialPosition = Vector2Int.zero;
+    private Vector2Int initialPosition = new(-1 ,-1);
     [SerializeField]
     private MovementDirection initialDirection = MovementDirection.Right;
     private bool finishedMoving = true;
@@ -51,12 +51,27 @@ public class EnemyBehaviour : MonoBehaviour, IStunnable, IPurgable
     {
         gridMover = new GameObject(name + " Grid Mover", typeof(GridMover)).GetComponent<GridMover>();
         gridMover.transform.parent = transform;
-        gridMover.SetUp(transform, speed, initialPosition, initialDirection);
+        if (MapHandler.Instance != null && MapHandler.Instance.MapGrid != null)
+        {
+            gridMover.SetUp(transform, speed, MapHandler.Instance.MapGrid.GetXY(transform.position), initialDirection);
+        }
+        else
+        {
+            gridMover.SetUp(transform, speed, initialPosition, initialDirection);
+        }
+
+        //IEnumerator SetupApprotiately()
+        //{
+        //    yield return new WaitUntil(() => initialPosition.x > -1 && initialPosition.y > -1);
+        //    gridMover = new GameObject(name + " Grid Mover", typeof(GridMover)).GetComponent<GridMover>();
+        //    gridMover.transform.parent = transform;
+        //    gridMover.SetUp(transform, speed, initialPosition, initialDirection);
+        //}
+        //StartCoroutine(SetupApprotiately());
 
         enemyPatrol = GetComponent<EnemyPatrol>();
 
         TryGetComponent(out animator);
-            
     }
 
     private void Start()

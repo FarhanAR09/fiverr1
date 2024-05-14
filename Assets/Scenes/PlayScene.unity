@@ -649,6 +649,7 @@ Transform:
   - {fileID: 461945983}
   - {fileID: 371633729}
   - {fileID: 931176025}
+  - {fileID: 1617301750}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &273739046
@@ -11997,50 +11998,6 @@ MonoBehaviour:
     m_PersistentCalls:
       m_Calls: []
   m_IsOn: 1
---- !u!1 &675478874
-GameObject:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  serializedVersion: 6
-  m_Component:
-  - component: {fileID: 675478875}
-  - component: {fileID: 675478876}
-  m_Layer: 0
-  m_Name: CorruptedCacheTracker
-  m_TagString: Untagged
-  m_Icon: {fileID: 0}
-  m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
-  m_IsActive: 1
---- !u!4 &675478875
-Transform:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 675478874}
-  serializedVersion: 2
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 1, y: 1, z: 1}
-  m_ConstrainProportionsScale: 0
-  m_Children: []
-  m_Father: {fileID: 0}
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &675478876
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 675478874}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 6ba4eb62051a9d344997a7da51ca940f, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
 --- !u!1 &675662930
 GameObject:
   m_ObjectHideFlags: 0
@@ -27305,7 +27262,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 66647267742b37643a7477096a9f60c3, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  <OverflowChargeAmount>k__BackingField: 1000
+  <OverflowChargeAmount>k__BackingField: 1500
 --- !u!4 &1434447514
 Transform:
   m_ObjectHideFlags: 0
@@ -28110,6 +28067,37 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1546904695}
   m_CullTransparentMesh: 1
+--- !u!1 &1617301749
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 1617301750}
+  m_Layer: 0
+  m_Name: UncorruptedCacheTracker
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &1617301750
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1617301749}
+  serializedVersion: 2
+  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
+  m_LocalPosition: {x: 12.941036, y: -6.1461177, z: -0.47013324}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 269307647}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!4 &1628083877 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 6295397095598678650, guid: c2f229acc4814fe49bab816f536e28c9, type: 3}
@@ -28822,6 +28810,54 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1898999911}
   m_CullTransparentMesh: 1
+--- !u!1 &1911799301
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 1911799303}
+  - component: {fileID: 1911799302}
+  m_Layer: 0
+  m_Name: Bits Eater Spawner
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!114 &1911799302
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1911799301}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 44c7a4b95179481419e0349f9aa8e0b7, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  bitsEaterPrefab: {fileID: 2031004996501218167, guid: 685e4dae6d7003b469857cc6dd0454e1, type: 3}
+  spawnPositions:
+  - {x: 8, y: 4}
+  - {x: 14, y: 4}
+--- !u!4 &1911799303
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1911799301}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 12.941036, y: -6.1461177, z: -0.47013324}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &1931331304
 GameObject:
   m_ObjectHideFlags: 0
@@ -44805,6 +44841,10 @@ PrefabInstance:
       propertyPath: m_Name
       value: Bits Eater
       objectReference: {fileID: 0}
+    - target: {fileID: 162084248308361675, guid: 685e4dae6d7003b469857cc6dd0454e1, type: 3}
+      propertyPath: m_IsActive
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 5194871228704935774, guid: 685e4dae6d7003b469857cc6dd0454e1, type: 3}
       propertyPath: m_LocalPosition.x
       value: 10.2
@@ -44986,4 +45026,4 @@ SceneRoots:
   - {fileID: 2074337429}
   - {fileID: 403601895}
   - {fileID: 2330219021806565575}
-  - {fileID: 675478875}
+  - {fileID: 1911799303}

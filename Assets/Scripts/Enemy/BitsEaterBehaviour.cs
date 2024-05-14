@@ -10,17 +10,23 @@ public class BitsEaterBehaviour : MonoBehaviour, IStunnable, IPurgable, IScoreCo
     [SerializeField]
     private float speed = 2.2f;
     [SerializeField]
-    private Vector2Int initialPosition = Vector2Int.zero;
+    private Vector2Int initialPosition = new(-1, -1);
     [SerializeField]
     private MovementDirection initialDirection = MovementDirection.Right;
     private GridMover gridMover;
     //private bool finishedMoving = true;
 
+    //Set Up
+    private bool beenSetUp = false;
+    private float storedSpeed;
+    private Vector2Int storedInitialPosition;
+    private MovementDirection storedInitialDirection;
+
     private Transform targetTransform = null;
     
     private bool playerLost = false;
     private bool isRespawning = false;
-    private bool inPurge = false;
+    //private bool inPurge = false;
 
     private Animator animator;
     [SerializeField]
@@ -29,14 +35,44 @@ public class BitsEaterBehaviour : MonoBehaviour, IStunnable, IPurgable, IScoreCo
     private SpriteRenderer spriteRenderer;
 
     //Score Collection
-    public bool CanEatUncorrupted { get; } = false;
-    public bool CanEatCorrupted { get; } = true;
+    public bool CanEatUncorrupted { get; } = true;
+    public bool CanEatCorrupted { get; } = false;
+    public bool EatingBitProduceScore { get; } = false;
+    public bool CanCorruptBit { get; } = true;
 
     private void Awake()
     {
+        if (beenSetUp)
+        {
+            speed = storedSpeed;
+            initialPosition = storedInitialPosition;
+            initialDirection = storedInitialDirection;
+        }
+
+        //gridMover = new GameObject(name + " Grid Mover", typeof(GridMover)).GetComponent<GridMover>();
+        //gridMover.transform.parent = transform;
+        //gridMover.SetUp(transform, speed, initialPosition, initialDirection);
+
         gridMover = new GameObject(name + " Grid Mover", typeof(GridMover)).GetComponent<GridMover>();
         gridMover.transform.parent = transform;
-        gridMover.SetUp(transform, speed, initialPosition, initialDirection);
+        if (MapHandler.Instance != null && MapHandler.Instance.MapGrid != null)
+        {
+            gridMover.SetUp(transform, speed, MapHandler.Instance.MapGrid.GetXY(transform.position), initialDirection);
+        }
+        else
+        {
+            gridMover.SetUp(transform, speed, initialPosition, initialDirection);
+        }
+
+        //IEnumerator SetupApprotiately()
+        //{
+        //    yield return new WaitUntil(() => initialPosition.x > -1 && initialPosition.y > -1);
+        //    gridMover = new GameObject(name + " Grid Mover", typeof(GridMover)).GetComponent<GridMover>();
+        //    gridMover.transform.parent = transform;
+        //    gridMover.SetUp(transform, speed, initialPosition, initialDirection);
+        //    Debug.Log("Setup!");
+        //}
+        //StartCoroutine(SetupApprotiately());
 
         TryGetComponent(out animator);
 
@@ -94,7 +130,7 @@ public class BitsEaterBehaviour : MonoBehaviour, IStunnable, IPurgable, IScoreCo
         if (MapHandler.Instance != null && MapHandler.Instance.MapGrid != null)
         {
             //Determining target
-            ScorePellet targetBit = CorruptedCacheTracker.Instance != null ? CorruptedCacheTracker.Instance.TryGetCorruptedPellet() : null;
+            ScorePellet targetBit = UncorruptedCacheTracker.Instance != null ? UncorruptedCacheTracker.Instance.TryGetBit() : null;
             targetTransform = targetBit != null ? targetBit.transform : null;
             Vector2Int target = targetTransform != null ?
                 MapHandler.Instance.MapGrid.GetXY(targetTransform.position) :
@@ -194,56 +230,53 @@ public class BitsEaterBehaviour : MonoBehaviour, IStunnable, IPurgable, IScoreCo
 
     private IEnumerator Respawn()
     {
-        isRespawning = true;
+        //isRespawning = true;
+        //if (animator != null)
+        //    animator.Play("enemy_disappear", -1);
+        //if (gridMover != null)
+        //{
+        //    gridMover.ForceMoveTo(initialPosition);
+        //    //gridMover.Enabled = false;
+        //    gridMover.SetActiveState(false);
+        //}
+        //if (psSpawning != null)
+        //{
+        //    var emission = psSpawning.emission;
+        //    emission.enabled = true;
+        //}
+
+        //yield return new WaitForSeconds(12f);
+        //yield return new WaitUntil(() => !inPurge);
+
+        //isRespawning = false;
+        //if (gridMover != null)
+        //{
+        //    //gridmover.enabled = true;
+        //    gridMover.SetActiveState(true);
+        //}
+
+        //if (animator != null)
+        //    animator.Play("enemy_spawn", -1);
+
+        //if (psSpawning != null)
+        //{
+        //    var emission = psSpawning.emission;
+        //    emission.enabled = false;
+        //}
+
+        float animDur = 0;
         if (animator != null)
+        {
             animator.Play("enemy_disappear", -1);
-        if (gridMover != null)
-        {
-            gridMover.ForceMoveTo(initialPosition);
-            //gridMover.Enabled = false;
-            gridMover.SetActiveState(false);
+            animDur = animator.GetCurrentAnimatorStateInfo(0).length;
         }
-        if (psSpawning != null)
-        {
-            var emission = psSpawning.emission;
-            emission.enabled = true;
-        }
-
-        //if (psAbsorb != null)
-        //{
-            //var emission = psAbsorb.emission;
-            //emission.rateOverTime = new ParticleSystem.MinMaxCurve(absorbInitialRate * 4);
-        //}
-
-        yield return new WaitForSeconds(12f);
-        yield return new WaitUntil(() => !inPurge);
-
-        isRespawning = false;
-        if (gridMover != null)
-        {
-            //gridmover.enabled = true;
-            gridMover.SetActiveState(true);
-        }
-
-        if (animator != null)
-            animator.Play("enemy_spawn", -1);
-
-        if (psSpawning != null)
-        {
-            var emission = psSpawning.emission;
-            emission.enabled = false;
-        }
-
-        //if (psAbsorb != null)
-        //{
-        //var emission = psAbsorb.emission;
-        //emission.rateOverTime = new ParticleSystem.MinMaxCurve(absorbInitialRate);
-        //}
+        yield return new WaitForSeconds(animDur);
+        Destroy(gameObject);
     }
 
     private void DisableByPurge(bool _)
     {
-        inPurge = true;
+        //inPurge = true;
 
         if (playerLost)
             return;
@@ -260,7 +293,7 @@ public class BitsEaterBehaviour : MonoBehaviour, IStunnable, IPurgable, IScoreCo
 
     private void EnableByPurge(bool _)
     {
-        inPurge = false;
+        //inPurge = false;
 
         if (playerLost)
             return;
@@ -281,5 +314,13 @@ public class BitsEaterBehaviour : MonoBehaviour, IStunnable, IPurgable, IScoreCo
         {
             psEatBit.Emit(8);
         }
+    }
+
+    public void Setup(float speed, Vector2Int initialPosition, MovementDirection initialDirection)
+    {
+        storedSpeed = speed;
+        storedInitialPosition = initialPosition;
+        storedInitialDirection = initialDirection;
+        beenSetUp = true;
     }
 }

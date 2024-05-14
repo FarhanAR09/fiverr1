@@ -51,8 +51,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   speed: 1.5
-  initialPosition: {x: 8, y: 4}
-  initialDirection: 2
+  initialPosition: {x: -1, y: -1}
+  initialDirection: 3
   psEatBit: {fileID: 6387395292104460820}
   psSpawning: {fileID: 680870979152458504}
   spriteRenderer: {fileID: 3315141127133589065}

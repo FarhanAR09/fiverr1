@@ -136,7 +136,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   speed: 3.8
-  initialPosition: {x: 2, y: 4}
+  initialPosition: {x: -1, y: -1}
   initialDirection: 3
   detectPlayerSFX: {fileID: 8300000, guid: 3e76fd3c0a9c0e74699761ffeee39e26, type: 3}
   stunnedSFX: {fileID: 8300000, guid: 4cbd343824609264dad0b8cfa38a1251, type: 3}
