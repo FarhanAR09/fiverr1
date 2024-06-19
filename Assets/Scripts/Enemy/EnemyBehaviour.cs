@@ -99,6 +99,20 @@ public class EnemyBehaviour : MonoBehaviour, IStunnable, IPurgable
         GameEvents.OnPurgeFinished.Add(EnableByPurge);
     }
 
+    private void OnDisable()
+    {
+        if (gridMover != null)
+        {
+            gridMover.OnFinishedMoving.RemoveListener(FinishedMoving);
+            gridMover.OnStartedMoving.RemoveListener(StartedMoving);
+        }
+        enemyPatrol.OnPlayerDetected.RemoveListener(EnterChaseStateTemporarily);
+
+        GameEvents.OnPlayerLose.Remove(HandleLosing);
+        GameEvents.OnPurgeWarning.Remove(DisableByPurge);
+        GameEvents.OnPurgeFinished.Remove(EnableByPurge);
+    }
+
     private void FixedUpdate()
     {
         //Consider input every frame
@@ -139,7 +153,8 @@ public class EnemyBehaviour : MonoBehaviour, IStunnable, IPurgable
                 }
             }
 
-            spriteRenderer.transform.localRotation = gridMover.InputDirection == MovementDirection.Left ? Quaternion.Euler(0f, 180f, 0f) : Quaternion.Euler(0f, 0f, 0f);
+            if (spriteRenderer != null)
+                spriteRenderer.transform.localRotation = gridMover.InputDirection == MovementDirection.Left ? Quaternion.Euler(0f, 180f, 0f) : Quaternion.Euler(0f, 0f, 0f);
             if (animator != null)
             {
                 if (gridMover.InputDirection == MovementDirection.Left || gridMover.InputDirection == MovementDirection.Right)
@@ -177,20 +192,6 @@ public class EnemyBehaviour : MonoBehaviour, IStunnable, IPurgable
                 GameEvents.OnPlayerLose.Publish(false);
             }
         }
-    }
-
-    private void OnDisable()
-    {
-        if (gridMover != null)
-        {
-            gridMover.OnFinishedMoving.RemoveListener(FinishedMoving);
-            gridMover.OnStartedMoving.RemoveListener(StartedMoving);
-        }
-        enemyPatrol.OnPlayerDetected.RemoveListener(EnterChaseStateTemporarily);
-
-        GameEvents.OnPlayerLose.Remove(HandleLosing);
-        GameEvents.OnPurgeWarning.Remove(DisableByPurge);
-        GameEvents.OnPurgeFinished.Remove(EnableByPurge);
     }
 
     private void OnDestroy()
