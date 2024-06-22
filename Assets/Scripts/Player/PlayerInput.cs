@@ -231,11 +231,11 @@ public class PlayerInput : MonoBehaviour
         StopAllCoroutines();
     }
 
-    private void HandleLosing(bool enabled)
+    private void HandleLosing(bool _)
     {
         if (gridMover != null)
         {
-            gridMover.Enabled = enabled;
+            gridMover.SetActiveState(false);
         }
         Lost = true;
     }

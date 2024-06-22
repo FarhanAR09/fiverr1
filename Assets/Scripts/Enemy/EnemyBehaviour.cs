@@ -295,7 +295,7 @@ public class EnemyBehaviour : MonoBehaviour, IStunnable, IPurgable
         }
     }
 
-    private void HandleLosing(bool enabled)
+    private void HandleLosing(bool _)
     {
         if (playerLost)
             return;
@@ -305,7 +305,7 @@ public class EnemyBehaviour : MonoBehaviour, IStunnable, IPurgable
 
         if (gridMover != null)
         {
-            gridMover.Enabled = enabled;
+            gridMover.SetActiveState(false);
         }
 
         playerLost = true;

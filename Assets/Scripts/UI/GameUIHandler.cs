@@ -54,7 +54,7 @@ public class GameUIHandler : MonoBehaviour
             gameSpeedDisplay.SetText("Game Speed:\n" + Time.timeScale.ToString("F2") + " GHz");
     }
 
-    private void UpdateLoseDisplay(bool s)
+    private void UpdateLoseDisplay(bool _)
     {
         float highscore = PlayerPrefs.HasKey("highscore") && PlayerPrefs.GetFloat("highscore") > ScoreCounter.Score ?
             PlayerPrefs.GetFloat("highscore") :

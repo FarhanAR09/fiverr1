@@ -84,57 +84,54 @@ public class PlaySceneManager : MonoBehaviour
         ToMainMenu();
     }
 
-    private void Lose(bool enabled)
+    private void Lose(bool _)
     {
-        if (!enabled)
+        SetHighscore();
+
+        if (LoseCanvas != null)
         {
-            SetHighscore();
+            LoseCanvas.gameObject.SetActive(true);
 
-            if (LoseCanvas != null)
+            bool newLeaderMade = LeaderboardDataManager.CheckLeaderboardEligibility(ScoreCounter.Score);
+            if (panelLose != null)
             {
-                LoseCanvas.gameObject.SetActive(true);
+                panelLose.SetActive(!newLeaderMade);
+            }
+            if (panelLeaderboardInput != null)
+            {
+                panelLeaderboardInput.SetActive(newLeaderMade);
+            }
 
-                bool newLeaderMade = LeaderboardDataManager.CheckLeaderboardEligibility(ScoreCounter.Score);
-                if (panelLose != null)
+            if (LoseAnimation != null)
+            {
+                IEnumerator AnimationLoop()
                 {
-                    panelLose.SetActive(!newLeaderMade);
-                }
-                if (panelLeaderboardInput != null)
-                {
-                    panelLeaderboardInput.SetActive(newLeaderMade);
-                }
-
-                if (LoseAnimation != null)
-                {
-                    IEnumerator AnimationLoop()
+                    loseAnimationTime = 0;
+                    while (true)
                     {
-                        loseAnimationTime = 0;
-                        while (true)
+                        if (loseAnimationTime < loseAnimationDuration)
                         {
-                            if (loseAnimationTime < loseAnimationDuration)
-                            {
-                                yield return new WaitForFixedUpdate();
-                                loseAnimationTime += Time.fixedDeltaTime;
+                            yield return new WaitForFixedUpdate();
+                            loseAnimationTime += Time.fixedDeltaTime;
 
-                                LoseCanvas.GetComponent<RectTransform>().position = Vector2.Lerp(EndLosePosition, StartLosePosition, LoseAnimation.Evaluate(loseAnimationTime / loseAnimationDuration));
-                            }
-                            else
-                            {
-                                break;
-                            }
+                            LoseCanvas.GetComponent<RectTransform>().position = Vector2.Lerp(EndLosePosition, StartLosePosition, LoseAnimation.Evaluate(loseAnimationTime / loseAnimationDuration));
+                        }
+                        else
+                        {
+                            break;
                         }
                     }
-                    StartCoroutine(AnimationLoop());
                 }
-                else
-                {
-                    LoseCanvas.position = EndLosePosition;
-                }
+                StartCoroutine(AnimationLoop());
             }
             else
             {
-                ToMainMenu();
+                LoseCanvas.position = EndLosePosition;
             }
+        }
+        else
+        {
+            ToMainMenu();
         }
     }
 

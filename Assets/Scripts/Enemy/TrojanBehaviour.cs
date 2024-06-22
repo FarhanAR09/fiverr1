@@ -9,12 +9,12 @@ using UnityEngine.LowLevel;
 public class TrojanBehaviour : MonoBehaviour
 {
     private GridMover gridMover;
-    private bool finishedMoving = true, playerLost = false, inPurge = false;
+    private bool finishedMoving = true, playerLost = false, inPurge = false, isAttacking = false, isDestroying = false;
 
     private MovementDirection currentDirection = MovementDirection.Right;
 
     [SerializeField]
-    private float speed = 2.2f;
+    private float speed = 2.2f, attackingSpeed = 6f;
     [SerializeField]
     private Vector2Int initialPosition = new(-1, -1);
     [SerializeField]
@@ -44,6 +44,7 @@ public class TrojanBehaviour : MonoBehaviour
             gridMover.OnFinishedMoving.AddListener(FinishedMoving);
             gridMover.OnStartedMoving.AddListener(StartedMoving);
             gridMover.OnStartedMoving.AddListener(UpdateLaneDetectionPosition);
+            gridMover.OnDeniedMoving.AddListener(DestroyWhenHittingWall);
         }
 
         GameEvents.OnPlayerLose.Add(HandleLosing);
@@ -58,6 +59,7 @@ public class TrojanBehaviour : MonoBehaviour
             gridMover.OnFinishedMoving.RemoveListener(FinishedMoving);
             gridMover.OnStartedMoving.RemoveListener(StartedMoving);
             gridMover.OnStartedMoving.RemoveListener(UpdateLaneDetectionPosition);
+            gridMover.OnDeniedMoving.RemoveListener(DestroyWhenHittingWall);
         }
 
         GameEvents.OnPlayerLose.Remove(HandleLosing);
@@ -67,11 +69,11 @@ public class TrojanBehaviour : MonoBehaviour
 
     private void FixedUpdate()
     {
-        if (finishedMoving && gridMover != null)
+        if (finishedMoving && gridMover != null && !isAttacking)
         {
             if (MapHandler.Instance != null && MapHandler.Instance.MapGrid != null)
             {
-                Vector2Int target = TryGetRandomTilePosition(); //TODO: Optimize this, but good enough (detect if target is reached); 
+                Vector2Int target = TryGetRandomTilePosition(); //TODO: Optimize this, but good enough (detect if target is reached before checking)
                 Dictionary<MovementDirection, float> directionDistances = new()
                 {
                     { MovementDirection.Up, CalculateDistanceSqr(gridMover.Position + new Vector2Int(0, 1), target) },
@@ -97,6 +99,14 @@ public class TrojanBehaviour : MonoBehaviour
                 }
                 gridMover.InputDirection = currentDirection;
             }
+        }
+    }
+
+    private void OnTriggerEnter2D(Collider2D collision)
+    {
+        if (collision.gameObject.Equals(PlayerInput.GOInstance))
+        {
+            GameEvents.OnPlayerLose.Publish(true);
         }
     }
 
@@ -141,7 +151,7 @@ public class TrojanBehaviour : MonoBehaviour
         finishedMoving = true;
     }
 
-    private void HandleLosing(bool enabled)
+    private void HandleLosing(bool _)
     {
         if (playerLost)
             return;
@@ -151,7 +161,7 @@ public class TrojanBehaviour : MonoBehaviour
 
         if (gridMover != null)
         {
-            gridMover.Enabled = enabled;
+            gridMover.SetActiveState(false);
         }
 
         playerLost = true;
@@ -280,21 +290,67 @@ public class TrojanBehaviour : MonoBehaviour
                     MapHandler.Instance.MapGrid.GetWorldPosition(horizontalLaneCellPoss[0]),
                     MapHandler.Instance.MapGrid.GetWorldPosition(horizontalLaneCellPoss[1]),
                     MapHandler.Instance.MapGrid.GetCellSize(), false);
-                vLaneDetector.OnPlayerDetected += ObjectOnLaneDetected;
-                hLaneDetector.OnPlayerDetected += ObjectOnLaneDetected;
-            }
-            else
-            {
-                Debug.LogWarning("Wrong list format");
-                Debug.LogWarning("Vertical lane list count: " + verticalLaneCellPoss.Count);
-                Debug.LogWarning("Horizontal lane list count: " + horizontalLaneCellPoss.Count);
+                vLaneDetector.OnPlayerDetected += AttackLane;
+                hLaneDetector.OnPlayerDetected += AttackLane;
             }
         }
     }
 
-    private void ObjectOnLaneDetected(LaneDetectionData ldd)
+    private void AttackLane(LaneDetectionData ldd)
     {
         //Debug.Log($"Player detected on {ldd.IsVertical}: {ldd.DetectedGO.name}");
+        if (!isAttacking && !inPurge && gridMover != null && MapHandler.Instance != null && MapHandler.Instance.MapGrid != null)
+        {
+            Vector2Int attackDirection = ldd.GridPos - MapHandler.Instance.MapGrid.GetXY(transform.position);
+            if (attackDirection.x != 0 ^ attackDirection.y != 0)
+            {
+                if (Mathf.Abs(attackDirection.x) > Mathf.Abs(attackDirection.y))
+                {
+                    if (Mathf.Sign(attackDirection.x) > 0)
+                    {
+                        attackDirection = Vector2Int.right;
+                    }
+                    else
+                    {
+                        attackDirection = Vector2Int.left;
+                    }
+                }
+                else
+                {
+                    if (Mathf.Sign(attackDirection.y) > 0)
+                    {
+                        attackDirection = Vector2Int.up;
+                    }
+                    else
+                    {
+                        attackDirection = Vector2Int.down;
+                    }
+                }
+                isAttacking = true;
+                IEnumerator AngryThenCharge()
+                {
+                    if (gridMover.Enabled)
+                    {
+                        yield return new WaitForSeconds(0.5f);
 
+                        if (gridMover != null)
+                        {
+                            gridMover.Speed = attackingSpeed;
+                            gridMover.ForceToDirection(DirectionUtils.Vector2IntToMovementDirection(attackDirection));
+                        }
+                    }
+                }
+                StartCoroutine(AngryThenCharge());
+                //Debug.Log(attackDirection.x + " " + attackDirection.y);
+            }
+        }
+    }
+
+    private void DestroyWhenHittingWall()
+    {
+        if (isAttacking && !isDestroying)
+        {
+            Destroy(gameObject, 1f);
+        }
     }
 }

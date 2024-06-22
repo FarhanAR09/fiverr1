@@ -27,11 +27,16 @@ public class LaneDetector : MonoBehaviour
         OnPlayerDetected = null;
     }
 
-    private void OnTriggerEnter2D(Collider2D collision)
+    private void OnTriggerStay2D(Collider2D collision)
     {
         if (collision.gameObject.Equals(PlayerInput.GOInstance))
         {
-            OnPlayerDetected?.Invoke(new LaneDetectionData(IsVertical, collision.gameObject));
+            if (MapHandler.Instance != null && MapHandler.Instance.MapGrid != null)
+            {
+                OnPlayerDetected?.Invoke(
+                    new LaneDetectionData(IsVertical, collision.gameObject,
+                    MapHandler.Instance.MapGrid.GetXY(collision.transform.position)));
+            }
         }
     }
 
@@ -50,10 +55,12 @@ public class LaneDetectionData
 {
     public bool IsVertical { get; private set; }
     public GameObject DetectedGO { get; private set; }
+    public Vector2Int GridPos { get; private set; }
 
-    public LaneDetectionData(bool isVertical, GameObject detectedObject)
+    public LaneDetectionData(bool isVertical, GameObject detectedObject, Vector2Int gridPos)
     {
         IsVertical = isVertical;
         DetectedGO = detectedObject;
+        GridPos = gridPos;
     }
 }

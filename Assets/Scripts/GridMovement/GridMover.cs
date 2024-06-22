@@ -25,7 +25,14 @@ public class GridMover : MonoBehaviour, IGridMover
         } 
         set => _mover = value; 
     }
+
+    /// <summary>
+    /// To control where to move
+    /// </summary>
     public MovementDirection InputDirection { get; set; } = MovementDirection.Right;
+    /// <summary>
+    /// Where is gridMover currently moving
+    /// </summary>
     public MovementDirection CurrentDirection { get; private set; } = MovementDirection.Right;
     public float Speed { get; set; }
     public bool BeenSetUp { get => beenSetUp; private set => beenSetUp = value; }
@@ -40,7 +47,7 @@ public class GridMover : MonoBehaviour, IGridMover
     private bool finishedMoving = true;
     public bool Enabled { get; set; } = true;
 
-    private Coroutine tileTraversal;
+    private Coroutine tileTraversal, movementLoop;
 
     #region Interface Methods
     public void ForceMoveTo(Vector2Int position)
@@ -68,7 +75,7 @@ public class GridMover : MonoBehaviour, IGridMover
     IEnumerator MoveLoop()
     {
         yield return new WaitUntil(() => beenSetUp);
-        MoveTo(initialPos); //Please move this out
+        //MoveTo(initialPos); //Please move this out
         while (Mover != null && beenSetUp)
         {
             //Debug.Log("Current Direction: " + currentDirection.ToString());
@@ -186,12 +193,12 @@ public class GridMover : MonoBehaviour, IGridMover
 
     private void OnEnable()
     {
-        StartCoroutine(MoveLoop());
+        movementLoop = StartCoroutine(MoveLoop());
     }
 
     private void OnDisable()
     {
-        StopCoroutine(MoveLoop());
+        StopCoroutine(movementLoop);
     }
 
     private void OnDestroy()
@@ -218,11 +225,18 @@ public class GridMover : MonoBehaviour, IGridMover
         StartCoroutine(WaitingForMovement());
     }
 
-    public void ForceMovement(MovementDirection direction)
+    /// <summary>
+    /// Force movement if currently moving
+    /// </summary>
+    /// <param name="direction"></param>
+    public void ForceToDirection(MovementDirection direction)
     {
-        if (true)
+        if (movementLoop != null)
         {
-
+            CancelTileTraversal();
+            StopCoroutine(movementLoop);
+            InputDirection = direction;
+            movementLoop = StartCoroutine(MoveLoop());
         }
     }
 }

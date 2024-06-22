@@ -152,7 +152,7 @@ public class PlayerAnimation : MonoBehaviour
         }
     }
 
-    private void DeathSFX(bool s)
+    private void DeathSFX(bool _)
     {
         if (playerDeathSFX != null && SFXController.Instance != null)
         {
