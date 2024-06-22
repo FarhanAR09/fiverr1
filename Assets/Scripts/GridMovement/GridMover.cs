@@ -217,4 +217,12 @@ public class GridMover : MonoBehaviour, IGridMover
         StopCoroutine(WaitingForMovement());
         StartCoroutine(WaitingForMovement());
     }
+
+    public void ForceMovement(MovementDirection direction)
+    {
+        if (true)
+        {
+
+        }
+    }
 }

@@ -271,17 +271,17 @@ public class TrojanBehaviour : MonoBehaviour
                 //    MapHandler.Instance.MapGrid.GetWorldPosition(horizontalLane[1].x, horizontalLane[1].y) + MapHandler.Instance.MapGrid.GetCellSize() / 2 * Vector3.one,
                 //    Color.magenta, 3f);
                 vLaneDetector = new GameObject("Vertical Lane Detector", typeof(LaneDetector)).GetComponent<LaneDetector>();
-                vLaneDetector.OnPlayerDetected += VerticalDetected;
                 vLaneDetector.Setup(
                     MapHandler.Instance.MapGrid.GetWorldPosition(verticalLaneCellPoss[0]),
                     MapHandler.Instance.MapGrid.GetWorldPosition(verticalLaneCellPoss[1]),
                     MapHandler.Instance.MapGrid.GetCellSize(), true);
                 hLaneDetector = new GameObject("Horizontal Lane Detector", typeof(LaneDetector)).GetComponent<LaneDetector>();
-                hLaneDetector.OnPlayerDetected += HorizontalDetected;
                 hLaneDetector.Setup(
                     MapHandler.Instance.MapGrid.GetWorldPosition(horizontalLaneCellPoss[0]),
                     MapHandler.Instance.MapGrid.GetWorldPosition(horizontalLaneCellPoss[1]),
                     MapHandler.Instance.MapGrid.GetCellSize(), false);
+                vLaneDetector.OnPlayerDetected += ObjectOnLaneDetected;
+                hLaneDetector.OnPlayerDetected += ObjectOnLaneDetected;
             }
             else
             {
@@ -292,13 +292,9 @@ public class TrojanBehaviour : MonoBehaviour
         }
     }
 
-    private void VerticalDetected()
+    private void ObjectOnLaneDetected(LaneDetectionData ldd)
     {
-        Debug.Log("Player detected on vertical");
-    }
+        //Debug.Log($"Player detected on {ldd.IsVertical}: {ldd.DetectedGO.name}");
 
-    private void HorizontalDetected()
-    {
-        Debug.Log("Player detected on horizontal");
     }
 }

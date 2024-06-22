@@ -1,5 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
+using System.Runtime.CompilerServices;
 using UnityEngine;
 using UnityEngine.Events;
 
@@ -7,7 +8,8 @@ using UnityEngine.Events;
 [RequireComponent(typeof(Rigidbody2D))]
 public class LaneDetector : MonoBehaviour
 {
-    public UnityAction OnPlayerDetected { get; set; }
+    public UnityAction<LaneDetectionData> OnPlayerDetected { get; set; }
+    public bool IsVertical { get; private set; }
 
     private BoxCollider2D coll;
     private Rigidbody2D rb;
@@ -29,7 +31,7 @@ public class LaneDetector : MonoBehaviour
     {
         if (collision.gameObject.Equals(PlayerInput.GOInstance))
         {
-            OnPlayerDetected?.Invoke();
+            OnPlayerDetected?.Invoke(new LaneDetectionData(IsVertical, collision.gameObject));
         }
     }
 
@@ -40,6 +42,7 @@ public class LaneDetector : MonoBehaviour
             isVertical ?
             new Vector2(1, 1 + Mathf.Abs(startPos.y - endPos.y)):
             new Vector2(1 + Mathf.Abs(startPos.x - endPos.x), 1);
+        IsVertical = isVertical;
     }
 }
 
@@ -47,4 +50,10 @@ public class LaneDetectionData
 {
     public bool IsVertical { get; private set; }
     public GameObject DetectedGO { get; private set; }
+
+    public LaneDetectionData(bool isVertical, GameObject detectedObject)
+    {
+        IsVertical = isVertical;
+        DetectedGO = detectedObject;
+    }
 }
