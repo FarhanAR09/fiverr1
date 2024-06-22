@@ -20,6 +20,9 @@ public class TrojanBehaviour : MonoBehaviour
     [SerializeField]
     private MovementDirection initialDirection = MovementDirection.Right;
 
+    //Lane Detection
+    private LaneDetector vLaneDetector, hLaneDetector;
+
     private void Awake()
     {
         gridMover = new GameObject(name + " Grid Mover", typeof(GridMover)).GetComponent<GridMover>();
@@ -194,44 +197,108 @@ public class TrojanBehaviour : MonoBehaviour
 
     private void UpdateLaneDetectionPosition()
     {
+        if (vLaneDetector != null)
+        {
+            Destroy(vLaneDetector.gameObject);
+        }
+        if (hLaneDetector != null)
+        {
+            Destroy(hLaneDetector.gameObject);
+        }
         if (MapHandler.Instance != null && MapHandler.Instance.MapGrid != null)
         {
             MapHandler.Instance.MapGrid.GetXY(transform.position, out int x, out int y);
             Vector2Int initCheckGridPos = new Vector2Int(x, y) + DirectionUtils.MovementDirectionToVector2Int(currentDirection);
-            Debug.Log(initCheckGridPos);
-            Debug.DrawRay(
-                MapHandler.Instance.MapGrid.GetWorldPosition(initCheckGridPos.x, initCheckGridPos.y) +
-                MapHandler.Instance.MapGrid.GetCellSize() / 2 * Vector3.one,
-                Vector2.one * 2,
-                Color.red,
-                2f);
+            //Debug.Log(initCheckGridPos);
+            //Debug.DrawRay(
+            //    MapHandler.Instance.MapGrid.GetWorldPosition(initCheckGridPos.x, initCheckGridPos.y) +
+            //    MapHandler.Instance.MapGrid.GetCellSize() / 2 * Vector3.one,
+            //    Vector2.one * 2,
+            //    Color.red,
+            //    2f);
 
             //Element is lane starting cell
-            List<Vector2Int> verticalLane = new(), horizontalLane = new();
-            bool CheckCell(Vector2Int gridPos, Vector2Int direction)
+            List<Vector2Int> verticalLaneCellPoss = new(), horizontalLaneCellPoss = new();
+            //Check if gridPos is walkable or not recursively in direction
+            bool CheckCellWalkable(Vector2Int gridPos, Vector2Int direction)
             {
-                if (MapHandler.Instance.MapGrid.GetGridObject(gridPos.x, gridPos.y).Walkable)
+                if (
+                    MapHandler.Instance.MapGrid.GetGridObject(gridPos.x, gridPos.y) != null &&
+                    MapHandler.Instance.MapGrid.GetGridObject(gridPos.x, gridPos.y).Walkable
+                )
                 {
-                    CheckCell(gridPos + direction, direction);
+                    bool nextCheckWalkable = CheckCellWalkable(gridPos + direction, direction);
+                    if (!nextCheckWalkable)
+                    {
+                        if (Mathf.Abs(direction.x) == 1)
+                        {
+                            horizontalLaneCellPoss.Add(gridPos);
+                        }
+                        else if (Mathf.Abs(direction.y) == 1)
+                        {
+                            verticalLaneCellPoss.Add(gridPos);
+                        }
+                        //Debug.DrawRay(
+                        //    MapHandler.Instance.MapGrid.GetWorldPosition(gridPos.x, gridPos.y) +
+                        //    MapHandler.Instance.MapGrid.GetCellSize() / 2 * Vector3.one,
+                        //    new Vector2(-1, 1) * 2,
+                        //    Color.green,
+                        //    2f
+                        //);
+                    }
                     return true;
                 }
                 else
                 {
-                    if (Mathf.Abs(direction.x) == 1)
-                    {
-                        horizontalLane.Add(direction);
-                    }
-                    else if (Mathf.Abs(direction.y) == 1)
-                    {
-                        verticalLane.Add(direction);
-                    }
                     return false;
                 }
             }
-            CheckCell(initCheckGridPos + new Vector2Int(-1, 0), new Vector2Int(-1, 0));
-            CheckCell(initCheckGridPos + new Vector2Int(1, 0), new Vector2Int(1, 0));
-            CheckCell(initCheckGridPos + new Vector2Int(0, -1), new Vector2Int(0, -1));
-            CheckCell(initCheckGridPos + new Vector2Int(0, 1), new Vector2Int(0, 1));
+            CheckCellWalkable(initCheckGridPos, new Vector2Int(-1, 0));
+            CheckCellWalkable(initCheckGridPos, new Vector2Int(1, 0));
+            CheckCellWalkable(initCheckGridPos, new Vector2Int(0, -1));
+            CheckCellWalkable(initCheckGridPos, new Vector2Int(0, 1));
+
+            if (verticalLaneCellPoss.Count == 2 && horizontalLaneCellPoss.Count == 2)
+            {
+                //Debug.Log(verticalLane[0] + ", " + verticalLane[1]);
+                //Debug.Log(horizontalLane[0] + ", " + horizontalLane[1]);
+                //Debug.DrawLine(
+                //    MapHandler.Instance.MapGrid.GetWorldPosition(verticalLane[0].x, verticalLane[0].y) + MapHandler.Instance.MapGrid.GetCellSize() / 2 * Vector3.one,
+                //    MapHandler.Instance.MapGrid.GetWorldPosition(verticalLane[1].x, verticalLane[1].y) + MapHandler.Instance.MapGrid.GetCellSize() / 2 * Vector3.one, 
+                //    Color.magenta, 3f);
+                //Debug.DrawLine(
+                //    MapHandler.Instance.MapGrid.GetWorldPosition(horizontalLane[0].x, horizontalLane[0].y) + MapHandler.Instance.MapGrid.GetCellSize() / 2 * Vector3.one,
+                //    MapHandler.Instance.MapGrid.GetWorldPosition(horizontalLane[1].x, horizontalLane[1].y) + MapHandler.Instance.MapGrid.GetCellSize() / 2 * Vector3.one,
+                //    Color.magenta, 3f);
+                vLaneDetector = new GameObject("Vertical Lane Detector", typeof(LaneDetector)).GetComponent<LaneDetector>();
+                vLaneDetector.OnPlayerDetected += VerticalDetected;
+                vLaneDetector.Setup(
+                    MapHandler.Instance.MapGrid.GetWorldPosition(verticalLaneCellPoss[0]),
+                    MapHandler.Instance.MapGrid.GetWorldPosition(verticalLaneCellPoss[1]),
+                    MapHandler.Instance.MapGrid.GetCellSize(), true);
+                hLaneDetector = new GameObject("Horizontal Lane Detector", typeof(LaneDetector)).GetComponent<LaneDetector>();
+                hLaneDetector.OnPlayerDetected += HorizontalDetected;
+                hLaneDetector.Setup(
+                    MapHandler.Instance.MapGrid.GetWorldPosition(horizontalLaneCellPoss[0]),
+                    MapHandler.Instance.MapGrid.GetWorldPosition(horizontalLaneCellPoss[1]),
+                    MapHandler.Instance.MapGrid.GetCellSize(), false);
+            }
+            else
+            {
+                Debug.LogWarning("Wrong list format");
+                Debug.LogWarning("Vertical lane list count: " + verticalLaneCellPoss.Count);
+                Debug.LogWarning("Horizontal lane list count: " + horizontalLaneCellPoss.Count);
+            }
         }
+    }
+
+    private void VerticalDetected()
+    {
+        Debug.Log("Player detected on vertical");
+    }
+
+    private void HorizontalDetected()
+    {
+        Debug.Log("Player detected on horizontal");
     }
 }
