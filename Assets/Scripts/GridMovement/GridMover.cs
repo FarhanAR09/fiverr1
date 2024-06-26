@@ -208,7 +208,8 @@ public class GridMover : MonoBehaviour, IGridMover
 
     private void CancelTileTraversal()
     {
-        StopCoroutine(tileTraversal);
+        if (tileTraversal != null)
+            StopCoroutine(tileTraversal);
         OnFinishedMoving.Invoke();
         finishedMoving = true;
     }

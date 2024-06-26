@@ -10,6 +10,7 @@ public class TrojanBehaviour : MonoBehaviour
 {
     private GridMover gridMover;
     private bool finishedMoving = true, playerLost = false, inPurge = false, isAttacking = false, isDestroying = false;
+    //private bool beenSetUp = false;
 
     private MovementDirection currentDirection = MovementDirection.Right;
 
@@ -23,6 +24,11 @@ public class TrojanBehaviour : MonoBehaviour
     //Lane Detection
     private LaneDetector vLaneDetector, hLaneDetector;
 
+    //Animation
+    private SpriteRenderer sr;
+    [SerializeField]
+    private ParticleSystem psPlayerDetected, psCharging, psHitWall;
+
     private void Awake()
     {
         gridMover = new GameObject(name + " Grid Mover", typeof(GridMover)).GetComponent<GridMover>();
@@ -35,6 +41,13 @@ public class TrojanBehaviour : MonoBehaviour
         {
             gridMover.SetUp(transform, speed, initialPosition, initialDirection);
         }
+
+        TryGetComponent<SpriteRenderer>(out sr);
+    }
+
+    private void Start()
+    {
+        ChargeEmittingParticle(false);
     }
 
     private void OnEnable()
@@ -329,6 +342,15 @@ public class TrojanBehaviour : MonoBehaviour
                 isAttacking = true;
                 IEnumerator AngryThenCharge()
                 {
+                    if (sr != null)
+                    {
+                        sr.color = Color.red;
+                    }
+                    if (psPlayerDetected != null)
+                    {
+                        psPlayerDetected.Emit(10);
+                    }
+
                     if (gridMover.Enabled)
                     {
                         yield return new WaitForSeconds(0.5f);
@@ -338,6 +360,8 @@ public class TrojanBehaviour : MonoBehaviour
                             gridMover.Speed = attackingSpeed;
                             gridMover.ForceToDirection(DirectionUtils.Vector2IntToMovementDirection(attackDirection));
                         }
+
+                        ChargeEmittingParticle(true);
                     }
                 }
                 StartCoroutine(AngryThenCharge());
@@ -350,7 +374,34 @@ public class TrojanBehaviour : MonoBehaviour
     {
         if (isAttacking && !isDestroying)
         {
+            isDestroying = true;
+            if (psHitWall != null)
+            {
+                psHitWall.Emit(8);
+            }
+            ChargeEmittingParticle(false);
             Destroy(gameObject, 1f);
+        }
+    }
+
+    public void Setup(float speed, Vector2Int initialPosition, MovementDirection initialDirection)
+    {
+        this.speed = speed;
+        //storedInitialPosition = initialPosition;
+        this.initialDirection = initialDirection;
+        //beenSetUp = true;
+        if (gridMover != null)
+        {
+            gridMover.ForceToDirection(initialDirection);
+        }
+    }
+
+    private void ChargeEmittingParticle(bool enabled)
+    {
+        if (psCharging != null)
+        {
+            var em = psCharging.emission;
+            em.enabled = enabled;
         }
     }
 }

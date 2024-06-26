@@ -24,14 +24,6 @@ public class BitsEaterSpawner : MonoBehaviour
         GameEvents.OnLevelUp.Remove(TrySpawnBitsEaters);
     }
 
-    private void Update()
-    {
-        if (Input.GetKeyDown(KeyCode.R))
-        {
-            SceneManager.LoadScene("PlayScene");
-        }
-    }
-
     private void TrySpawnBitsEaters(bool _)
     {
         //20% Spawn rate
