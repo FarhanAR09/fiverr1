@@ -25,7 +25,9 @@ public class TrojanBehaviour : MonoBehaviour
     private LaneDetector vLaneDetector, hLaneDetector;
 
     //Animation
-    private SpriteRenderer sr;
+    [SerializeField]
+    private SpriteRenderer spriteRenderer;
+    private Animator animator;
     [SerializeField]
     private ParticleSystem psPlayerDetected, psCharging, psHitWall;
 
@@ -42,7 +44,12 @@ public class TrojanBehaviour : MonoBehaviour
             gridMover.SetUp(transform, speed, initialPosition, initialDirection);
         }
 
-        TryGetComponent<SpriteRenderer>(out sr);
+        TryGetComponent(out animator);
+
+        if (spriteRenderer != null && spriteRenderer.material != null)
+        {
+            spriteRenderer.material.SetColor("_Color", Color.cyan);
+        }
     }
 
     private void Start()
@@ -111,6 +118,18 @@ public class TrojanBehaviour : MonoBehaviour
                     currentDirection = minimalDirectionPair.Key;
                 }
                 gridMover.InputDirection = currentDirection;
+            }
+        }
+
+        if (spriteRenderer != null && gridMover != null)
+        {
+            if (gridMover.CurrentDirection == MovementDirection.Left)
+            {
+                spriteRenderer.transform.localScale = new Vector3(-1f, 1f, 1f);
+            }
+            else if (gridMover.CurrentDirection == MovementDirection.Right)
+            {
+                spriteRenderer.transform.localScale = new Vector3(1f, 1f, 1f);
             }
         }
     }
@@ -342,9 +361,18 @@ public class TrojanBehaviour : MonoBehaviour
                 isAttacking = true;
                 IEnumerator AngryThenCharge()
                 {
-                    if (sr != null)
+                    //if (sr != null)
+                    //{
+                    //    sr.color = Color.red;
+                    //}
+                    if (animator != null)
                     {
-                        sr.color = Color.red;
+                        animator.Play("trojan_angry", -1);
+                    }
+                    if (spriteRenderer != null && spriteRenderer.material != null)
+                    {
+                        spriteRenderer.material.SetColor("_Color", Color.red);
+                        spriteRenderer.material.SetFloat("_Intensity", 3f);
                     }
                     if (psPlayerDetected != null)
                     {
@@ -393,6 +421,10 @@ public class TrojanBehaviour : MonoBehaviour
         if (gridMover != null)
         {
             gridMover.ForceToDirection(initialDirection);
+        }
+        if (psPlayerDetected != null)
+        {
+            psPlayerDetected.Emit(10);
         }
     }
 
