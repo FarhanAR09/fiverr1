@@ -75,8 +75,8 @@ Material:
     m_Ints: []
     m_Floats:
     - _EnableExternalAlpha: 0
-    - _Intensity: 3.0749977
-    - _Reveal: 0.61499953
+    - _Intensity: 4.924996
+    - _Reveal: 0.9849992
     m_Colors:
     - _Color: {r: 1, g: 1, b: 1, a: 1}
     - _Flip: {r: 1, g: 1, b: 1, a: 1}
