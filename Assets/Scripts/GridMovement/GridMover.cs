@@ -219,8 +219,20 @@ public class GridMover : MonoBehaviour, IGridMover
         IEnumerator WaitingForMovement()
         {
             if (!active)
-                yield return new WaitUntil(() => finishedMoving);
+            {
+                //yield return new WaitUntil(() => finishedMoving);
+                CancelTileTraversal();
+            }
+            else
+            {
+                if (movementLoop != null)
+                {
+                    StopCoroutine(movementLoop);
+                }
+                movementLoop = StartCoroutine(MoveLoop());
+            }
             Enabled = active;
+            yield return null;
         }
         StopCoroutine(WaitingForMovement());
         StartCoroutine(WaitingForMovement());

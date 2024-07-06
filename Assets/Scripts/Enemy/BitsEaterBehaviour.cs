@@ -215,20 +215,20 @@ public class BitsEaterBehaviour : MonoBehaviour, IStunnable, IPurgable, IScoreCo
     {
         if (isRespawning)
             return;
-        StopCoroutine(Respawn());
-        StartCoroutine(Respawn());
+        StopCoroutine(Death());
+        StartCoroutine(Death());
     }
 
     public bool TryPurge()
     {
         if (isRespawning)
             return false;
-        StopCoroutine(Respawn());
-        StartCoroutine(Respawn());
+        StopCoroutine(Death());
+        StartCoroutine(Death());
         return true;
     }
 
-    private IEnumerator Respawn()
+    private IEnumerator Death()
     {
         //isRespawning = true;
         //if (animator != null)
