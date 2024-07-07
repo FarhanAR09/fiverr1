@@ -26,9 +26,12 @@ public class QuantumGhostBehaviour : MonoBehaviour
     private bool isTeleporting = false;
     private Coroutine teleportation;
 
+    //[SerializeField]
+    //private SpriteRenderer spriteRenderer;
     [SerializeField]
     private ParticleSystem psInTunelling, psOutTunelling, psTunnelingExplosion;
     private Coroutine outTunnellingEffects;
+    private Animator animator;
 
     private void Awake()
     {
@@ -52,6 +55,8 @@ public class QuantumGhostBehaviour : MonoBehaviour
         }
 
         teleportCooldownTimer = teleportCooldown;
+
+        TryGetComponent(out animator);
     }
 
     private void Start()
@@ -137,7 +142,7 @@ public class QuantumGhostBehaviour : MonoBehaviour
             if (teleportCooldownTimer > 0f)
             {
                 teleportCooldownTimer -= Time.fixedDeltaTime;
-                Debug.Log("Teleporting in " + teleportCooldownTimer);
+                //Debug.Log("Teleporting in " + teleportCooldownTimer);
             }
             else
             {
@@ -146,7 +151,7 @@ public class QuantumGhostBehaviour : MonoBehaviour
 
                 IEnumerator Teleport()
                 {
-                    Debug.Log("Teleporting....................");
+                    //Debug.Log("Teleporting....................");
 
                     Vector2 teleportEndWorldPos = new(-1, -1);
                     if (MapHandler.Instance != null && MapHandler.Instance.MapGrid != null)
@@ -199,6 +204,10 @@ public class QuantumGhostBehaviour : MonoBehaviour
                         em.enabled = false;
                     }
                     //Scale down animation (0.25 second)
+                    if (animator != null)
+                    {
+                        animator.Play("qg_scaledown", -1);
+                    }
 
                     yield return new WaitForSeconds(0.25f);
 
@@ -215,6 +224,10 @@ public class QuantumGhostBehaviour : MonoBehaviour
                     if (psTunnelingExplosion != null)
                     {
                         psTunnelingExplosion.Emit(20);
+                    }
+                    if (animator != null)
+                    {
+                        animator.Play("qg_scaleup", -1);
                     }
 
                     //Direction is set automatically?!?!?!?
