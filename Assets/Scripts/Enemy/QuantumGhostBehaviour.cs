@@ -4,7 +4,7 @@ using System.Linq;
 using UnityEngine;
 using UnityEngine.LowLevel;
 
-public class QuantumGhostBehaviour : MonoBehaviour
+public class QuantumGhostBehaviour : MonoBehaviour, IStunnable, IPurgable
 {
     private GridMover gridMover;
     [SerializeField]
@@ -26,8 +26,8 @@ public class QuantumGhostBehaviour : MonoBehaviour
     private bool isTeleporting = false;
     private Coroutine teleportation;
 
-    //[SerializeField]
-    //private SpriteRenderer spriteRenderer;
+    [SerializeField]
+    private SpriteRenderer spriteRenderer, teleRingSpriteRenderer1, teleRingSpriteRenderer2;
     [SerializeField]
     private ParticleSystem psInTunelling, psOutTunelling, psTunnelingExplosion;
     private Coroutine outTunnellingEffects;
@@ -70,6 +70,20 @@ public class QuantumGhostBehaviour : MonoBehaviour
         {
             var em = psOutTunelling.emission;
             em.enabled = false;
+        }
+        if (spriteRenderer != null)
+        {
+            spriteRenderer.material.SetColor("_Color", new Color(0f, 0.5f, 1f));
+        }
+        if (teleRingSpriteRenderer1 != null)
+        {
+            teleRingSpriteRenderer1.material.SetColor("_GlowColor", new Color(0f, 0.25f, 1f));
+            teleRingSpriteRenderer1.material.SetFloat("_Intensity", 10f);
+        }
+        if (teleRingSpriteRenderer2 != null)
+        {
+            teleRingSpriteRenderer2.material.SetColor("_GlowColor", new Color(1f, 0.4f, 0f));
+            teleRingSpriteRenderer2.material.SetFloat("_Intensity", 10f);
         }
     }
 
@@ -245,9 +259,10 @@ public class QuantumGhostBehaviour : MonoBehaviour
 
     private void OnTriggerEnter2D(Collider2D collision)
     {
-        if (collision.gameObject.Equals(PlayerInput.GOInstance))
+        if (collision.TryGetComponent(out IEnemyHurtable hurtable))
         {
-            GameEvents.OnPlayerLose.Publish(true);
+            //GameEvents.OnPlayerLose.Publish(true);
+            hurtable.TryHurt();
         }
     }
 
@@ -356,5 +371,68 @@ public class QuantumGhostBehaviour : MonoBehaviour
             gridPos.y >= 0 &&
             gridPos.y < MapHandler.Instance.MapGrid.GetHeight() &&
             MapHandler.Instance.MapGrid.GetGridObject(gridPos).Walkable;
+    }
+
+    public void Stun(float duration)
+    {
+        //if (isRespawning)
+        //    return;
+        StopCoroutine(Death());
+        StartCoroutine(Death());
+    }
+
+    public bool TryPurge()
+    {
+        //if (isRespawning)
+        //    return false;
+        StopCoroutine(Death());
+        StartCoroutine(Death());
+        return true;
+    }
+
+    private IEnumerator Death()
+    {
+        //isRespawning = true;
+        //if (animator != null)
+        //    animator.Play("enemy_disappear", -1);
+        //if (gridMover != null)
+        //{
+        //    gridMover.ForceMoveTo(initialPosition);
+        //    //gridMover.Enabled = false;
+        //    gridMover.SetActiveState(false);
+        //}
+        //if (psSpawning != null)
+        //{
+        //    var emission = psSpawning.emission;
+        //    emission.enabled = true;
+        //}
+
+        //yield return new WaitForSeconds(12f);
+        //yield return new WaitUntil(() => !inPurge);
+
+        //isRespawning = false;
+        //if (gridMover != null)
+        //{
+        //    //gridmover.enabled = true;
+        //    gridMover.SetActiveState(true);
+        //}
+
+        //if (animator != null)
+        //    animator.Play("enemy_spawn", -1);
+
+        //if (psSpawning != null)
+        //{
+        //    var emission = psSpawning.emission;
+        //    emission.enabled = false;
+        //}
+
+        float animDur = 0;
+        if (animator != null)
+        {
+            animator.Play("enemy_disappear", -1);
+            animDur = animator.GetCurrentAnimatorStateInfo(0).length;
+        }
+        yield return new WaitForSeconds(animDur);
+        Destroy(gameObject);
     }
 }

@@ -136,9 +136,9 @@ public class TrojanBehaviour : MonoBehaviour
 
     private void OnTriggerEnter2D(Collider2D collision)
     {
-        if (collision.gameObject.Equals(PlayerInput.GOInstance))
+        if (collision.TryGetComponent(out IEnemyHurtable hurtable))
         {
-            GameEvents.OnPlayerLose.Publish(true);
+            hurtable.TryHurt();
         }
     }
 

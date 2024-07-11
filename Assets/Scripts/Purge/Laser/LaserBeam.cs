@@ -37,9 +37,10 @@ public class LaserBeam : MonoBehaviour
     private void OnTriggerEnter2D(Collider2D collision)
     {
         //Detect player
-        if (Equals(collision.gameObject, PlayerInput.GOInstance) && !PlayerInput.GOInstance.GetComponent<PlayerInput>().Lost)
+        if (collision.TryGetComponent(out IEnemyHurtable hurtable))
         {
-            GameEvents.OnPlayerLose.Publish(false);
+            //GameEvents.OnPlayerLose.Publish(false);
+            hurtable.TryHurt();
         }
     }
 

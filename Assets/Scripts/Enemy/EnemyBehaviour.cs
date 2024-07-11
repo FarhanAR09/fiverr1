@@ -185,11 +185,12 @@ public class EnemyBehaviour : MonoBehaviour, IStunnable, IPurgable
 
     private void OnTriggerEnter2D(Collider2D collision)
     {
-        if (!isStunned && !isRespawning && PlayerInput.GOInstance != null && collision.gameObject.Equals(PlayerInput.GOInstance))
+        if (!isStunned && !isRespawning && collision.TryGetComponent(out IEnemyHurtable hurtable))
         {
             if (PlaySceneManager.Instance != null)
             {
-                GameEvents.OnPlayerLose.Publish(false);
+                //GameEvents.OnPlayerLose.Publish(false);
+                hurtable.TryHurt();
             }
         }
     }

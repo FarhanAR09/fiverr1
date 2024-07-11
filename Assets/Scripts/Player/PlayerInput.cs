@@ -6,10 +6,11 @@ using UnityEngine;
 using UnityEngine.Events;
 using UnityEngine.Rendering.UI;
 
-public class PlayerInput : MonoBehaviour
+public class PlayerInput : MonoBehaviour, IEnemyHurtable
 {
     //Singleton
-    public static GameObject GOInstance { get; private set; }
+    public static GameObject GOInstance { get => Instance.gameObject; }
+    public static PlayerInput Instance { get; private set; }
     public bool Lost { get; private set; } = false;
 
     //Movement
@@ -46,18 +47,21 @@ public class PlayerInput : MonoBehaviour
     private readonly float boostSpeedMultiplier = 2f;
     private float speedBeforeBoost;
 
+    //Life
+    public static int Life { get; private set; } = 1;
+
     //Debugging
     private bool canSlowDown = true;
 
     private void Awake()
     {
         //Singleton
-        if (GOInstance != null && GOInstance != this)
+        if (Instance != null && Instance != this)
         {
             Destroy(gameObject);
             return;
         }
-        GOInstance = gameObject;
+        Instance = this;
 
         //Movement
         gridMover = new GameObject("Player Grid Mover", typeof(GridMover)).GetComponent<GridMover>();
@@ -86,11 +90,17 @@ public class PlayerInput : MonoBehaviour
         }
 
         GameEvents.OnSwitchSlowDown.Add(SlowDownState);
+
+        //Test
+        GameEvents.OnLifeUpdated.Add(DebugDisplayLife);
     }
 
     private void Start()
     {
         StoredDirection = initialDirection;
+
+        //Life
+        SetLife(1);
     }
 
     private void Update()
@@ -224,6 +234,9 @@ public class PlayerInput : MonoBehaviour
         }
 
         GameEvents.OnSwitchSlowDown.Remove(SlowDownState);
+
+        //Test
+        GameEvents.OnLifeUpdated.Remove(DebugDisplayLife);
     }
 
     private void OnDestroy()
@@ -286,5 +299,29 @@ public class PlayerInput : MonoBehaviour
     private void SlowDownState(bool state)
     {
         canSlowDown = state;
+    }
+
+    public void SetLife(int amount)
+    {
+        Life = amount;
+        GameEvents.OnLifeUpdated.Publish(Life);
+    }
+
+    private void DebugDisplayLife(int remainingLives)
+    {
+        Debug.Log("Remaining Lives: " + remainingLives);
+    }
+
+    public bool TryHurt()
+    {
+        //TODO: implement invincibility check
+        SetLife(Life - 1);
+        GameEvents.OnPlayerHurt.Publish(true);
+        if (Life <= 0 && !Lost)
+        {
+            Lost = true;
+            GameEvents.OnPlayerLose.Publish(true);
+        }
+        return true;
     }
 }
