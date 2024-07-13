@@ -1,5 +1,7 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
+using TMPro;
 using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.UI;
@@ -13,6 +15,11 @@ public class SkillUIManager : MonoBehaviour
 
     [SerializeField]
     private Image empDisplay, bullettimeDisplay, boostDisplay;
+
+    [SerializeField]
+    private TMP_Text[] livesDisplays;
+    [SerializeField]
+    private Material onLifeMaterial, offLifeMaterial;
 
     private void Awake()
     {
@@ -61,6 +68,8 @@ public class SkillUIManager : MonoBehaviour
         GameEvents.OnBoostCooldownUpdated.Add(UpdateBoost);
         GameEvents.OnBoostCooldownStarted.Add(ResetBoost);
         GameEvents.OnBoostCooldownFinished.Add(IntensifyBoost);
+
+        GameEvents.OnLifeUpdated.Add(UpdateLifeDisplay);
     }
 
     private void OnDisable()
@@ -76,6 +85,8 @@ public class SkillUIManager : MonoBehaviour
         GameEvents.OnBoostCooldownUpdated.Remove(UpdateBoost);
         GameEvents.OnBoostCooldownStarted.Remove(ResetBoost);
         GameEvents.OnBoostCooldownFinished.Remove(IntensifyBoost);
+
+        GameEvents.OnLifeUpdated.Remove(UpdateLifeDisplay);
     }
 
     private void UpdateEMP(float progress)
@@ -183,5 +194,21 @@ public class SkillUIManager : MonoBehaviour
     private void IntensifyDisplay(Image display)
     {
         display.material.SetFloat("_Intensity", 7f);
+    }
+
+    private void UpdateLifeDisplay(int livesCount)
+    {
+        Color onColor = Color.white, offColor = new(0.06f, 0.06f, 0.06f);
+        if (livesDisplays.Length <= 0)
+            return;
+
+        for (int onIndex = 0; onIndex < livesCount; onIndex++)
+        {
+            livesDisplays[onIndex].color = onColor;
+        }
+        for (int offIndex = livesCount; offIndex < livesDisplays.Length; offIndex++)
+        {
+            livesDisplays[offIndex].color = offColor;
+        }
     }
 }

@@ -29,11 +29,6 @@ public class CacheStorage : MonoBehaviour
         if (StoredCache >= OverflowChargeAmount)
         {
             GameEvents.OnCacheOverflowed.Publish(true);
-            if (PlayerInput.GOInstance != null)
-            {
-                PlayerInput.GOInstance.GetComponent<PlayerInput>().SetLife(PlayerInput.Life + 1);
-                Debug.Log("Added 1 Life");
-            }
         }
     }
 

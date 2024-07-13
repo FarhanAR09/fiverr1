@@ -33,6 +33,8 @@ public class QuantumGhostBehaviour : MonoBehaviour, IStunnable, IPurgable
     private Coroutine outTunnellingEffects;
     private Animator animator;
 
+    private bool allowHurting = false;
+
     private void Awake()
     {
         gridMover = new GameObject(name + " Grid Mover", typeof(GridMover)).GetComponent<GridMover>();
@@ -222,8 +224,17 @@ public class QuantumGhostBehaviour : MonoBehaviour, IStunnable, IPurgable
                     {
                         animator.Play("qg_scaledown", -1);
                     }
+                    if (teleRingSpriteRenderer1 != null)
+                    {
+                        teleRingSpriteRenderer1.enabled = false;
+                    }
+                    if (teleRingSpriteRenderer2 != null)
+                    {
+                        teleRingSpriteRenderer2.enabled = false;
+                    }
 
                     yield return new WaitForSeconds(0.25f);
+                    yield return new WaitUntil(() => !inPurge);
 
                     gridMover.SetActiveState(false);
                     if (teleportEndWorldPos != new Vector2(-1, -1))
@@ -243,6 +254,14 @@ public class QuantumGhostBehaviour : MonoBehaviour, IStunnable, IPurgable
                     {
                         animator.Play("qg_scaleup", -1);
                     }
+                    if (teleRingSpriteRenderer1 != null)
+                    {
+                        teleRingSpriteRenderer1.enabled = true;
+                    }
+                    if (teleRingSpriteRenderer2 != null)
+                    {
+                        teleRingSpriteRenderer2.enabled = true;
+                    }
 
                     //Direction is set automatically?!?!?!?
                     //HOW?!?!
@@ -259,7 +278,7 @@ public class QuantumGhostBehaviour : MonoBehaviour, IStunnable, IPurgable
 
     private void OnTriggerEnter2D(Collider2D collision)
     {
-        if (collision.TryGetComponent(out IEnemyHurtable hurtable))
+        if (allowHurting && collision.TryGetComponent(out IEnemyHurtable hurtable))
         {
             //GameEvents.OnPlayerLose.Publish(true);
             hurtable.TryHurt();
@@ -334,6 +353,21 @@ public class QuantumGhostBehaviour : MonoBehaviour, IStunnable, IPurgable
         //    StopCoroutine(stunCoroutine);
         //gridMover.Enabled = false;
         gridMover.SetActiveState(false);
+
+        if (animator != null)
+        {
+            animator.Play("qg_scaledown", -1);
+        }
+        if (teleRingSpriteRenderer1 != null)
+        {
+            teleRingSpriteRenderer1.enabled = false;
+        }
+        if (teleRingSpriteRenderer2 != null)
+        {
+            teleRingSpriteRenderer2.enabled = false;
+        }
+
+        allowHurting = false;
         //isStunned = true;
 
         //if (animator != null)
@@ -352,6 +386,21 @@ public class QuantumGhostBehaviour : MonoBehaviour, IStunnable, IPurgable
 
         //gridMover.Enabled = true;
         gridMover.SetActiveState(true);
+        
+        if (animator != null)
+        {
+            animator.Play("qg_scaleup", -1);
+        }
+        if (teleRingSpriteRenderer1 != null)
+        {
+            teleRingSpriteRenderer1.enabled = true;
+        }
+        if (teleRingSpriteRenderer2 != null)
+        {
+            teleRingSpriteRenderer2.enabled = true;
+        }
+
+        allowHurting = true;
         //isStunned = false;
 
         //if (animator != null)
@@ -426,13 +475,33 @@ public class QuantumGhostBehaviour : MonoBehaviour, IStunnable, IPurgable
         //    emission.enabled = false;
         //}
 
-        float animDur = 0;
+        float animDur = 0f;
         if (animator != null)
         {
-            animator.Play("enemy_disappear", -1);
+            animator.Play("qg_scaledown", -1);
             animDur = animator.GetCurrentAnimatorStateInfo(0).length;
+        }
+        if (teleRingSpriteRenderer1 != null)
+        {
+            teleRingSpriteRenderer1.enabled = false;
+        }
+        if (teleRingSpriteRenderer2 != null)
+        {
+            teleRingSpriteRenderer2.enabled = false;
         }
         yield return new WaitForSeconds(animDur);
         Destroy(gameObject);
+    }
+
+    public void Setup(float speed, Vector2Int initialPosition, MovementDirection initialDirection)
+    {
+        this.speed = speed;
+        //storedInitialPosition = initialPosition;
+        this.initialDirection = initialDirection;
+        //beenSetUp = true;
+        if (gridMover != null)
+        {
+            gridMover.ForceToDirection(initialDirection);
+        }
     }
 }

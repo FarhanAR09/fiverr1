@@ -49,6 +49,16 @@ public class PlayerInput : MonoBehaviour, IEnemyHurtable
 
     //Life
     public static int Life { get; private set; } = 1;
+    /// <summary>
+    /// Can only collect life once every level
+    /// </summary>
+    private bool lifeCollectedInThisLevel = false;
+
+    //Invincibility
+    private bool invincible = false;
+
+    //Animations
+    private Animator animator;
 
     //Debugging
     private bool canSlowDown = true;
@@ -71,6 +81,8 @@ public class PlayerInput : MonoBehaviour, IEnemyHurtable
         Lost = false;
 
         TryGetComponent(out powerManager);
+
+        TryGetComponent(out animator);
     }
 
     private void OnEnable()
@@ -92,7 +104,10 @@ public class PlayerInput : MonoBehaviour, IEnemyHurtable
         GameEvents.OnSwitchSlowDown.Add(SlowDownState);
 
         //Test
-        GameEvents.OnLifeUpdated.Add(DebugDisplayLife);
+        //GameEvents.OnLifeUpdated.Add(DebugDisplayLife);
+
+        GameEvents.OnCacheOverflowed.Add(TryCollectLife);
+        GameEvents.OnLevelUp.Add(AllowLifeCollection);
     }
 
     private void Start()
@@ -236,7 +251,10 @@ public class PlayerInput : MonoBehaviour, IEnemyHurtable
         GameEvents.OnSwitchSlowDown.Remove(SlowDownState);
 
         //Test
-        GameEvents.OnLifeUpdated.Remove(DebugDisplayLife);
+        //GameEvents.OnLifeUpdated.Remove(DebugDisplayLife);
+
+        GameEvents.OnCacheOverflowed.Remove(TryCollectLife);
+        GameEvents.OnLevelUp.Remove(AllowLifeCollection);
     }
 
     private void OnDestroy()
@@ -307,21 +325,60 @@ public class PlayerInput : MonoBehaviour, IEnemyHurtable
         GameEvents.OnLifeUpdated.Publish(Life);
     }
 
-    private void DebugDisplayLife(int remainingLives)
-    {
-        Debug.Log("Remaining Lives: " + remainingLives);
-    }
+    //private void DebugDisplayLife(int remainingLives)
+    //{
+    //    Debug.Log("Remaining Lives: " + remainingLives);
+    //}
 
     public bool TryHurt()
     {
-        //TODO: implement invincibility check
+        if (invincible || Lost)
+        {
+            return false;
+        }
+
         SetLife(Life - 1);
         GameEvents.OnPlayerHurt.Publish(true);
-        if (Life <= 0 && !Lost)
+        if (Life <= 0)
         {
             Lost = true;
             GameEvents.OnPlayerLose.Publish(true);
         }
+        else
+        {
+            IEnumerator Invincibility()
+            {
+                invincible = true;
+                if (animator != null)
+                {
+                    animator.Play("player_invincible", -1);
+                }
+
+                yield return new WaitForSeconds(3f);
+
+                invincible = false;
+                if (animator != null)
+                {
+                    animator.Play("player_noAnim", 1);
+                }
+            }
+            StopCoroutine(Invincibility());
+            StartCoroutine(Invincibility());
+        }
         return true;
+    }
+
+    private void TryCollectLife(bool _)
+    {
+        if (!lifeCollectedInThisLevel && Life < 5)
+        {
+            lifeCollectedInThisLevel = true;
+            SetLife(Life + 1);
+        }
+    }
+
+    private void AllowLifeCollection(bool _)
+    {
+        lifeCollectedInThisLevel = false;
     }
 }

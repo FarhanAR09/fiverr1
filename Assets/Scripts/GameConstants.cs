@@ -14,4 +14,8 @@ public static class GameConstants
     public const string SOUNDVOLUME = "soundVolume";
     public const string MUSICVOLUME = "musicVolume";
     #endregion
+
+    #region Credit
+    public const string CREDIT = "credit";
+    #endregion
 }
