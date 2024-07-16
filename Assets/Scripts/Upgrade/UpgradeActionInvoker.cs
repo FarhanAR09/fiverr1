@@ -1,7 +1,9 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 using UnityEngine;
+using UnityEngine.Events;
 
 public class UpgradeActionInvoker : MonoBehaviour
 {
@@ -13,16 +15,10 @@ public class UpgradeActionInvoker : MonoBehaviour
         {
             if (_instance == null)
             {
-                _instance = FindObjectOfType<UpgradeActionInvoker>();
-
-                if (_instance == null)
-                {
-                    GameObject singletonObject = new GameObject();
-                    _instance = singletonObject.AddComponent<UpgradeActionInvoker>();
-                    singletonObject.name = typeof(UpgradeActionInvoker).ToString() + " (Singleton)";
-                }
+                GameObject singletonObject = new GameObject();
+                _instance = singletonObject.AddComponent<UpgradeActionInvoker>();
+                singletonObject.name = typeof(UpgradeActionInvoker).ToString() + " (Singleton)";
             }
-
             return _instance;
         }
     }
@@ -40,14 +36,54 @@ public class UpgradeActionInvoker : MonoBehaviour
         }
     }
 
-    public bool InvokeAction(string name)
+    public void InvokeAction(string name = "DefaultUpgradeAction", UnityAction<bool> callback = null)
     {
-        return StartCoroutine(name);
+        StartCoroutine(name, callback);
     }
 
-    private static IEnumerator<bool> DefaultUpgradeAction()
+    private void BaseUpgradeAction(string key, UnityAction<bool> callback = null)
+    {
+        Debug.Log("Upgrading...");
+        Debug.Log(PlayerPrefs.GetInt(key));
+        PlayerPrefs.SetInt(key, PlayerPrefs.GetInt(key) + 1);
+        Debug.Log(PlayerPrefs.GetInt(key));
+        callback?.Invoke(true);
+    }
+
+    private IEnumerator DefaultUpgradeAction(UnityAction<bool> callback = null)
     {
         Debug.LogWarning("Invalid Upgrade Action Name!");
-        yield return false;
+        callback?.Invoke(false);
+        yield return null;
+    }
+
+    private IEnumerator TestUpgradeAction(UnityAction<bool> callback = null)
+    {
+        BaseUpgradeAction("upgradeTest", callback);
+        yield return null;
+    }
+
+    private IEnumerator MaxLivesUpgrade(UnityAction<bool> callback = null)
+    {
+        BaseUpgradeAction("upgradeMaxLives", callback);
+        yield return null;
+    }
+
+    private IEnumerator TimeSlowUpgrade(UnityAction<bool> callback = null)
+    {
+        BaseUpgradeAction("upgradeTimeSlow", callback);
+        yield return null;
+    }
+
+    private IEnumerator EMPUpgrade(UnityAction<bool> callback = null)
+    {
+        BaseUpgradeAction("upgradeEMP", callback);
+        yield return null;
+    }
+
+    private IEnumerator BoostUpgrade(UnityAction<bool> callback = null)
+    {
+        BaseUpgradeAction("upgradeBoost", callback);
+        yield return null;
     }
 }

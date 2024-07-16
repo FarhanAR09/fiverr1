@@ -9,7 +9,7 @@ using UnityEngine.Rendering.UI;
 public class PlayerInput : MonoBehaviour, IEnemyHurtable
 {
     //Singleton
-    public static GameObject GOInstance { get => Instance.gameObject; }
+    public static GameObject GOInstance { get => Instance != null ? Instance.gameObject : null; }
     public static PlayerInput Instance { get; private set; }
     public bool Lost { get; private set; } = false;
 

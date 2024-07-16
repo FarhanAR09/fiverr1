@@ -62,7 +62,13 @@ public class ScorePellet : MonoBehaviour, IStunnable
                 canBePicked = false;
 
                 if (collector.EatingBitProduceScore)
-                    ScoreCounter.AddScore(10 * (Corrupted ? -2 : 1));
+                {
+                    if (Corrupted)
+                        ScoreCounter.AddCorruptedScore(20);
+                    else
+                        ScoreCounter.AddScore(10);
+
+                }
 
                 if (pickupSFX != null && SFXController.Instance != null)
                 {

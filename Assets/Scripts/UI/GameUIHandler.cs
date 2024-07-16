@@ -45,7 +45,7 @@ public class GameUIHandler : MonoBehaviour
     private void UpdateScoreDisplay(float addedScore)
     {
         if (scoreDisplay != null)
-            scoreDisplay.SetText("Score:\n" + ScoreCounter.Score.ToString("F0"));
+            scoreDisplay.SetText("Score:\n" + ScoreCounter.TotalScore.ToString("F0"));
     }
 
     private void UpdateGameSpeedDisplay()

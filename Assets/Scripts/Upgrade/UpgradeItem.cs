@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.Events;
 
 [CreateAssetMenu(fileName = "New UpgradeItem", menuName = "Data/Upgrades", order = 1)]
 public class UpgradeItem : ScriptableObject
@@ -21,9 +22,8 @@ public class UpgradeItem : ScriptableObject
         return PlayerPrefs.GetInt(KeyName);
     }
 
-    public bool TryUpgrade()
+    public void TryUpgrade(UnityAction<bool> callback = null)
     {
-        //TODO: calls action
-        return false;
+        UpgradeActionInvoker.Instance.InvokeAction(ActionName, callback);
     }
 }
