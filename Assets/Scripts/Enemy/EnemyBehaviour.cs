@@ -385,7 +385,6 @@ public class EnemyBehaviour : MonoBehaviour, IStunnable, IPurgable
         {
             gridMover.ForceMoveTo(initialPosition);
             //gridMover.Enabled = false;
-            gridMover.SetActiveState(false);
         }
 
         if (psAbsorb != null)
@@ -393,6 +392,9 @@ public class EnemyBehaviour : MonoBehaviour, IStunnable, IPurgable
             var emission = psAbsorb.emission;
             emission.rateOverTime = new ParticleSystem.MinMaxCurve(absorbInitialRate * 4);
         }
+
+        yield return new WaitForSeconds(0.5f);
+        gridMover.SetActiveState(false);
 
         yield return new WaitForSeconds(12f);
         yield return new WaitUntil(() => !inPurge);

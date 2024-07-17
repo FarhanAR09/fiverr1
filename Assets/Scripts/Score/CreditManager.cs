@@ -4,22 +4,48 @@ using UnityEngine;
 
 public static class CreditManager
 {
-    public static int Credit { get; private set; } = 0;
+    public static float Credit {
+        get;
+        private set; 
+    }
+
+    public static void LoadCredit()
+    {
+        Credit = PlayerPrefs.GetFloat(GameConstants.CREDIT, 0f);
+    }
 
     public static void SaveCredit()
     {
-        PlayerPrefs.SetInt(GameConstants.CREDIT, Credit);
+        PlayerPrefs.SetFloat(GameConstants.CREDIT, Credit);
+        PlayerPrefs.Save();
     }
 
-    public static void DepositCredit(int amount)
+    public static void DepositCredit(float amount)
     {
+        LoadCredit();
+        //Credit = PlayerPrefs.GetFloat(GameConstants.CREDIT, 0f);
         Credit += amount;
         GameEvents.OnCreditUpdated.Publish(Credit);
+        Debug.Log($"Credits Left: {Credit}");
+        SaveCredit();
     }
 
-    public static void SpendCredit(int amount)
+    public static bool TrySpendCredit(float amount)
     {
-        Credit -= amount;
-        GameEvents.OnCreditUpdated.Publish(Credit);
+        LoadCredit();
+        Debug.Log("Spending...");
+        //Credit = PlayerPrefs.GetFloat(GameConstants.CREDIT, 0f);
+        if (amount <= Credit)
+        {
+            Debug.Log("Spending Succeed");
+            Credit -= amount;
+            SaveCredit();
+            GameEvents.OnCreditUpdated.Publish(Credit);
+            Debug.Log($"Credits Left: {Credit}");
+            return true;
+        }
+        SaveCredit();
+        Debug.Log($"Credits Left: {Credit}");
+        return false;
     }
 }

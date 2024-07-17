@@ -44,13 +44,15 @@ public class UpgradeItemButton : MonoBehaviour
                 price = upgradeItem.Price[level - 1];
             }
 
-            if (CreditManager.Credit >= price)
+            CreditManager.LoadCredit();
+            if (CreditManager.TrySpendCredit(price))
             {
-                CreditManager.SpendCredit(price);
                 upgradeItem.TryUpgrade(callback: UpdateDisplay);
+                Debug.Log("Enough Credit");
             }
+            CreditManager.SaveCredit();
         }
-        Debug.LogWarning("Upgrade Failed");
+        else Debug.LogWarning("Upgrade Failed");
     }
 
     private void UpdateDisplay(bool success)
@@ -94,13 +96,13 @@ public class UpgradeItemButton : MonoBehaviour
             {
                 nameDisplay.SetText(upgradeItem.Name);
             }
-            Debug.Log(upgradeItem.name + " Success");
+            //Debug.Log(upgradeItem.name + " Success");
 
-            if (level > upgradeItem.MaxLevel)
-            {
-                PlayerPrefs.SetInt(upgradeItem.KeyName, 1);
-                Debug.Log("Resetting...");
-            }
+            //if (level > upgradeItem.MaxLevel)
+            //{
+            //    PlayerPrefs.SetInt(upgradeItem.KeyName, 1);
+            //    //Debug.Log("Resetting...");
+            //}
         }
         else
         {

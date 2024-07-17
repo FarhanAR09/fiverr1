@@ -11,7 +11,7 @@ using UnityEngine.SocialPlatforms.Impl;
 public class GameUIHandler : MonoBehaviour
 {
     [SerializeField]
-    private TextMeshProUGUI scoreDisplay, gameSpeedDisplay, loseScoreDisplay, leaderboardScoreDisplay;
+    private TextMeshProUGUI scoreDisplay, gameSpeedDisplay, loseScoreDisplay, loseCreditsDisplay, leaderboardScoreDisplay;
 
     private Animator gameSpeedDisplayAnimator;
 
@@ -56,11 +56,17 @@ public class GameUIHandler : MonoBehaviour
 
     private void UpdateLoseDisplay(bool _)
     {
-        float highscore = PlayerPrefs.HasKey("highscore") && PlayerPrefs.GetFloat("highscore") > ScoreCounter.Score ?
+        float highscore = PlayerPrefs.HasKey("highscore") && PlayerPrefs.GetFloat("highscore") > ScoreCounter.TotalScore ?
             PlayerPrefs.GetFloat("highscore") :
-            ScoreCounter.Score;
+            ScoreCounter.TotalScore;
         if (loseScoreDisplay != null)
-            loseScoreDisplay.SetText($"SCORE:\t\t{ScoreCounter.Score}\r\nHIGHSCORE:\t{highscore:F0}");
+            loseScoreDisplay.SetText(
+                $"SCORE:\t\t\t{ScoreCounter.Score}\r\n" +
+                $"CORRUPTED SCORE:\t{ScoreCounter.CorruptedScore}\r\n" +
+                $"TOTAL SCORE:\t\t{ScoreCounter.TotalScore}\r\n" +
+                $"HIGHSCORE:\t\t{highscore:F0}\r\n");
+        if (loseCreditsDisplay != null)
+            loseCreditsDisplay.SetText($"+{ScoreCounter.TotalScore} CREDITS EARNED");
     }
 
     private void FlashRedReduceGameSpeed(bool _)
@@ -73,7 +79,7 @@ public class GameUIHandler : MonoBehaviour
     {
         if (leaderboardScoreDisplay != null)
         {
-            leaderboardScoreDisplay.SetText($"{ScoreCounter.Score:F0}");
+            leaderboardScoreDisplay.SetText($"{ScoreCounter.TotalScore:F0}");
         }
     }
 }

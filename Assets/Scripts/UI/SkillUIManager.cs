@@ -21,6 +21,8 @@ public class SkillUIManager : MonoBehaviour
     [SerializeField]
     private Material onLifeMaterial, offLifeMaterial;
 
+    private bool bulletTimeUnlocked = true, empUnlocked = true, boostUnlocked = true;
+
     private void Awake()
     {
         if (canvasUI != null && renderingCamera != null)
@@ -35,6 +37,10 @@ public class SkillUIManager : MonoBehaviour
 
     private void Start()
     {
+        bulletTimeUnlocked = PlayerPrefs.GetInt("upgradeTimeSlow") >= 2;
+        empUnlocked = PlayerPrefs.GetInt("upgradeEMP") >= 2;
+        boostUnlocked = PlayerPrefs.GetInt("upgradeBoost") >= 2;
+
         if (empDisplay != null)
         {
             empDisplay.material.SetColor("_Color", Color.white);
@@ -57,34 +63,54 @@ public class SkillUIManager : MonoBehaviour
 
     private void OnEnable()
     {
-        GameEvents.OnEMPCooldownUpdated.Add(UpdateEMP);
-        GameEvents.OnEMPCooldownStarted.Add(ResetEMP);
-        GameEvents.OnEMPCooldownFinished.Add(IntensifyEMP);
+        if (bulletTimeUnlocked)
+        {
+            GameEvents.OnBulletTimeCooldownUpdated.Add(UpdateBulletTime);
+            GameEvents.OnBulletTimeCooldownStarted.Add(ResetBulletTime);
+            GameEvents.OnBulletTimeCooldownFinished.Add(IntensifyBulletTime);
+        }
 
-        GameEvents.OnBulletTimeCooldownUpdated.Add(UpdateBulletTime);
-        GameEvents.OnBulletTimeCooldownStarted.Add(ResetBulletTime);
-        GameEvents.OnBulletTimeCooldownFinished.Add(IntensifyBulletTime);
+        if (empUnlocked)
+        {
+            GameEvents.OnEMPCooldownUpdated.Add(UpdateEMP);
+            GameEvents.OnEMPCooldownStarted.Add(ResetEMP);
+            GameEvents.OnEMPCooldownFinished.Add(IntensifyEMP);
+        }
 
-        GameEvents.OnBoostCooldownUpdated.Add(UpdateBoost);
-        GameEvents.OnBoostCooldownStarted.Add(ResetBoost);
-        GameEvents.OnBoostCooldownFinished.Add(IntensifyBoost);
+        if (boostUnlocked)
+        {
+            GameEvents.OnBoostCooldownUpdated.Add(UpdateBoost);
+            GameEvents.OnBoostCooldownStarted.Add(ResetBoost);
+            GameEvents.OnBoostCooldownFinished.Add(IntensifyBoost);
+        }
 
         GameEvents.OnLifeUpdated.Add(UpdateLifeDisplay);
+
+        Debug.Log("Bruh");
     }
 
     private void OnDisable()
     {
-        GameEvents.OnEMPCooldownUpdated.Remove(UpdateEMP);
-        GameEvents.OnEMPCooldownStarted.Remove(ResetEMP);
-        GameEvents.OnEMPCooldownFinished.Remove(IntensifyEMP);
+        if (bulletTimeUnlocked)
+        {
+            GameEvents.OnBulletTimeCooldownUpdated.Remove(UpdateBulletTime);
+            GameEvents.OnBulletTimeCooldownStarted.Remove(ResetBulletTime);
+            GameEvents.OnBulletTimeCooldownFinished.Remove(IntensifyBulletTime);
+        }
+        
+        if (empUnlocked)
+        {
+            GameEvents.OnEMPCooldownUpdated.Remove(UpdateEMP);
+            GameEvents.OnEMPCooldownStarted.Remove(ResetEMP);
+            GameEvents.OnEMPCooldownFinished.Remove(IntensifyEMP);
+        }
 
-        GameEvents.OnBulletTimeCooldownUpdated.Remove(UpdateBulletTime);
-        GameEvents.OnBulletTimeCooldownStarted.Remove(ResetBulletTime);
-        GameEvents.OnBulletTimeCooldownFinished.Remove(IntensifyBulletTime);
-
-        GameEvents.OnBoostCooldownUpdated.Remove(UpdateBoost);
-        GameEvents.OnBoostCooldownStarted.Remove(ResetBoost);
-        GameEvents.OnBoostCooldownFinished.Remove(IntensifyBoost);
+        if (boostUnlocked)
+        {
+            GameEvents.OnBoostCooldownUpdated.Remove(UpdateBoost);
+            GameEvents.OnBoostCooldownStarted.Remove(ResetBoost);
+            GameEvents.OnBoostCooldownFinished.Remove(IntensifyBoost);
+        }
 
         GameEvents.OnLifeUpdated.Remove(UpdateLifeDisplay);
     }
@@ -92,6 +118,9 @@ public class SkillUIManager : MonoBehaviour
     private void UpdateEMP(float progress)
     {
         //Debug.Log("EMP Progress Update: " + progress);
+        if (!empUnlocked)
+            return;
+
         if (empDisplay != null)
         {
             UpdateDisplay(empDisplay, progress);
@@ -102,6 +131,9 @@ public class SkillUIManager : MonoBehaviour
     private void ResetEMP(bool _)
     {
         //Debug.Log("EMP Intensity Reset");
+        if (!empUnlocked)
+            return;
+
         if (empDisplay != null)
         {
             ResetDisplay(empDisplay);
@@ -112,6 +144,9 @@ public class SkillUIManager : MonoBehaviour
     private void IntensifyEMP(bool _)
     {
         //Debug.Log("EMP Intensified");
+        if (!empUnlocked)
+            return;
+
         if (empDisplay != null)
         {
             IntensifyDisplay(empDisplay);
@@ -122,6 +157,9 @@ public class SkillUIManager : MonoBehaviour
     private void UpdateBulletTime(float progress)
     {
         //Debug.Log("Bullet Time Progress Update: " + progress);
+        if (!bulletTimeUnlocked)
+            return;
+
         if (bullettimeDisplay != null)
         {
             UpdateDisplay(bullettimeDisplay, progress);
@@ -132,6 +170,9 @@ public class SkillUIManager : MonoBehaviour
     private void ResetBulletTime(bool _)
     {
         //Debug.Log("Bullet Time Intensity Reset");
+        if (!bulletTimeUnlocked)
+            return;
+
         if (bullettimeDisplay != null)
         {
             ResetDisplay(bullettimeDisplay);
@@ -142,6 +183,9 @@ public class SkillUIManager : MonoBehaviour
     private void IntensifyBulletTime(bool _)
     {
         //Debug.Log("Bullet Time Intensified");
+        if (!bulletTimeUnlocked)
+            return;
+
         if (bullettimeDisplay != null)
         {
             IntensifyDisplay(bullettimeDisplay);
@@ -152,6 +196,9 @@ public class SkillUIManager : MonoBehaviour
     private void UpdateBoost(float progress)
     {
         //Debug.Log("Boost Progress Update: " + progress);
+        if (!boostUnlocked)
+            return;
+
         if (boostDisplay != null)
         {
             UpdateDisplay(boostDisplay, progress);
@@ -162,6 +209,9 @@ public class SkillUIManager : MonoBehaviour
     private void ResetBoost(bool _)
     {
         //Debug.Log("Boost Intensity Reset");
+        if (!boostUnlocked)
+            return;
+
         if (boostDisplay != null)
         {
             ResetDisplay(boostDisplay);
@@ -172,6 +222,9 @@ public class SkillUIManager : MonoBehaviour
     private void IntensifyBoost(bool _)
     {
         //Debug.Log("Boost Intensified");
+        if (!boostUnlocked)
+            return;
+
         if (boostDisplay != null)
         {
             IntensifyDisplay(boostDisplay);

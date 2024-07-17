@@ -10,5 +10,5 @@ public partial class GameEvents
     /// <summary>
     /// Credit is updated to int amount
     /// </summary>
-    public static GameEvent<int> OnCreditUpdated = new();
+    public static GameEvent<float> OnCreditUpdated = new();
 }

@@ -9,6 +9,7 @@ using static Unity.Burst.Intrinsics.X86.Avx;
 
 public class PlayerPowerUpManager : MonoBehaviour, IScoreCollector
 {
+    private bool bulletTimeUnlocked = true;
     private const string BULLETTIME = "BulletTimeSpeed";
     private Coroutine bulletTimeCoroutine;
     private bool bulletTimeActive = false;
@@ -29,6 +30,7 @@ public class PlayerPowerUpManager : MonoBehaviour, IScoreCollector
     private AudioClip fillChargeSFX;
 
     //Boost
+    private bool boostUnlocked = true;
     private bool boostStarted;
     private float boostTime = 0f;
     private readonly float boostDuration = 3f;
@@ -51,6 +53,7 @@ public class PlayerPowerUpManager : MonoBehaviour, IScoreCollector
     public bool CanCorruptBit { get; } = false;
 
     //EMP Cooldown
+    private bool empUnlocked = true;
     private float EmpCdDuration
     {
         get => powersHaveCooldown? 3f : powerInstantCooldownDuration;
@@ -102,6 +105,11 @@ private float empCdTime = 0;
     private void Start()
     {
         GameSpeedManager.TryAddGameSpeedModifier(BULLETTIME, 1f);
+
+        //Skill Level Check
+        bulletTimeUnlocked = PlayerPrefs.GetInt("upgradeTimeSlow", 1) >= 2;
+        empUnlocked = PlayerPrefs.GetInt("upgradeEMP", 1) >= 2;
+        boostUnlocked = PlayerPrefs.GetInt("upgradeBoost", 1) >= 2;
     }
 
     private void OnEnable()
@@ -254,6 +262,9 @@ private float empCdTime = 0;
 
     private void BulletTime()
     {
+        if (!bulletTimeUnlocked)
+            return;
+
         int usedCharge = 1;
         
         if (!powersRequireCharge)
@@ -290,6 +301,9 @@ private float empCdTime = 0;
 
     private void ThrowEMP()
     {
+        if (!empUnlocked)
+            return;
+
         int usedCharge = 1;
 
         if (!powersRequireCharge)
@@ -314,6 +328,9 @@ private float empCdTime = 0;
 
     private void StartBoost()
     {
+        if (!boostUnlocked)
+            return;
+
         int usedCharge = 1;
 
         if (!powersRequireCharge)

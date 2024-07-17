@@ -12,7 +12,7 @@ public class MainMenuManager : MonoBehaviour
     [SerializeField]
     private GameObject panelMainMenu, panelLeaderboard, panelHowToPlay, panelSettings, panelUpgrade;
     [SerializeField]
-    private TextMeshProUGUI leaderNamesDisplay, leaderScoresDisplay;
+    private TextMeshProUGUI leaderNamesDisplay, leaderScoresDisplay, upgradeCreditsDisplay;
 
     private void Start()
     {
@@ -48,6 +48,17 @@ public class MainMenuManager : MonoBehaviour
         {
             panelUpgrade.SetActive(false);
         }
+    }
+
+    private void OnEnable()
+    {
+        GameEvents.OnCreditUpdated.Add(UpdateUpgradeCreditsDisplay);
+        UpdateUpgradeCreditsDisplay();
+    }
+
+    private void OnDisable()
+    {
+        GameEvents.OnCreditUpdated.Remove(UpdateUpgradeCreditsDisplay);
     }
 
     public void Play()
@@ -137,6 +148,8 @@ public class MainMenuManager : MonoBehaviour
             panelUpgrade.SetActive(true);
         if (panelMainMenu != null)
             panelMainMenu.SetActive(false);
+        CreditManager.LoadCredit();
+        UpdateUpgradeCreditsDisplay();
     }
 
     public void CloseUpgrade()
@@ -146,5 +159,13 @@ public class MainMenuManager : MonoBehaviour
         if (panelMainMenu != null)
             panelMainMenu.SetActive(true);
         PlayerPrefs.Save();
+    }
+
+    private void UpdateUpgradeCreditsDisplay(float _ = 0f)
+    {
+        if (upgradeCreditsDisplay != null)
+        {
+            upgradeCreditsDisplay.SetText("CREDITS: " + CreditManager.Credit.ToString("F0"));
+        }
     }
 }

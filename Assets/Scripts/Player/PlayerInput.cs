@@ -49,6 +49,7 @@ public class PlayerInput : MonoBehaviour, IEnemyHurtable
 
     //Life
     public static int Life { get; private set; } = 1;
+    public static int MaxLife { get; private set; } = 1;
     /// <summary>
     /// Can only collect life once every level
     /// </summary>
@@ -62,6 +63,9 @@ public class PlayerInput : MonoBehaviour, IEnemyHurtable
 
     //Debugging
     private bool canSlowDown = true;
+
+    //Feature Switch
+    private bool slowDownEnabled = true;
 
     private void Awake()
     {
@@ -108,11 +112,16 @@ public class PlayerInput : MonoBehaviour, IEnemyHurtable
 
         GameEvents.OnCacheOverflowed.Add(TryCollectLife);
         GameEvents.OnLevelUp.Add(AllowLifeCollection);
+
+        GameEvents.OnSwitchIdleMechanics.Add(FSSlowDownState);
     }
 
     private void Start()
     {
         StoredDirection = initialDirection;
+
+        MaxLife = PlayerPrefs.GetInt("upgradeMaxLives");
+        //Debug.Log(MaxLife);
 
         //Life
         SetLife(1);
@@ -210,7 +219,7 @@ public class PlayerInput : MonoBehaviour, IEnemyHurtable
             else
             {
                 playerStoppedTimer = 0;
-                if (canSlowDown)
+                if (canSlowDown && slowDownEnabled)
                 {
                     float currentSpeed = GameSpeedManager.TryGetGameSpeedModifier(GameConstants.LEVELSPEEDKEY);
                     float reducedGameSpeed = Mathf.Max(currentSpeed - GameConstants.PLAYERSTOPSLOWDOWN, 1f);
@@ -255,6 +264,8 @@ public class PlayerInput : MonoBehaviour, IEnemyHurtable
 
         GameEvents.OnCacheOverflowed.Remove(TryCollectLife);
         GameEvents.OnLevelUp.Remove(AllowLifeCollection);
+
+        GameEvents.OnSwitchIdleMechanics.Remove(FSSlowDownState);
     }
 
     private void OnDestroy()
@@ -370,7 +381,7 @@ public class PlayerInput : MonoBehaviour, IEnemyHurtable
 
     private void TryCollectLife(bool _)
     {
-        if (!lifeCollectedInThisLevel && Life < 5)
+        if (!lifeCollectedInThisLevel && Life < MaxLife)
         {
             lifeCollectedInThisLevel = true;
             SetLife(Life + 1);
@@ -380,5 +391,10 @@ public class PlayerInput : MonoBehaviour, IEnemyHurtable
     private void AllowLifeCollection(bool _)
     {
         lifeCollectedInThisLevel = false;
+    }
+
+    private void FSSlowDownState(bool active)
+    {
+        slowDownEnabled = active;
     }
 }

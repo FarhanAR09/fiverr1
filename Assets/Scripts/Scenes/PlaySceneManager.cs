@@ -46,6 +46,7 @@ public class PlaySceneManager : MonoBehaviour
     private void OnEnable()
     {
         GameEvents.OnPlayerLose.Add(Lose);
+        GameEvents.OnPlayerLose.Add(KeepCredits);
     }
 
     private void Start()
@@ -75,6 +76,7 @@ public class PlaySceneManager : MonoBehaviour
     private void OnDisable()
     {
         GameEvents.OnPlayerLose.Remove(Lose);
+        GameEvents.OnPlayerLose.Remove(KeepCredits);
     }
 
     private void OnDestroy()
@@ -92,7 +94,7 @@ public class PlaySceneManager : MonoBehaviour
         {
             LoseCanvas.gameObject.SetActive(true);
 
-            bool newLeaderMade = LeaderboardDataManager.CheckLeaderboardEligibility(ScoreCounter.Score);
+            bool newLeaderMade = LeaderboardDataManager.CheckLeaderboardEligibility(ScoreCounter.TotalScore);
             if (panelLose != null)
             {
                 panelLose.SetActive(!newLeaderMade);
@@ -144,7 +146,7 @@ public class PlaySceneManager : MonoBehaviour
 
     private void SetHighscore()
     {
-        float currentHighscore = PlayerPrefs.HasKey("highscore") ? Mathf.Max(PlayerPrefs.GetFloat("highscore"), ScoreCounter.Score) : 0;
+        float currentHighscore = PlayerPrefs.HasKey("highscore") ? Mathf.Max(PlayerPrefs.GetFloat("highscore"), ScoreCounter.TotalScore) : 0;
         PlayerPrefs.SetFloat("highscore", currentHighscore);
         PlayerPrefs.Save();
     }
@@ -156,7 +158,7 @@ public class PlaySceneManager : MonoBehaviour
         {
             name = nameInput.text;
         }
-        LeaderboardDataManager.TryAddToList(name, ScoreCounter.Score);
+        LeaderboardDataManager.TryAddToList(name, ScoreCounter.TotalScore);
 
         if (panelLose != null)
         {
@@ -166,5 +168,12 @@ public class PlaySceneManager : MonoBehaviour
         {
             panelLeaderboardInput.SetActive(false);
         }
+    }
+
+    private void KeepCredits(bool _)
+    {
+        CreditManager.LoadCredit();
+        CreditManager.DepositCredit(ScoreCounter.TotalScore);
+        CreditManager.SaveCredit();
     }
 }

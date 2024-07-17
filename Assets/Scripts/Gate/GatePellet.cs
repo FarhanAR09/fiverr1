@@ -36,6 +36,8 @@ public class GatePellet : MonoBehaviour
 
     private Animator animator;
 
+    private bool featureActivated = true;
+
     private void Awake()
     {
         CircleCollider2D circleCollider = GetComponent<CircleCollider2D>();
@@ -51,6 +53,7 @@ public class GatePellet : MonoBehaviour
         GameEvents.OnPurgeWarning.Add(PurgeShiverMeTimbers);
         GameEvents.OnPurgeStarted.Add(DisableOnPurge);
         GameEvents.OnPurgeFinished.Add(EnableOnPurge);
+        GameEvents.OnSwitchSequentialGates.Add(FeatureSwitchState);
     }
 
     private void OnDisable()
@@ -59,11 +62,12 @@ public class GatePellet : MonoBehaviour
         GameEvents.OnPurgeWarning.Remove(PurgeShiverMeTimbers);
         GameEvents.OnPurgeStarted.Remove(DisableOnPurge);
         GameEvents.OnPurgeFinished.Remove(EnableOnPurge);
+        GameEvents.OnSwitchSequentialGates.Remove(FeatureSwitchState);
     }
 
     private void OnTriggerEnter2D(Collider2D collision)
     {
-        if (beenSetUp && !inPurge && state != State.Activated)
+        if (featureActivated && beenSetUp && !inPurge && state != State.Activated)
         {
             if (collision.gameObject.Equals(PlayerInput.GOInstance))
             {
@@ -167,5 +171,12 @@ public class GatePellet : MonoBehaviour
         {
             animator.Play("gate_noshake");
         }
+    }
+
+    private void FeatureSwitchState(bool active)
+    {
+        featureActivated = active;
+        if (spriteRenderer != null)
+            spriteRenderer.enabled = active;
     }
 }

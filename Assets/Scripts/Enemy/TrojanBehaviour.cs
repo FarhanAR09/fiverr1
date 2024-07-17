@@ -136,7 +136,7 @@ public class TrojanBehaviour : MonoBehaviour
 
     private void OnTriggerEnter2D(Collider2D collision)
     {
-        if (collision.TryGetComponent(out IEnemyHurtable hurtable))
+        if (!inPurge && collision.TryGetComponent(out IEnemyHurtable hurtable))
         {
             hurtable.TryHurt();
         }
@@ -210,6 +210,12 @@ public class TrojanBehaviour : MonoBehaviour
         //    StopCoroutine(stunCoroutine);
         //gridMover.Enabled = false;
         gridMover.SetActiveState(false);
+
+        if (spriteRenderer != null)
+        {
+            spriteRenderer.enabled = false;
+        }
+
         //isStunned = true;
 
         //if (animator != null)
@@ -228,6 +234,12 @@ public class TrojanBehaviour : MonoBehaviour
 
         //gridMover.Enabled = true;
         gridMover.SetActiveState(true);
+
+        if (spriteRenderer != null)
+        {
+            spriteRenderer.enabled = true;
+        }
+
         //isStunned = false;
 
         //if (animator != null)

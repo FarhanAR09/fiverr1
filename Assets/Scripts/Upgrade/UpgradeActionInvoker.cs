@@ -43,10 +43,11 @@ public class UpgradeActionInvoker : MonoBehaviour
 
     private void BaseUpgradeAction(string key, UnityAction<bool> callback = null)
     {
-        Debug.Log("Upgrading...");
-        Debug.Log(PlayerPrefs.GetInt(key));
+        //Debug.Log("Upgrading...");
+        //Debug.Log(PlayerPrefs.GetInt(key));
         PlayerPrefs.SetInt(key, PlayerPrefs.GetInt(key) + 1);
-        Debug.Log(PlayerPrefs.GetInt(key));
+        PlayerPrefs.Save();
+        //Debug.Log(PlayerPrefs.GetInt(key));
         callback?.Invoke(true);
     }
 
