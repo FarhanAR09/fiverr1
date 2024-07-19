@@ -24,12 +24,12 @@ public class MusicController : MonoBehaviour
     private void Awake()
     {
         //Singleton
-        if (Instance == null && Instance != this)
+        if (Instance == null)
         {
             Instance = this;
-            DontDestroyOnLoad(gameObject);
+            //DontDestroyOnLoad(gameObject);
         }
-        else
+        else if (Instance != this)
         {
             Destroy(gameObject);
             return;

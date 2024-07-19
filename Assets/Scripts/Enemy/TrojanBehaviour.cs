@@ -31,6 +31,10 @@ public class TrojanBehaviour : MonoBehaviour
     [SerializeField]
     private ParticleSystem psPlayerDetected, psCharging, psHitWall;
 
+    //SFX
+    [SerializeField]
+    private AudioClip detectPlayerSFX, hitSFX;
+
     private void Awake()
     {
         gridMover = new GameObject(name + " Grid Mover", typeof(GridMover)).GetComponent<GridMover>();
@@ -138,7 +142,13 @@ public class TrojanBehaviour : MonoBehaviour
     {
         if (!inPurge && collision.TryGetComponent(out IEnemyHurtable hurtable))
         {
-            hurtable.TryHurt();
+            if (hurtable.TryHurt())
+            {
+                if (hitSFX != null && SFXController.Instance != null)
+                {
+                    SFXController.Instance.RequestPlay(hitSFX, 15000);
+                }
+            }
         }
     }
 
@@ -390,6 +400,10 @@ public class TrojanBehaviour : MonoBehaviour
                     {
                         psPlayerDetected.Emit(10);
                     }
+                    if (detectPlayerSFX != null && SFXController.Instance != null)
+                    {
+                        SFXController.Instance.RequestPlay(detectPlayerSFX, 15000);
+                    }
 
                     if (gridMover.Enabled)
                     {
@@ -420,6 +434,10 @@ public class TrojanBehaviour : MonoBehaviour
                 psHitWall.Emit(8);
             }
             ChargeEmittingParticle(false);
+            if (hitSFX != null && SFXController.Instance != null)
+            {
+                SFXController.Instance.RequestPlay(hitSFX, 15000);
+            }
             Destroy(gameObject, 1f);
         }
     }

@@ -4996,6 +4996,7 @@ MonoBehaviour:
   - {fileID: 392480946, guid: b31ac7de44ae13642b5f5d31fe847285, type: 3}
   spriteRenderer: {fileID: 6984912853929224745}
   psDischarge: {fileID: 21988579447813305}
+  dischargeSFX: {fileID: 8300000, guid: 76443e7dcb6ba2349b450aad5d9ecba9, type: 3}
 --- !u!50 &3034133644017138587
 Rigidbody2D:
   serializedVersion: 4

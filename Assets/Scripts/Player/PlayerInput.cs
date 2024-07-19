@@ -48,8 +48,8 @@ public class PlayerInput : MonoBehaviour, IEnemyHurtable
     private float speedBeforeBoost;
 
     //Life
-    public static int Life { get; private set; } = 1;
-    public static int MaxLife { get; private set; } = 1;
+    public static int Lives { get; private set; } = 1;
+    public static int MaxLives { get; private set; } = 1;
     /// <summary>
     /// Can only collect life once every level
     /// </summary>
@@ -120,7 +120,7 @@ public class PlayerInput : MonoBehaviour, IEnemyHurtable
     {
         StoredDirection = initialDirection;
 
-        MaxLife = PlayerPrefs.GetInt("upgradeMaxLives");
+        MaxLives = PlayerPrefs.GetInt("upgradeMaxLives");
         //Debug.Log(MaxLife);
 
         //Life
@@ -332,8 +332,8 @@ public class PlayerInput : MonoBehaviour, IEnemyHurtable
 
     public void SetLife(int amount)
     {
-        Life = amount;
-        GameEvents.OnLifeUpdated.Publish(Life);
+        Lives = amount;
+        GameEvents.OnLifeUpdated.Publish(Lives);
     }
 
     //private void DebugDisplayLife(int remainingLives)
@@ -348,9 +348,9 @@ public class PlayerInput : MonoBehaviour, IEnemyHurtable
             return false;
         }
 
-        SetLife(Life - 1);
+        SetLife(Lives - 1);
         GameEvents.OnPlayerHurt.Publish(true);
-        if (Life <= 0)
+        if (Lives <= 0)
         {
             Lost = true;
             GameEvents.OnPlayerLose.Publish(true);
@@ -381,10 +381,10 @@ public class PlayerInput : MonoBehaviour, IEnemyHurtable
 
     private void TryCollectLife(bool _)
     {
-        if (!lifeCollectedInThisLevel && Life < MaxLife)
+        if (!lifeCollectedInThisLevel && Lives < MaxLives)
         {
             lifeCollectedInThisLevel = true;
-            SetLife(Life + 1);
+            SetLife(Lives + 1);
         }
     }
 

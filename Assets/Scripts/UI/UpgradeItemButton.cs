@@ -48,7 +48,7 @@ public class UpgradeItemButton : MonoBehaviour
             if (CreditManager.TrySpendCredit(price))
             {
                 upgradeItem.TryUpgrade(callback: UpdateDisplay);
-                Debug.Log("Enough Credit");
+                //Debug.Log("Enough Credit");
             }
             CreditManager.SaveCredit();
         }

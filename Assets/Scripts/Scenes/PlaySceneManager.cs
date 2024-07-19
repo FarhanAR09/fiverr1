@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using TMPro;
+using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 using UnityEngine.UI;
@@ -26,6 +27,9 @@ public class PlaySceneManager : MonoBehaviour
     private readonly Vector2 StartLosePosition = new(14.4f, 32f), EndLosePosition = new(14.4f, 7.2f);
     private readonly float loseAnimationDuration = 1f;
     private float loseAnimationTime = 0;
+
+    [SerializeField]
+    private AudioClip combatMusic;
 
     private void Awake()
     {
@@ -66,9 +70,10 @@ public class PlaySceneManager : MonoBehaviour
             panelLeaderboardInput.SetActive(false);
         }
 
-        if (MusicController.Instance != null)
+        if (MusicController.Instance != null && combatMusic != null)
         {
             MusicController.Instance.Stop();
+            MusicController.Instance.SetClip(combatMusic);
             MusicController.Instance.Play();
         }
     }

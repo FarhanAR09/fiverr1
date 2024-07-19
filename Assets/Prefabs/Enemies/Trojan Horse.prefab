@@ -5031,6 +5031,8 @@ MonoBehaviour:
   psPlayerDetected: {fileID: 3098317717658131980}
   psCharging: {fileID: 3884714644213641454}
   psHitWall: {fileID: 8476736364720784950}
+  detectPlayerSFX: {fileID: 8300000, guid: b750c0f5f0ac25747864d8f35e315492, type: 3}
+  hitSFX: {fileID: 8300000, guid: bd33cda38314de14ba8b9eb65990d1db, type: 3}
 --- !u!58 &8224685721642084299
 CircleCollider2D:
   m_ObjectHideFlags: 0

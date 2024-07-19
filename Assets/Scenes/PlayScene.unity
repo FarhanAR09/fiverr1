@@ -12812,6 +12812,10 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 0}
     m_Modifications:
+    - target: {fileID: 4806607733137867822, guid: 49b03933e623c8244b9f94d6eeba6f22, type: 3}
+      propertyPath: m_audioClip
+      value: 
+      objectReference: {fileID: 8300000, guid: 8fed8e87a69cd244782db9da656a4b34, type: 3}
     - target: {fileID: 4821126267145065054, guid: 49b03933e623c8244b9f94d6eeba6f22, type: 3}
       propertyPath: m_Name
       value: Music Controller
@@ -12979,7 +12983,7 @@ Transform:
   m_GameObject: {fileID: 650318755}
   serializedVersion: 2
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 1.5697842, y: -1.3010774, z: 0.01793918}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -29813,6 +29817,7 @@ MonoBehaviour:
     m_PreInfinity: 2
     m_PostInfinity: 2
     m_RotationOrder: 4
+  combatMusic: {fileID: 8300000, guid: 8fed8e87a69cd244782db9da656a4b34, type: 3}
 --- !u!4 &1454641919
 Transform:
   m_ObjectHideFlags: 0
@@ -31969,7 +31974,7 @@ Transform:
   m_GameObject: {fileID: 1911799301}
   serializedVersion: 2
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: -2.0954933, y: -14.614735, z: -0.06516233}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -48113,7 +48118,7 @@ MonoBehaviour:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 2098944256}
-  m_Enabled: 0
+  m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 3312d7739989d2b4e91e6319e9a96d76, type: 3}
   m_Name: 

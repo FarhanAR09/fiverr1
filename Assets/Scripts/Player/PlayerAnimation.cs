@@ -30,6 +30,8 @@ public class PlayerAnimation : MonoBehaviour
     [SerializeField]
     private ParticleSystem psBoostTrail, psBoostExplode;
 
+    private const string HURT = "hurtTimeFreeze";
+
     private void Awake()
     {
         input = GetComponent<PlayerInput>();
@@ -69,6 +71,8 @@ public class PlayerAnimation : MonoBehaviour
 
         powerManager.OnBoostStart.AddListener(StartBoostEffects);
         powerManager.OnBoostEnd.AddListener(EndBoostEffects);
+        
+        GameEvents.OnPlayerHurt.Add(StartHurtAnimation);
     }
 
     private void Update()
@@ -119,6 +123,26 @@ public class PlayerAnimation : MonoBehaviour
                 _ => (ParticleSystem.MinMaxGradient)Color.red,
             };
         }
+
+        //if (assemblingAnim)
+        //{
+        //    if (assembleTime < assembleDur)
+        //    {
+        //        Debug.Log(assembleTime);
+        //        assembleTime += Time.deltaTime;
+        //        float norm = assembleTime / assembleDur;
+
+        //        if (assembledSprite != null)
+        //        {
+        //            assembledSprite.color = new(1f, 1f, 1f, Mathf.Min(norm, 1f));
+        //            assembledSprite.transform.localScale = ((1 - norm) * 9f + 1f) * Vector3.one;
+        //        }
+        //    }
+        //    else
+        //    {
+        //        assemblingAnim = false;
+        //    }
+        //}
     }
 
     private void OnDisable()
@@ -130,6 +154,8 @@ public class PlayerAnimation : MonoBehaviour
 
         powerManager.OnBoostStart.RemoveListener(StartBoostEffects);
         powerManager.OnBoostEnd.RemoveListener(EndBoostEffects);
+        
+        GameEvents.OnPlayerHurt.Remove(StartHurtAnimation);
     }
 
     private void Explode()
@@ -213,5 +239,95 @@ public class PlayerAnimation : MonoBehaviour
         {
             psBoostExplode.Emit(20);
         }
+    }
+
+    private void StartHurtAnimation(bool _)
+    {
+        IEnumerator HurtAnimation()
+        {
+            //Debug.Log("Started");
+
+            if (!GameSpeedManager.TryModifyGameSpeedModifier(HURT, 0f))
+                GameSpeedManager.TryAddGameSpeedModifier(HURT, 0f);
+
+            SpriteRenderer assembledSprite = null;
+            if (spriteTransform != null)
+            {
+                Vector2 mapCenter = Vector2.zero;
+                if (MapHandler.Instance != null && MapHandler.Instance.MapGrid != null)
+                {
+                    float cellSize = MapHandler.Instance.MapGrid.GetCellSize();
+                    mapCenter = new Vector2(
+                        Mathf.Lerp(0f, cellSize * MapHandler.Instance.MapGrid.GetWidth(), 0.5f),
+                        Mathf.Lerp(0f, cellSize * MapHandler.Instance.MapGrid.GetHeight(), 0.5f));
+                }
+
+                assembledSprite = Instantiate(spriteTransform.gameObject, mapCenter, new Quaternion(), transform).GetComponent<SpriteRenderer>();
+                assembledSprite.color = new(1f, 1f, 1f, 0f);
+                assembledSprite.transform.localScale = new(10f, 10f, 10f);
+            }
+
+            if (spriteRenderer != null)
+            {
+                spriteRenderer.enabled = false;
+            }
+
+            //Assemble
+            float assembleDur = 0.5f, assembleTime = 0f;
+            do
+            {
+                yield return new WaitForEndOfFrame();
+                assembleTime += Time.unscaledDeltaTime;
+                float t = assembleTime / assembleDur;
+
+                if (assembledSprite != null)
+                {
+                    assembledSprite.color = new Color(1f, 1f, 1f, t * t * (3f - 2f * t));
+                    assembledSprite.transform.localScale = Mathf.Lerp(32f, 10f, t * t * (3f - 2f * t)) * Vector3.one;
+                }
+            }
+            while (assembleTime < assembleDur);
+
+            yield return new WaitForSecondsRealtime(0.2f);
+
+            //Move
+            float moveDur = 1f, moveTime = 0f;
+            Vector3 initialPosition = assembledSprite != null ? assembledSprite.transform.position : Vector3.zero;
+            do
+            {
+                yield return new WaitForEndOfFrame();
+                moveTime += Time.unscaledDeltaTime;
+                float t = moveTime / moveDur;
+                t = t * t * (3f - 2f * t);
+
+                if (assembledSprite != null)
+                {
+                    assembledSprite.transform.position = Vector3.Lerp(initialPosition, transform.position, t);
+                    assembledSprite.transform.localScale = Mathf.Lerp(10f, 1f, t) * Vector3.one;
+                }
+            }
+            while (moveTime < moveDur);
+
+            yield return new WaitForSecondsRealtime(0.3f);
+
+            if (assembledSprite != null)
+            {
+                Destroy(assembledSprite.gameObject);
+            }
+
+            if (spriteRenderer != null)
+            {
+                spriteRenderer.enabled = true;
+            }
+
+            //yield return new WaitForSecondsRealtime(0.5f);
+            //yield return new WaitForSecondsRealtime(3f);
+
+            if (!GameSpeedManager.TryModifyGameSpeedModifier(HURT, 1f))
+                GameSpeedManager.TryAddGameSpeedModifier(HURT, 1f);
+        }
+        StopCoroutine(HurtAnimation());
+        if (PlayerInput.Instance != null && PlayerInput.Lives > 0)
+            StartCoroutine(HurtAnimation());
     }
 }

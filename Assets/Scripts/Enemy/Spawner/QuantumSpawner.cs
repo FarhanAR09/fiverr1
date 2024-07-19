@@ -39,7 +39,7 @@ public class QuantumSpawner : MonoBehaviour
         //Debug.Log("Spawn Attempt " + random);
         if (fsEnabled && requirementPowerUpUnlocked && quantumGhostPrefab != null && MapHandler.Instance != null && MapHandler.Instance.MapGrid != null && spawnPositions.Count > 0 && UnityEngine.Random.Range(0f, 100f) <= 40f)
         {
-            Debug.Log(name);
+            //Debug.Log(name);
             Vector2Int spawnPosGrid = spawnPositions[UnityEngine.Random.Range(0, spawnPositions.Count)];
             Vector2 spawnPosWorld = MapHandler.Instance.MapGrid.GetWorldPosition(spawnPosGrid.x, spawnPosGrid.y) + MapHandler.Instance.MapGrid.GetCellSize() / 2 * Vector3.one;
             QuantumGhostBehaviour spawned = Instantiate(quantumGhostPrefab, spawnPosWorld, new Quaternion());

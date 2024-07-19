@@ -14,6 +14,9 @@ public class MainMenuManager : MonoBehaviour
     [SerializeField]
     private TextMeshProUGUI leaderNamesDisplay, leaderScoresDisplay, upgradeCreditsDisplay;
 
+    [SerializeField]
+    private AudioClip calmMusic;
+
     private void Start()
     {
         float highscore = PlayerPrefs.HasKey("highscore") ?
@@ -47,6 +50,13 @@ public class MainMenuManager : MonoBehaviour
         if (panelUpgrade != null)
         {
             panelUpgrade.SetActive(false);
+        }
+
+        if (MusicController.Instance != null && calmMusic != null)
+        {
+            MusicController.Instance.Stop();
+            MusicController.Instance.SetClip(calmMusic);
+            MusicController.Instance.Play();
         }
     }
 

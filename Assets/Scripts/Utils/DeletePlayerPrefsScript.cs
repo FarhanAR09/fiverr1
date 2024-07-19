@@ -1,3 +1,4 @@
+#if UNITY_EDITOR
 using UnityEngine;
 using UnityEditor;
 
@@ -9,3 +10,4 @@ public class DeletePlayerPrefsScript : EditorWindow
         PlayerPrefs.DeleteAll();
     }
 }
+#endif

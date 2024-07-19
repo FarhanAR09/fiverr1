@@ -17,7 +17,7 @@ public class EMPController : MonoBehaviour
 
         circleCollider = goHitbox.GetComponent<CircleCollider2D>();
         circleCollider.isTrigger = true;
-        circleCollider.radius = 2.5f;
+        circleCollider.radius = 4f;
 
         hitbox = goHitbox.GetComponent<Hitbox>();
         hitbox.OnDetected.AddListener(OnDetected);

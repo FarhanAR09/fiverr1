@@ -33,6 +33,9 @@ public class QuantumGhostBehaviour : MonoBehaviour, IStunnable, IPurgable
     private Coroutine outTunnellingEffects;
     private Animator animator;
 
+    [SerializeField]
+    private AudioClip portalOpenSFX, teleportSFX;
+
     private bool allowHurting = false;
 
     private void Awake()
@@ -211,6 +214,10 @@ public class QuantumGhostBehaviour : MonoBehaviour, IStunnable, IPurgable
                             StopCoroutine(outTunnellingEffects);
                         outTunnellingEffects = StartCoroutine(OutTunnellingEffects());
                     }
+                    if (portalOpenSFX != null && SFXController.Instance != null)
+                    {
+                        SFXController.Instance.RequestPlay(portalOpenSFX, 15000);
+                    }
 
                     yield return new WaitForSeconds(1.25f);
 
@@ -261,6 +268,10 @@ public class QuantumGhostBehaviour : MonoBehaviour, IStunnable, IPurgable
                     if (teleRingSpriteRenderer2 != null)
                     {
                         teleRingSpriteRenderer2.enabled = true;
+                    }
+                    if (teleportSFX != null && SFXController.Instance != null)
+                    {
+                        SFXController.Instance.RequestPlay(teleportSFX, 15000);
                     }
 
                     //Direction is set automatically?!?!?!?

@@ -85,8 +85,6 @@ public class SkillUIManager : MonoBehaviour
         }
 
         GameEvents.OnLifeUpdated.Add(UpdateLifeDisplay);
-
-        Debug.Log("Bruh");
     }
 
     private void OnDisable()

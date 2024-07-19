@@ -26,26 +26,26 @@ public static class CreditManager
         //Credit = PlayerPrefs.GetFloat(GameConstants.CREDIT, 0f);
         Credit += amount;
         GameEvents.OnCreditUpdated.Publish(Credit);
-        Debug.Log($"Credits Left: {Credit}");
+        //Debug.Log($"Credits Left: {Credit}");
         SaveCredit();
     }
 
     public static bool TrySpendCredit(float amount)
     {
         LoadCredit();
-        Debug.Log("Spending...");
+        //Debug.Log("Spending...");
         //Credit = PlayerPrefs.GetFloat(GameConstants.CREDIT, 0f);
         if (amount <= Credit)
         {
-            Debug.Log("Spending Succeed");
+            //Debug.Log("Spending Succeed");
             Credit -= amount;
             SaveCredit();
             GameEvents.OnCreditUpdated.Publish(Credit);
-            Debug.Log($"Credits Left: {Credit}");
+            //Debug.Log($"Credits Left: {Credit}");
             return true;
         }
         SaveCredit();
-        Debug.Log($"Credits Left: {Credit}");
+        //Debug.Log($"Credits Left: {Credit}");
         return false;
     }
 }

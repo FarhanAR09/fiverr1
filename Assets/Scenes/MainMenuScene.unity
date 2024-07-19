@@ -17525,6 +17525,7 @@ MonoBehaviour:
   leaderNamesDisplay: {fileID: 135129281}
   leaderScoresDisplay: {fileID: 291287484}
   upgradeCreditsDisplay: {fileID: 66101701}
+  calmMusic: {fileID: 8300000, guid: 2bc151589529b624abbcf45f1829ce32, type: 3}
 --- !u!4 &2071818250
 Transform:
   m_ObjectHideFlags: 0

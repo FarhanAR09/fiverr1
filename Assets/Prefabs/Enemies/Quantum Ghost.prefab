@@ -10065,6 +10065,8 @@ MonoBehaviour:
   psInTunelling: {fileID: 918155547019562457}
   psOutTunelling: {fileID: 490668898560636535}
   psTunnelingExplosion: {fileID: 4609591845854747188}
+  portalOpenSFX: {fileID: 8300000, guid: 0424e2f72aa387746a70a13ea61464a9, type: 3}
+  teleportSFX: {fileID: 8300000, guid: 3502d337084014f4e8326367e61d79a8, type: 3}
 --- !u!58 &1099231082190325164
 CircleCollider2D:
   m_ObjectHideFlags: 0

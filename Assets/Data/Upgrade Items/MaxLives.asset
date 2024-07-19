@@ -18,8 +18,8 @@ MonoBehaviour:
   KeyName: upgradeMaxLives
   Price: 64000000c80000009001000020030000
   Icons:
-  - {fileID: 0}
-  - {fileID: 0}
-  - {fileID: 0}
-  - {fileID: 0}
-  - {fileID: 0}
+  - {fileID: -67514094, guid: 3a94d900b36e17f4ea0664ded0660e5c, type: 3}
+  - {fileID: -1762682087, guid: 3a94d900b36e17f4ea0664ded0660e5c, type: 3}
+  - {fileID: -1332253185, guid: 3a94d900b36e17f4ea0664ded0660e5c, type: 3}
+  - {fileID: 2107863580, guid: 3a94d900b36e17f4ea0664ded0660e5c, type: 3}
+  - {fileID: 1432537883, guid: 3a94d900b36e17f4ea0664ded0660e5c, type: 3}

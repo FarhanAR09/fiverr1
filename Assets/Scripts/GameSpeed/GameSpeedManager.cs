@@ -28,6 +28,10 @@ public static class GameSpeedManager
             UpdateTimeScale();
             return true;
         }
+        //else if (TryAddGameSpeedModifier(key, value))
+        //{
+        //    return true;
+        //}
         return false;
     }
 
@@ -52,6 +56,7 @@ public static class GameSpeedManager
         Time.timeScale = 1;
         foreach (KeyValuePair<string, float> modifier in activeModifiers)
         {
+            //Debug.Log(modifier.Key + ": " + modifier.Value);
             Time.timeScale *= modifier.Value;
         }
         Time.fixedDeltaTime = 0.02f * Time.timeScale;

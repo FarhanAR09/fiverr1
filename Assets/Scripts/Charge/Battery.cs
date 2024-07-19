@@ -37,6 +37,9 @@ public class Battery : MonoBehaviour, IStunnable
     [SerializeField]
     private ParticleSystem psDischarge;
 
+    [SerializeField]
+    private AudioClip dischargeSFX;
+
     public bool AllowCharging { get; set; } = false;
 
     private void Awake()
@@ -130,6 +133,10 @@ public class Battery : MonoBehaviour, IStunnable
             main.startColor = GetChargeColor();
             psDischarge.GetComponent<ParticleSystemRenderer>().material.SetColor("_GlowColor", GetChargeColor());
             psDischarge.Emit(15);
+        }
+        if (dischargeSFX != null && SFXController.Instance != null)
+        {
+            SFXController.Instance.RequestPlay(dischargeSFX, 16000);
         }
         CurrentCharge = 0f;
     }
