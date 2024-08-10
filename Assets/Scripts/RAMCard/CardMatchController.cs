@@ -13,7 +13,9 @@ public class CardMatchController : MonoBehaviour
 
     [SerializeField]
     private RAMGrid ramGrid;
-    private int maxPairCount = 0, pairCount = 0;
+    public int MaxPairCount { get; private set; } = 0;
+    public int PairCount { get; private set; } = 0;
+    public int TimesCardOpened { get; private set; } = 0;
 
 
     private void OnEnable()
@@ -46,7 +48,7 @@ public class CardMatchController : MonoBehaviour
     {
         if (ramGrid != null)
         {
-            maxPairCount = Mathf.FloorToInt(ramGrid.Row * ramGrid.Column / 2f);
+            MaxPairCount = Mathf.FloorToInt(ramGrid.Row * ramGrid.Column / 2f);
         }
     }
 
@@ -89,6 +91,7 @@ public class CardMatchController : MonoBehaviour
         
         if (arg.isUp)
         {
+            TimesCardOpened++;
             //print("Adding card " + arg.card.name);
             openedCards.Add(arg.card);
             //print(openedCards.Count);
@@ -139,8 +142,8 @@ public class CardMatchController : MonoBehaviour
 
     private void Pairing(CardPairArgument arg)
     {
-        pairCount++;
-        if (pairCount >= maxPairCount)
+        PairCount++;
+        if (PairCount >= MaxPairCount)
         {
             print("All paired!");
             GameEvents.OnAllCardsPaired.Publish(true);

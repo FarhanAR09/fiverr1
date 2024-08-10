@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.Events;
 
 public class MLLeakTracker : MonoBehaviour
 {
@@ -11,14 +12,19 @@ public class MLLeakTracker : MonoBehaviour
     [field: SerializeField]
     public int MaxMemory { get; private set; } = 100;
 
+    private readonly float addLeakDuration = 4f;
+    private float addLeakTime = 0f;
+
+    public UnityAction<int> OnMemoryLeakUpdated;
+
     private void OnEnable()
     {
-        GameEvents.OnMLMistakesUpdated.Add(AddLeak);
+        GameEvents.OnMLMistakesUpdated.Add(AddLeakByMistakes);
     }
 
     private void OnDisable()
     {
-        GameEvents.OnMLMistakesUpdated.Remove(AddLeak);
+        GameEvents.OnMLMistakesUpdated.Remove(AddLeakByMistakes);
     }
 
     private void Awake()
@@ -35,10 +41,29 @@ public class MLLeakTracker : MonoBehaviour
         LeakedMemory = 0;
     }
 
-    private void AddLeak(int mistakes)
+    private void FixedUpdate()
     {
-        LeakedMemory += 1 + Mathf.FloorToInt(10 * Mathf.Log(mistakes + 1, 32));
+        if (addLeakTime < addLeakDuration)
+        {
+            addLeakTime += Time.fixedDeltaTime;
+        }
+        else
+        {
+            addLeakTime = 0f;
+            AddLeak(1);
+        }
+    }
+
+    private void AddLeakByMistakes(int mistakes)
+    {
+        AddLeak(1 + Mathf.FloorToInt(10 * Mathf.Log(mistakes + 1, 32)));
         print("Leaked Memory: " + LeakedMemory);
+    }
+
+    private void AddLeak(int amount)
+    {
+        LeakedMemory += amount;
+        OnMemoryLeakUpdated?.Invoke(LeakedMemory);
         if (LeakedMemory >= MaxMemory)
         {
             print("-----=====| YOU LOSE |=====-----");

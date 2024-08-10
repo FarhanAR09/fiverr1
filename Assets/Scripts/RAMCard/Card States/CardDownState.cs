@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using Unity.VisualScripting.Antlr3.Runtime;
+using Unity.VisualScripting.FullSerializer;
 using UnityEngine;
 
 public class CardDownState : CardState
@@ -16,6 +17,7 @@ public class CardDownState : CardState
             //Debug.Log(Owner.name + " subscribed");
             Owner.OnClicked += OnClicked;
         }
+        GameEvents.OnMLFlashPowerStarted.Add(PeekCard);
     }
 
     public override void OnDisable()
@@ -26,6 +28,7 @@ public class CardDownState : CardState
         {
             Owner.OnClicked -= OnClicked;
         }
+        GameEvents.OnMLFlashPowerStarted.Remove(PeekCard);
     }
 
     public override void Enter()
@@ -61,6 +64,14 @@ public class CardDownState : CardState
         {
             //Debug.Log(Owner.name + " state called");
             stateMachine.ChangeState(Owner.UpState);
+        }
+    }
+
+    private void PeekCard(bool _)
+    {
+        if (Owner != null && Owner.PeekedState != null && stateMachine != null)
+        {
+            stateMachine.ChangeState(Owner.PeekedState);
         }
     }
 }

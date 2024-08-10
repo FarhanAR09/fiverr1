@@ -11,12 +11,18 @@ public class MLDebugLeakBar : MonoBehaviour
 
     private void OnEnable()
     {
-        GameEvents.OnMLMistakesUpdated.Add(UpdateBar);
+        if (MLLeakTracker.Instance != null)
+        {
+            MLLeakTracker.Instance.OnMemoryLeakUpdated += UpdateBar;
+        }
     }
 
     private void OnDisable()
     {
-        GameEvents.OnMLMistakesUpdated.Remove(UpdateBar);
+        if (MLLeakTracker.Instance != null)
+        {
+            MLLeakTracker.Instance.OnMemoryLeakUpdated -= UpdateBar;
+        }
     }
 
     private void Awake()

@@ -21,6 +21,7 @@ public class RAMCard : MonoBehaviour
     public CardDownState DownState { get; private set; }
     public CardUpState UpState { get; private set; }
     public CardPairedState PairedState { get; private set; }
+    public CardPeekedState PeekedState { get; private set; }
 
     [SerializeField]
     private TMP_Text display;
@@ -36,6 +37,7 @@ public class RAMCard : MonoBehaviour
             DownState = new(this, stateMachine);
             UpState = new(this, stateMachine);
             PairedState = new(this, stateMachine);
+            PeekedState = new(this, stateMachine);
 
             stateMachine.ChangeState(DownState);
         }

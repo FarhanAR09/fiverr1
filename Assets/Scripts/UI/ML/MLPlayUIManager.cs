@@ -2,6 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using TMPro;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 
 public class MLPlayUIManager : MonoBehaviour
 {
@@ -29,5 +30,11 @@ public class MLPlayUIManager : MonoBehaviour
         {
             scoreDisplay.SetText($"SCORE\r\n{currentScore:F0}");
         }
+    }
+
+    public void GoToMainMenu()
+    {
+        print("To Main Menu!");
+        SceneManager.LoadScene("MainMenuScene");
     }
 }
