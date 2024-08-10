@@ -1,5 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
+using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.Events;
 
@@ -14,17 +15,20 @@ public class MLLeakTracker : MonoBehaviour
 
     private readonly float addLeakDuration = 4f;
     private float addLeakTime = 0f;
+    private bool isFrozen = false;
 
     public UnityAction<int> OnMemoryLeakUpdated;
 
     private void OnEnable()
     {
         GameEvents.OnMLMistakesUpdated.Add(AddLeakByMistakes);
+        GameEvents.OnMLFreezePowerUpdated.Add(SetFrozenState);
     }
 
     private void OnDisable()
     {
         GameEvents.OnMLMistakesUpdated.Remove(AddLeakByMistakes);
+        GameEvents.OnMLFreezePowerUpdated.Remove(SetFrozenState);
     }
 
     private void Awake()
@@ -43,21 +47,23 @@ public class MLLeakTracker : MonoBehaviour
 
     private void FixedUpdate()
     {
-        if (addLeakTime < addLeakDuration)
+        if (!isFrozen)
         {
-            addLeakTime += Time.fixedDeltaTime;
-        }
-        else
-        {
-            addLeakTime = 0f;
-            AddLeak(1);
+            if (addLeakTime < addLeakDuration)
+            {
+                addLeakTime += Time.fixedDeltaTime;
+            }
+            else
+            {
+                addLeakTime = 0f;
+                AddLeak(1);
+            }
         }
     }
 
     private void AddLeakByMistakes(int mistakes)
     {
         AddLeak(1 + Mathf.FloorToInt(10 * Mathf.Log(mistakes + 1, 32)));
-        print("Leaked Memory: " + LeakedMemory);
     }
 
     private void AddLeak(int amount)
@@ -69,5 +75,10 @@ public class MLLeakTracker : MonoBehaviour
             print("-----=====| YOU LOSE |=====-----");
             GameEvents.OnMLLost.Publish(true);
         }
+    }
+
+    private void SetFrozenState(bool frozen)
+    {
+        isFrozen = frozen;
     }
 }
