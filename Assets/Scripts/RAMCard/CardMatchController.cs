@@ -22,14 +22,14 @@ public class CardMatchController : MonoBehaviour
     {
         GameEvents.OnCardFlipped.Add(CheckCard);
         GameEvents.OnCardsPaired.Add(Pairing);
-        GameEvents.OnCardExitUpState.Add(HandleCardNotUpAnymore);
+        GameEvents.OnCardExitUpState.Add(RemoveCardFromList);
     }
 
     private void OnDisable()
     {
         GameEvents.OnCardFlipped.Remove(CheckCard);
         GameEvents.OnCardsPaired.Remove(Pairing);
-        GameEvents.OnCardExitUpState.Remove(HandleCardNotUpAnymore);
+        GameEvents.OnCardExitUpState.Remove(RemoveCardFromList);
     }
 
     private void Awake()
@@ -132,7 +132,7 @@ public class CardMatchController : MonoBehaviour
         }
     }
 
-    private void HandleCardNotUpAnymore(RAMCard card)
+    private void RemoveCardFromList(RAMCard card)
     {
         if (openedCards.Contains(card))
         {
