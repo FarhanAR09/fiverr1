@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using TMPro;
 using UnityEngine;
 using UnityEngine.SceneManagement;
+using UnityEngine.UI;
 
 public class MLMainMenuUIManager : MonoBehaviour
 {
@@ -12,7 +13,11 @@ public class MLMainMenuUIManager : MonoBehaviour
     private GameObject mainMenuPanel, modeSelectionPanel, classicLevelSelectionPanel;
 
     [SerializeField]
+    private List<Button> difficultiesButtons = new();
+    [SerializeField]
     private List<TMP_Text> difficultiesButtonTexts = new();
+    [SerializeField]
+    private int unlockedLevel = 1;
 
     private void Awake()
     {
@@ -32,10 +37,12 @@ public class MLMainMenuUIManager : MonoBehaviour
         if (difficultiesButtonTexts != null)
         {
             //TODO: PlayerPrefs to get level
-            int unlockedLevel = 3;
-            for (int i = 0; i < difficultiesButtonTexts.Count; i++)
+            //int unlockedLevel = 3;
+            //int unlockedLevel = PlayerPrefs.GetInt(GameConstants.MLUNLOCKEDLEVEL, 1);
+            for (int i = 0; i < difficultiesButtons.Count; i++)
             {
-                difficultiesButtonTexts[i].color = (i + 1) <= unlockedLevel ? Color.white : Color.gray;
+                difficultiesButtons[i].interactable = (i + 1) <= unlockedLevel;
+                difficultiesButtonTexts[i].color = (i + 1) <= unlockedLevel ? Color.white : new Color(0.2f, 0.2f, 0.2f);
             }
         }
 
@@ -74,6 +81,7 @@ public class MLMainMenuUIManager : MonoBehaviour
     public void PlayClassic(int level)
     {
         PlayerPrefs.SetInt(GameConstants.MLLOADLEVEL, level);
+        print("Selected Level: " + level);
         SceneManager.LoadScene("MemoryLeakPlayScene");
     }
 

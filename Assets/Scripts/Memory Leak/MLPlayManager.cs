@@ -21,7 +21,7 @@ public class MLPlayManager : MonoBehaviour
     private void Start()
     {
         int desiredLevel = PlayerPrefs.GetInt(GameConstants.MLLOADLEVEL, 1);
-        desiredLevel = 3;
+        print("Loaded Level: " + desiredLevel);
         if (RAMGrid.Instance != null)
         {
             RAMGrid.Instance.Setup(desiredLevel);
