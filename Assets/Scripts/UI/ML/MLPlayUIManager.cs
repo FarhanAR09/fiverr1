@@ -35,6 +35,6 @@ public class MLPlayUIManager : MonoBehaviour
     public void GoToMainMenu()
     {
         print("To Main Menu!");
-        SceneManager.LoadScene("MainMenuScene");
+        SceneManager.LoadScene("MLMainMenuScene");
     }
 }

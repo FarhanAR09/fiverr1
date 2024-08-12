@@ -16,8 +16,8 @@ public class MLMainMenuUIManager : MonoBehaviour
     private List<Button> difficultiesButtons = new();
     [SerializeField]
     private List<TMP_Text> difficultiesButtonTexts = new();
-    [SerializeField]
-    private int unlockedLevel = 1;
+    //[SerializeField]
+    //private int unlockedLevel = 1;
 
     private void Awake()
     {
@@ -36,9 +36,8 @@ public class MLMainMenuUIManager : MonoBehaviour
         //Set button color by unlocked level in Classic mode
         if (difficultiesButtonTexts != null)
         {
-            //TODO: PlayerPrefs to get level
             //int unlockedLevel = 3;
-            //int unlockedLevel = PlayerPrefs.GetInt(GameConstants.MLUNLOCKEDLEVEL, 1);
+            int unlockedLevel = PlayerPrefs.GetInt(GameConstants.MLUNLOCKEDLEVEL, 1);
             for (int i = 0; i < difficultiesButtons.Count; i++)
             {
                 difficultiesButtons[i].interactable = (i + 1) <= unlockedLevel;

@@ -19,6 +19,8 @@ public class MLLeakTracker : MonoBehaviour
 
     public UnityAction<int> OnMemoryLeakUpdated;
 
+    private bool lost = false;
+
     private void OnEnable()
     {
         GameEvents.OnMLMistakesUpdated.Add(AddLeakByMistakes);
@@ -70,6 +72,9 @@ public class MLLeakTracker : MonoBehaviour
 
     private void AddLeak(int amount)
     {
+        if (lost)
+            return;
+
         if (LeakedMemory + amount > 0)
         {
             LeakedMemory += amount;
@@ -81,6 +86,7 @@ public class MLLeakTracker : MonoBehaviour
         OnMemoryLeakUpdated?.Invoke(LeakedMemory);
         if (LeakedMemory >= MaxMemory)
         {
+            lost = true;
             print("-----=====| YOU LOSE |=====-----");
             GameEvents.OnMLLost.Publish(true);
         }

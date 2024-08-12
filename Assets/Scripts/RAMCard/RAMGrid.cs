@@ -30,7 +30,7 @@ public class RAMGrid : MonoBehaviour
         }
     }
 
-    public void Setup(int level)
+    public void SetupByLevel(int level)
     {
         if (beenSetup) return;
         beenSetup = true;

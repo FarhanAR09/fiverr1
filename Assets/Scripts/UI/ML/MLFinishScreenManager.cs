@@ -7,6 +7,7 @@ public class MLFinishScreenManager : MonoBehaviour
 {
     public static MLFinishScreenManager Instance { get; private set; }
 
+    [Tooltip("Must be full size on canvas")]
     [SerializeField]
     private RectTransform finishPanel;
     [SerializeField]
@@ -61,7 +62,9 @@ public class MLFinishScreenManager : MonoBehaviour
         if (finishPanel != null)
         {
             finishPanel.gameObject.SetActive(true);
-            finishPanel.localPosition = Vector2.zero;
+            //finishPanel.localPosition = Vector2.zero;
+            finishPanel.offsetMin = Vector2.zero;
+            finishPanel.offsetMax = Vector2.zero;
         }
 
         if (finalScoreDisplay != null)

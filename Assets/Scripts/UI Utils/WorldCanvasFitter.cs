@@ -54,7 +54,11 @@ public class WorldCanvasFitter : MonoBehaviour
 
         canvasTransform.sizeDelta = new Vector2(frustumWidth, frustumHeight);
 
-        canvas.transform.position = followedCamera.transform.position + followedCamera.transform.forward;
+        canvas.transform.position = new Vector3(
+            followedCamera.transform.position.x,
+            followedCamera.transform.position.y,
+            canvasTransform.position.z
+            );
         canvas.transform.rotation = followedCamera.transform.rotation;
     }
 }
