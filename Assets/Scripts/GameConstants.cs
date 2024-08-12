@@ -18,4 +18,11 @@ public static class GameConstants
     #region Credit
     public const string CREDIT = "credit";
     #endregion
+
+    #region Memory Leak
+    /// <summary>
+    /// Load this level
+    /// </summary>
+    public const string MLLOADLEVEL = "mlLoadLevel";
+    #endregion
 }

@@ -78,7 +78,6 @@ public class MLLeakTracker : MonoBehaviour
         {
             LeakedMemory = 0;
         }
-        print(LeakedMemory);
         OnMemoryLeakUpdated?.Invoke(LeakedMemory);
         if (LeakedMemory >= MaxMemory)
         {

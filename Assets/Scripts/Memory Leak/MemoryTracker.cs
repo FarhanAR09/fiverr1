@@ -89,16 +89,16 @@ public class MemoryTracker : MonoBehaviour
 
     private void DebugCombo(int combo)
     {
-        print("Combo: " + combo);
+        //print("Combo: " + combo);
     }
 
     private void DebugComboBroken(bool _)
     {
-        print("COMBO BROKEN!");
+        //print("COMBO BROKEN!");
     }
 
     private void DebugMistakes(int mistakes)
     {
-        print("Mistakes: " + mistakes);
+        //print("Mistakes: " + mistakes);
     }
 }

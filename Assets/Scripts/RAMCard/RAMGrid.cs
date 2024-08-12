@@ -1,25 +1,68 @@
 using System.Collections;
 using System.Collections.Generic;
+using Unity.VisualScripting;
 using UnityEngine;
 
 public class RAMGrid : MonoBehaviour
 {
+    public static RAMGrid Instance { get; private set; }
+
     [SerializeField]
     private List<RAMStick> sticks;
 
-    [SerializeField]
+    //[SerializeField]
     private int row = 3, column = 4;
 
     public int Row { get { return row; } }
     public int Column { get { return column; } }
 
-    private void Start()
+    private bool beenSetup = false;
+
+    private void Awake()
     {
-        Setup();
+        if (Instance == null)
+        {
+            Instance = this;
+        }
+        else if (Instance != this)
+        {
+            Destroy(gameObject);
+        }
     }
 
-    private void Setup()
+    public void Setup(int level)
     {
+        if (beenSetup) return;
+        beenSetup = true;
+
+        switch (level)
+        {
+            case 1:
+                row = 4;
+                column = 4;
+                break;
+            case 2:
+                row = 4;
+                column = 5;
+                break;
+            case 3:
+                row = 5;
+                column = 6;
+                break;
+            case 4:
+                row = 6;
+                column = 6;
+                break;
+            case 5:
+                row = 6;
+                column = 7;
+                break;
+            default:
+                row = 4;
+                column = 4;
+                break;
+        }
+
         //Setting difficulty
         List<int> activeSticksIndexes = GetRAMStickActiveIndex(column);
         for (int i = 0; i < sticks.Count; i++)
