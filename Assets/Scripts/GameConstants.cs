@@ -24,5 +24,6 @@ public static class GameConstants
     /// Load this level
     /// </summary>
     public const string MLLOADLEVEL = "mlLoadLevel";
+    public const string MLUNLOCKEDLEVEL = "mlUnlockedLevel";
     #endregion
 }

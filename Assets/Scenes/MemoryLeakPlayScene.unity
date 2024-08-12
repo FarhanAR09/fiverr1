@@ -334,8 +334,6 @@ MonoBehaviour:
   - {fileID: 1798031756}
   - {fileID: 1850233903}
   - {fileID: 1303767071}
-  row: 3
-  column: 4
 --- !u!4 &193399184
 Transform:
   m_ObjectHideFlags: 0
@@ -612,6 +610,7 @@ Transform:
   - {fileID: 1383750840}
   - {fileID: 1946380535}
   - {fileID: 612497624}
+  - {fileID: 2007848745}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &527448239
@@ -2360,6 +2359,50 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   finishPanel: {fileID: 1394843501}
   finalScoreDisplay: {fileID: 641573161}
+--- !u!1 &2007848744
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 2007848745}
+  - component: {fileID: 2007848746}
+  m_Layer: 0
+  m_Name: ML Play Manager
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &2007848745
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2007848744}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 484520092}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &2007848746
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2007848744}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 863fbc8dbbfe99c46a15625611ab08ab, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1001 &2047973617
 PrefabInstance:
   m_ObjectHideFlags: 0
