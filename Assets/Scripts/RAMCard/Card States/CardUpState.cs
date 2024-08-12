@@ -7,7 +7,6 @@ public class CardUpState : CardState
 {
     public CardUpState(RAMCard owner, StateMachine stateMachine) : base(owner, stateMachine) { }
 
-    private readonly float autoFlipDuration = 2f;
     private float autoFlipTime = 0f;
 
     public override void OnEnable()
@@ -70,7 +69,7 @@ public class CardUpState : CardState
         base.PhysicsUpdate();
 
         autoFlipTime += Time.fixedDeltaTime;
-        if (autoFlipTime >= autoFlipDuration)
+        if (autoFlipTime >= (MLPlayManager.Instance != null ? MLPlayManager.Instance.CardAutoFlipDuration : 1.7f))
         {
             PutDownCardSingleCheck();
         }

@@ -69,7 +69,8 @@ public class RAMGrid : MonoBehaviour
         {
             if (!activeSticksIndexes.Contains(i))
             {
-                Destroy(sticks[i].gameObject);
+                sticks[i].gameObject.SetActive(false);
+                //Destroy(sticks[i].gameObject);
             }
         }
 

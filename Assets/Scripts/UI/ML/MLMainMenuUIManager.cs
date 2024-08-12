@@ -80,7 +80,7 @@ public class MLMainMenuUIManager : MonoBehaviour
     public void PlayClassic(int level)
     {
         PlayerPrefs.SetInt(GameConstants.MLLOADLEVEL, level);
-        print("Selected Level: " + level);
+        //print("Selected Level: " + level);
         SceneManager.LoadScene("MemoryLeakPlayScene");
     }
 

@@ -7,6 +7,20 @@ public class MLPlayManager : MonoBehaviour
     public static MLPlayManager Instance { get; private set; }
     public int CurrentLevel { get; private set; } = 0;
 
+    public float CardAutoFlipDuration {
+        get {
+            return CurrentLevel switch
+            {
+                1 => 2.0f,
+                2 => 1.6f,
+                3 => 1.3f,
+                4 => 1.0f,
+                5 => 0.7f,
+                _ => 1.7f,
+            };
+        } 
+    }
+
     private void OnEnable()
     {
         GameEvents.OnAllCardsPaired.Add(UnlockNewLevel);
@@ -33,7 +47,7 @@ public class MLPlayManager : MonoBehaviour
 
     private void Start()
     {
-        print("Loaded Level: " + CurrentLevel);
+        //print("Loaded Level: " + CurrentLevel);
         if (RAMGrid.Instance != null)
         {
             RAMGrid.Instance.SetupByLevel(CurrentLevel);
