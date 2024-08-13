@@ -7,10 +7,11 @@ public static class CreditManager
     /// <summary>
     /// Dictionary of various types of credits. Key is same for PlayerPrefs
     /// </summary>
-    public static Dictionary<string,float> Credit {
+    public static Dictionary<string, float> Credit
+    {
         get;
-        private set; 
-    }
+        private set;
+    } = new();
 
     public static void LoadCredit(string key)
     {
@@ -21,7 +22,7 @@ public static class CreditManager
     public static void SaveCredit(string key)
     {
         if (!Credit.ContainsKey(key)) Credit.Add(key, 0f);
-        PlayerPrefs.SetFloat(GameConstants.FTCCREDIT, Credit[key]);
+        PlayerPrefs.SetFloat(key, Credit[key]);
         PlayerPrefs.Save();
     }
 

@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using TMPro;
+using Unity.VisualScripting;
 using UnityEngine;
 
 public class MLFinishScreenManager : MonoBehaviour
@@ -19,12 +20,18 @@ public class MLFinishScreenManager : MonoBehaviour
     {
         GameEvents.OnMLLost.Add(ShowFinishScreen);
         GameEvents.OnAllCardsPaired.Add(ShowFinishScreen);
+
+        GameEvents.OnMLLost.Add(AddCredit);
+        GameEvents.OnAllCardsPaired.Add(AddCredit);
     }
 
     private void OnDisable()
     {
         GameEvents.OnMLLost.Remove(ShowFinishScreen);
         GameEvents.OnAllCardsPaired.Remove(ShowFinishScreen);
+
+        GameEvents.OnMLLost.Remove(AddCredit);
+        GameEvents.OnAllCardsPaired.Remove(AddCredit);
     }
 
     private void Awake()
@@ -74,5 +81,27 @@ public class MLFinishScreenManager : MonoBehaviour
                 0;
             finalScoreDisplay.SetText($"SCORE:\t{(MLScoreManager.Instance != null ? MLScoreManager.Instance.Score.ToString("F0") : 0)}\r\nRATING:\t{rating:F1}/5.0");
         }
+    }
+
+    private void AddCredit(bool _)
+    {
+        float fullCredit = 1000;
+        if (MLPlayManager.Instance != null)
+        {
+            //Full Credit = 1000 * (cardCount / 16)^2
+            fullCredit = MLPlayManager.Instance.CurrentLevel switch
+            {
+                1 => 1000,
+                2 => 1500,
+                3 => 3500,
+                4 => 5000,
+                5 => 7000,
+                _ => 1000
+            };
+        }
+        float addedCredit = fullCredit * CardMatchController.Instance.PairCount / CardMatchController.Instance.MaxPairCount;
+        print("Adding MLCredit: " + addedCredit);
+        CreditManager.DepositCredit(GameConstants.MLCREDIT, addedCredit);
+        CreditManager.SaveCredit(GameConstants.MLCREDIT);
     }
 }
