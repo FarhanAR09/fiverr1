@@ -6,8 +6,7 @@ public class MLScoreManager : MonoBehaviour
 {
     public static MLScoreManager Instance { get; private set; }
 
-    public float Score { get => score; }
-    private float score;
+    public float Score { get; private set; }
 
     private void Awake()
     {
@@ -20,7 +19,7 @@ public class MLScoreManager : MonoBehaviour
             Destroy(gameObject);
         }
 
-        score = 0;
+        Score = 0;
     }
 
     public void AddScore(float baseScore)
@@ -28,7 +27,8 @@ public class MLScoreManager : MonoBehaviour
         float multiplier = MemoryTracker.Instance != null && MemoryTracker.Instance.Combo > 0 ?
             Mathf.Max(MemoryTracker.Instance.Combo, Mathf.Pow(2.71828f, 0.6f * MemoryTracker.Instance.Combo) - 1) :
             1;
-        score += baseScore * (baseScore > 0 ? multiplier : 1);
+        float addedScore = baseScore * (baseScore > 0 ? multiplier : 1);
+        Score = Mathf.Max(0f, Score + addedScore);
         GameEvents.OnMLScoreUpdated.Publish(Score);
     }
 }
