@@ -177,8 +177,8 @@ public class PlaySceneManager : MonoBehaviour
 
     private void KeepCredits(bool _)
     {
-        CreditManager.LoadCredit();
-        CreditManager.DepositCredit(ScoreCounter.TotalScore);
-        CreditManager.SaveCredit();
+        CreditManager.LoadCredit(GameConstants.FTCCREDIT);
+        CreditManager.DepositCredit(GameConstants.FTCCREDIT, ScoreCounter.TotalScore);
+        CreditManager.SaveCredit(GameConstants.FTCCREDIT);
     }
 }

@@ -4,48 +4,64 @@ using UnityEngine;
 
 public static class CreditManager
 {
-    public static float Credit {
+    /// <summary>
+    /// Dictionary of various types of credits. Key is same for PlayerPrefs
+    /// </summary>
+    public static Dictionary<string,float> Credit {
         get;
         private set; 
     }
 
-    public static void LoadCredit()
+    public static void LoadCredit(string key)
     {
-        Credit = PlayerPrefs.GetFloat(GameConstants.CREDIT, 0f);
+        if (!Credit.ContainsKey(key)) Credit.Add(key, 0f);
+        Credit[key] = PlayerPrefs.GetFloat(key, 0f);
     }
 
-    public static void SaveCredit()
+    public static void SaveCredit(string key)
     {
-        PlayerPrefs.SetFloat(GameConstants.CREDIT, Credit);
+        if (!Credit.ContainsKey(key)) Credit.Add(key, 0f);
+        PlayerPrefs.SetFloat(GameConstants.FTCCREDIT, Credit[key]);
         PlayerPrefs.Save();
     }
 
-    public static void DepositCredit(float amount)
+    public static void DepositCredit(string key, float amount)
     {
-        LoadCredit();
+        LoadCredit(key);
         //Credit = PlayerPrefs.GetFloat(GameConstants.CREDIT, 0f);
-        Credit += amount;
-        GameEvents.OnCreditUpdated.Publish(Credit);
+        if (!Credit.ContainsKey(key)) Credit.Add(key, 0f);
+        Credit[key] += amount;
+        GameEvents.OnCreditUpdated.Publish(Credit[key]);
         //Debug.Log($"Credits Left: {Credit}");
-        SaveCredit();
+        SaveCredit(key);
     }
 
-    public static bool TrySpendCredit(float amount)
+    public static bool TrySpendCredit(string key, float amount)
     {
-        LoadCredit();
+        LoadCredit(key);
         //Debug.Log("Spending...");
         //Credit = PlayerPrefs.GetFloat(GameConstants.CREDIT, 0f);
-        if (amount <= Credit)
+        if (amount <= Credit[key])
         {
             //Debug.Log("Spending Succeed");
-            Credit -= amount;
-            SaveCredit();
-            GameEvents.OnCreditUpdated.Publish(Credit);
+            Credit[key] -= amount;
+            SaveCredit(key);
+            GameEvents.OnCreditUpdated.Publish(Credit[key]);
             //Debug.Log($"Credits Left: {Credit}");
             return true;
         }
-        SaveCredit();
+        SaveCredit(key);
         //Debug.Log($"Credits Left: {Credit}");
         return false;
+    }
+
+    public static float GetCredit(string key)
+    {
+        if (!Credit.ContainsKey(key))
+        {
+            Credit.Add(key, 0f);
+            return 0f;
+        }
+        return Credit[key];
     }
 }

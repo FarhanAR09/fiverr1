@@ -44,13 +44,13 @@ public class UpgradeItemButton : MonoBehaviour
                 price = upgradeItem.Price[level - 1];
             }
 
-            CreditManager.LoadCredit();
-            if (CreditManager.TrySpendCredit(price))
+            CreditManager.LoadCredit(GameConstants.FTCCREDIT);
+            if (CreditManager.TrySpendCredit(GameConstants.FTCCREDIT, price))
             {
                 upgradeItem.TryUpgrade(callback: UpdateDisplay);
                 //Debug.Log("Enough Credit");
             }
-            CreditManager.SaveCredit();
+            CreditManager.SaveCredit(GameConstants.FTCCREDIT);
         }
         else Debug.LogWarning("Upgrade Failed");
     }

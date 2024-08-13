@@ -16,7 +16,8 @@ public static class GameConstants
     #endregion
 
     #region Credit
-    public const string CREDIT = "credit";
+    public const string FTCCREDIT = "ftcCredit";
+    public const string MLCREDIT = "mlCredit";
     #endregion
 
     #region Memory Leak

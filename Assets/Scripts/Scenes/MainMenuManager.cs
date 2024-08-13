@@ -158,7 +158,7 @@ public class MainMenuManager : MonoBehaviour
             panelUpgrade.SetActive(true);
         if (panelMainMenu != null)
             panelMainMenu.SetActive(false);
-        CreditManager.LoadCredit();
+        CreditManager.LoadCredit(GameConstants.FTCCREDIT);
         UpdateUpgradeCreditsDisplay();
     }
 
@@ -175,7 +175,7 @@ public class MainMenuManager : MonoBehaviour
     {
         if (upgradeCreditsDisplay != null)
         {
-            upgradeCreditsDisplay.SetText("CREDITS: " + CreditManager.Credit.ToString("F0"));
+            upgradeCreditsDisplay.SetText("CREDITS: " + CreditManager.GetCredit(GameConstants.FTCCREDIT).ToString("F0"));
         }
     }
 }
