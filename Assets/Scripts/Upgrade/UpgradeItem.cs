@@ -24,6 +24,7 @@ public class UpgradeItem : ScriptableObject
 
     public void TryUpgrade(UnityAction<bool> callback = null)
     {
-        UpgradeActionInvoker.Instance.InvokeAction(ActionName, callback);
+        if (UpgradeActionInvoker.Instance != null)
+            UpgradeActionInvoker.Instance.InvokeAction(ActionName, callback);
     }
 }

@@ -87,4 +87,25 @@ public class UpgradeActionInvoker : MonoBehaviour
         BaseUpgradeAction("upgradeBoost", callback);
         yield return null;
     }
+
+    private IEnumerator MLUpgradeDifficulties(UnityAction<bool> callback = null)
+    {
+        print("MLUpgradeDifficulties");
+        //BaseUpgradeAction("upgradeBoost", callback);
+        yield return null;
+    }
+
+    private IEnumerator MLUpgradeFlash(UnityAction<bool> callback = null)
+    {
+        print("MLUpgradeFlash");
+        //BaseUpgradeAction("upgradeBoost", callback);
+        yield return null;
+    }
+
+    private IEnumerator MLUpgradeFreeze(UnityAction<bool> callback = null)
+    {
+        print("MLUpgradeFreeze");
+        //BaseUpgradeAction("upgradeBoost", callback);
+        yield return null;
+    }
 }

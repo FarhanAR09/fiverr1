@@ -10,7 +10,7 @@ public class MLMainMenuUIManager : MonoBehaviour
     public static MLMainMenuUIManager Instance { get; private set; }
 
     [SerializeField]
-    private GameObject mainMenuPanel, modeSelectionPanel, classicLevelSelectionPanel;
+    private GameObject mainMenuPanel, modeSelectionPanel, classicLevelSelectionPanel, upgradePanel;
 
     [SerializeField]
     private List<Button> difficultiesButtons = new();
@@ -48,7 +48,8 @@ public class MLMainMenuUIManager : MonoBehaviour
         //Enable only main panel
         SetPanel(mainMenuPanel, true);
         SetPanel(modeSelectionPanel, false);
-        SetPanel(classicLevelSelectionPanel, false); ;
+        SetPanel(classicLevelSelectionPanel, false);
+        SetPanel(upgradePanel, false);
     }
 
     private void SetPanel(GameObject panel, bool active)
@@ -102,5 +103,10 @@ public class MLMainMenuUIManager : MonoBehaviour
     public void BackToModeSelection(GameObject currentPanel)
     {
         SwitchPanel(modeSelectionPanel, currentPanel);
+    }
+
+    public void OpenUpgradePanel(GameObject currentPanel)
+    {
+        SwitchPanel(upgradePanel, currentPanel);
     }
 }
