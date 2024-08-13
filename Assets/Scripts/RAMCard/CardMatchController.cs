@@ -109,6 +109,8 @@ public class CardMatchController : MonoBehaviour
                         card1.PairCard();
                         card2.PairCard();
                         GameEvents.OnCardsPaired.Publish(new CardPairArgument(card1, card2));
+                        if (MLScoreManager.Instance != null)
+                            MLScoreManager.Instance.AddScore(10f);
                     }
                     else
                     {
@@ -121,6 +123,8 @@ public class CardMatchController : MonoBehaviour
                             card1.PutDownCard();
                             card2.PutDownCard();
                             GameEvents.OnCardsFailPairing.Publish(new(card1, card2));
+                            if (MLScoreManager.Instance != null)
+                                MLScoreManager.Instance.AddScore(-10f);
                         }
                         StartCoroutine(DelayPutDown());
                     }
