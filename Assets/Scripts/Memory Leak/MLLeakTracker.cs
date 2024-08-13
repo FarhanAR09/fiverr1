@@ -67,7 +67,20 @@ public class MLLeakTracker : MonoBehaviour
 
     private void AddLeakByMistakes(int mistakes)
     {
-        AddLeak(1 + Mathf.FloorToInt(10 * Mathf.Log(mistakes + 1, 32)));
+        int multiplier = 10;
+        if (MLPlayManager.Instance != null)
+        {
+            multiplier = MLPlayManager.Instance.CurrentLevel switch
+            {
+                1 => 10,
+                2 => 12,
+                3 => 14,
+                4 => 17,
+                5 => 20,
+                _ => 10,
+            };
+        }
+        AddLeak(1 + Mathf.FloorToInt(multiplier * Mathf.Log(mistakes + 1, 32)));
     }
 
     private void AddLeak(int amount)
