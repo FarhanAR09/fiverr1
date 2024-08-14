@@ -8,6 +8,7 @@ public class UpgradeItem : ScriptableObject
 {
     public string Name;
     public int MaxLevel;
+    [Tooltip("Which IEnumerator to run in UpgradeActionInvoker")]
     public string ActionName;
     public string KeyName;
     public int[] Price;
@@ -25,6 +26,6 @@ public class UpgradeItem : ScriptableObject
     public void TryUpgrade(UnityAction<bool> callback = null)
     {
         if (UpgradeActionInvoker.Instance != null)
-            UpgradeActionInvoker.Instance.InvokeAction(ActionName, callback);
+            UpgradeActionInvoker.Instance.InvokeAction(this, callback: callback);
     }
 }

@@ -16,7 +16,7 @@ MonoBehaviour:
   MaxLevel: 2
   ActionName: MLUpgradeFreeze
   KeyName: mlFreezeUpgrade
-  Price: 00000000
+  Price: 01000000
   Icons:
   - {fileID: 0}
   - {fileID: 0}

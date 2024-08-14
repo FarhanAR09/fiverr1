@@ -750,6 +750,10 @@ PrefabInstance:
       value: Upgrade Item Button (2)
       objectReference: {fileID: 0}
     - target: {fileID: 8432425695899438971, guid: a445a95255da0ee4daf89fba45c56140, type: 3}
+      propertyPath: game
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 8432425695899438971, guid: a445a95255da0ee4daf89fba45c56140, type: 3}
       propertyPath: upgradeItem
       value: 
       objectReference: {fileID: 11400000, guid: f7ce3189777bac54d90fb04917e454e4, type: 2}
@@ -2958,6 +2962,10 @@ PrefabInstance:
       value: Upgrade Item Button (1)
       objectReference: {fileID: 0}
     - target: {fileID: 8432425695899438971, guid: a445a95255da0ee4daf89fba45c56140, type: 3}
+      propertyPath: game
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 8432425695899438971, guid: a445a95255da0ee4daf89fba45c56140, type: 3}
       propertyPath: upgradeItem
       value: 
       objectReference: {fileID: 11400000, guid: 45a6c3aaabfcfe24dbfe27460f19ca7a, type: 2}
@@ -4619,6 +4627,10 @@ PrefabInstance:
       value: Upgrade Item Button
       objectReference: {fileID: 0}
     - target: {fileID: 8432425695899438971, guid: a445a95255da0ee4daf89fba45c56140, type: 3}
+      propertyPath: game
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 8432425695899438971, guid: a445a95255da0ee4daf89fba45c56140, type: 3}
       propertyPath: upgradeItem
       value: 
       objectReference: {fileID: 11400000, guid: 6261320ed3eda3a4c97778624816e53b, type: 2}
@@ -5307,6 +5319,7 @@ MonoBehaviour:
   - {fileID: 1359222358}
   - {fileID: 1286555552}
   - {fileID: 1264678181}
+  upgradeCreditDisplay: {fileID: 1112589455}
 --- !u!1 &1677016180
 GameObject:
   m_ObjectHideFlags: 0

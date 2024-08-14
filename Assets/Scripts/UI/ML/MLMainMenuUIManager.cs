@@ -18,6 +18,18 @@ public class MLMainMenuUIManager : MonoBehaviour
     private List<TMP_Text> difficultiesButtonTexts = new();
     //[SerializeField]
     //private int unlockedLevel = 1;
+    [SerializeField]
+    private TMP_Text upgradeCreditDisplay;
+
+    private void OnEnable()
+    {
+        GameEvents.OnCreditUpdated.Add(UpdateUpgradeCreditDisplay);
+    }
+
+    private void OnDisable()
+    {
+        GameEvents.OnCreditUpdated.Remove(UpdateUpgradeCreditDisplay);
+    }
 
     private void Awake()
     {
@@ -50,6 +62,11 @@ public class MLMainMenuUIManager : MonoBehaviour
         SetPanel(modeSelectionPanel, false);
         SetPanel(classicLevelSelectionPanel, false);
         SetPanel(upgradePanel, false);
+
+        //Give credit on load
+        //CreditManager.LoadCredit(GameConstants.MLCREDIT);
+        //CreditManager.DepositCredit(GameConstants.MLCREDIT, 1000f);
+        //CreditManager.SaveCredit(GameConstants.MLCREDIT);
     }
 
     private void SetPanel(GameObject panel, bool active)
@@ -108,5 +125,16 @@ public class MLMainMenuUIManager : MonoBehaviour
     public void OpenUpgradePanel(GameObject currentPanel)
     {
         SwitchPanel(upgradePanel, currentPanel);
+        UpdateUpgradeCreditDisplay();
+    }
+
+    private void UpdateUpgradeCreditDisplay(float _ = 0f)
+    {
+        CreditManager.LoadCredit(GameConstants.MLCREDIT);
+        //print($"ML CREDIT: {CreditManager.GetCredit(GameConstants.MLCREDIT):F0}");
+        if (upgradeCreditDisplay != null)
+        {
+            upgradeCreditDisplay.SetText($"CREDIT: {CreditManager.GetCredit(GameConstants.MLCREDIT):F0}");
+        }
     }
 }
