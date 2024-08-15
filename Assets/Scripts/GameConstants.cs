@@ -10,6 +10,10 @@ public static class GameConstants
     public const float PLAYERSTOPSLOWDOWN = 0.1f;
     #endregion
 
+    public const string FTCUPGRADEBULLETTIME = "upgradeTimeSlow";
+    public const string FTCUPGRADEEMP = "upgradeEMP";
+    public const string FTCUPGRADEBOOST = "upgradeBoost";
+
     #region Settings
     public const string SOUNDVOLUME = "soundVolume";
     public const string MUSICVOLUME = "musicVolume";

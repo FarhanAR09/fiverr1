@@ -8,11 +8,11 @@ public class MLPowerManager : MonoBehaviour
     public static MLPowerManager Instance { get; private set; }
 
     private bool canFlash = false, flashUnlocked = true;
-    private readonly float flashCdDuration = 30f;
+    private readonly float flashCdDuration = 1f;
     private float flashCdTime = 0f;
 
     private bool canFreeze = false, isFrozen = false, freezeUnlocked = true;
-    private readonly float freezeCdDuration = 30f, freezeDuration = 15f;
+    private readonly float freezeCdDuration = 60f, freezeDuration = 15f;
     private float freezeCdTime = 0f, freezeTime = 0f;
 
     private void Awake()
@@ -36,6 +36,7 @@ public class MLPowerManager : MonoBehaviour
 
         canFreeze = false;
         freezeCdTime = 0f;
+        GameEvents.OnMLFreezeCDStarted.Publish(true);
     }
 
     private void Update()
@@ -52,7 +53,6 @@ public class MLPowerManager : MonoBehaviour
             canFreeze = false;
             isFrozen = true;
             GameEvents.OnMLFreezeStateUpdated.Publish(true);
-            print("Freeze " + isFrozen);
         }
     }
 
@@ -65,11 +65,12 @@ public class MLPowerManager : MonoBehaviour
                 if (flashCdTime < flashCdDuration)
                 {
                     flashCdTime += Time.fixedDeltaTime;
-                    GameEvents.ONMLFlashCooldownUpdated.Publish(flashCdTime / flashCdDuration);
+                    GameEvents.OnMLFlashCDUpdated.Publish(flashCdTime / flashCdDuration);
                 }
                 else
                 {
                     canFlash = true;
+                    GameEvents.OnMLFlashCDFinished.Publish(true);
                 }
             }
         }
@@ -79,15 +80,19 @@ public class MLPowerManager : MonoBehaviour
             //Frozen active countdown
             if (isFrozen)
             {
-                freezeTime += Time.fixedDeltaTime;
-                if (freezeTime >= freezeDuration)
+                if (freezeTime < freezeDuration)
+                {
+                    freezeTime += Time.fixedDeltaTime;
+                    GameEvents.OnMLFreezeCDUpdated.Publish(1 - freezeTime / freezeDuration);
+                }
+                else
                 {
                     isFrozen = false;
-                    canFreeze = true;
+                    canFreeze = false;
                     freezeTime = 0f;
                     freezeCdTime = 0f;
                     GameEvents.OnMLFreezeStateUpdated.Publish(false);
-                    print("Freeze: " + isFrozen);
+                    GameEvents.OnMLFreezeCDStarted.Publish(true);
                 }
             }
             else //Frozen Cooldown (when not frozen)
@@ -97,10 +102,11 @@ public class MLPowerManager : MonoBehaviour
                     if (freezeCdTime < freezeCdDuration)
                     {
                         freezeCdTime += Time.fixedDeltaTime;
-                        GameEvents.ONMLFreezeCooldownUpdated.Publish(freezeCdTime / freezeCdDuration);
+                        GameEvents.OnMLFreezeCDUpdated.Publish(freezeCdTime / freezeCdDuration);
                     }
                     else
                     {
+                        GameEvents.OnMLFreezeCDFinished.Publish(true);
                         canFreeze = true;
                     }
                 }
@@ -112,5 +118,6 @@ public class MLPowerManager : MonoBehaviour
     {
         canFlash = false;
         flashCdTime = 0f;
+        GameEvents.OnMLFlashCDStarted.Publish(true);
     }
 }
