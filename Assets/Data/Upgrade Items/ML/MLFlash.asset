@@ -14,7 +14,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   Name: Flash
   MaxLevel: 2
-  ActionName: MLUpgradeFlash
+  ActionName: BaseUpgradeAction
   KeyName: mlFlashUpgrade
   Price: 01000000
   Icons:

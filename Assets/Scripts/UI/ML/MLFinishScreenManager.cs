@@ -100,7 +100,6 @@ public class MLFinishScreenManager : MonoBehaviour
             };
         }
         float addedCredit = fullCredit * CardMatchController.Instance.PairCount / CardMatchController.Instance.MaxPairCount;
-        print("Adding MLCredit: " + addedCredit);
         CreditManager.DepositCredit(GameConstants.MLCREDIT, addedCredit);
         CreditManager.SaveCredit(GameConstants.MLCREDIT);
     }

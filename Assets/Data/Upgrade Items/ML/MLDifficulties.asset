@@ -14,7 +14,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   Name: Difficulties
   MaxLevel: 5
-  ActionName: MLUpgradeDifficulties
+  ActionName: BaseUpgradeAction
   KeyName: mlDifficultiesUpgrade
   Price: 01000000020000000300000004000000
   Icons:

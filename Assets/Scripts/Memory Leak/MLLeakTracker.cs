@@ -24,14 +24,14 @@ public class MLLeakTracker : MonoBehaviour
     private void OnEnable()
     {
         GameEvents.OnMLMistakesUpdated.Add(AddLeakByMistakes);
-        GameEvents.OnMLFreezePowerUpdated.Add(SetFrozenState);
+        GameEvents.OnMLFreezeStateUpdated.Add(SetFrozenState);
         GameEvents.OnCardsPaired.Add(ReduceLeakByCombo);
     }
 
     private void OnDisable()
     {
         GameEvents.OnMLMistakesUpdated.Remove(AddLeakByMistakes);
-        GameEvents.OnMLFreezePowerUpdated.Remove(SetFrozenState);
+        GameEvents.OnMLFreezeStateUpdated.Remove(SetFrozenState);
         GameEvents.OnCardsPaired.Remove(ReduceLeakByCombo);
     }
 

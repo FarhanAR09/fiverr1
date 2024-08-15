@@ -14,7 +14,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   Name: Freeze
   MaxLevel: 2
-  ActionName: MLUpgradeFreeze
+  ActionName: BaseUpgradeAction
   KeyName: mlFreezeUpgrade
   Price: 01000000
   Icons:

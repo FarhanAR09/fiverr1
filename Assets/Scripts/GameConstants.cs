@@ -15,7 +15,7 @@ public static class GameConstants
     public const string MUSICVOLUME = "musicVolume";
     #endregion
 
-    #region Credit
+    #region Credit Types
     public const string FTCCREDIT = "ftcCredit";
     public const string MLCREDIT = "mlCredit";
     #endregion
@@ -26,5 +26,12 @@ public static class GameConstants
     /// </summary>
     public const string MLLOADLEVEL = "mlLoadLevel";
     public const string MLUNLOCKEDLEVEL = "mlUnlockedLevel";
+
+    #region Upgrades
+    public const string MLUPGRADEDIFFICULTIES = "mlDifficultiesUpgrade";
+    public const string MLUPGRADEFLASH = "mlFlashUpgrade";
+    public const string MLUPGRADEFREEZE = "mlFreezeUpgrade";
+    #endregion
+
     #endregion
 }
