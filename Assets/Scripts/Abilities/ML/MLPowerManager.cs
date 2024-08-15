@@ -8,7 +8,7 @@ public class MLPowerManager : MonoBehaviour
     public static MLPowerManager Instance { get; private set; }
 
     private bool canFlash = false, flashUnlocked = true;
-    private readonly float flashCdDuration = 1f;
+    private readonly float flashCdDuration = 90f;
     private float flashCdTime = 0f;
 
     private bool canFreeze = false, isFrozen = false, freezeUnlocked = true;
