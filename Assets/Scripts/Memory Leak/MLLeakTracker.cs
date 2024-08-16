@@ -26,6 +26,7 @@ public class MLLeakTracker : MonoBehaviour
         GameEvents.OnMLMistakesUpdated.Add(AddLeakByMistakes);
         GameEvents.OnMLFreezeStateUpdated.Add(SetFrozenState);
         GameEvents.OnMLCardsPaired.Add(ReduceLeakByCombo);
+        GameEvents.OnMLCorruptCardsPaired.Add(AddLeakByCorruptPair);
     }
 
     private void OnDisable()
@@ -33,6 +34,7 @@ public class MLLeakTracker : MonoBehaviour
         GameEvents.OnMLMistakesUpdated.Remove(AddLeakByMistakes);
         GameEvents.OnMLFreezeStateUpdated.Remove(SetFrozenState);
         GameEvents.OnMLCardsPaired.Remove(ReduceLeakByCombo);
+        GameEvents.OnMLCorruptCardsPaired.Remove(AddLeakByCorruptPair);
     }
 
     private void Awake()
@@ -88,14 +90,7 @@ public class MLLeakTracker : MonoBehaviour
         if (lost)
             return;
 
-        if (LeakedMemory + amount > 0)
-        {
-            LeakedMemory += amount;
-        }
-        else
-        {
-            LeakedMemory = 0;
-        }
+        LeakedMemory = Mathf.Max(0, LeakedMemory + amount);
         OnMemoryLeakUpdated?.Invoke(LeakedMemory);
         if (LeakedMemory >= MaxMemory)
         {
@@ -117,5 +112,10 @@ public class MLLeakTracker : MonoBehaviour
             int reduce = -Mathf.CeilToInt(20 * Mathf.Log(0.25f * (MemoryTracker.Instance.Combo - 1) + 1));
             AddLeak(reduce);
         }
+    }
+
+    private void AddLeakByCorruptPair(CardPairArgument arg)
+    {
+        AddLeak(30);
     }
 }

@@ -18,6 +18,8 @@ public class CardDownState : CardState
             Owner.OnClicked += OnClicked;
         }
         GameEvents.OnMLFlashPowerStarted.Add(PeekCard);
+
+        GameEvents.OnMLAllCardsPaired.Add(RemoveCardIfCorrupt);
     }
 
     public override void OnDisable()
@@ -29,6 +31,8 @@ public class CardDownState : CardState
             Owner.OnClicked -= OnClicked;
         }
         GameEvents.OnMLFlashPowerStarted.Remove(PeekCard);
+
+        GameEvents.OnMLAllCardsPaired.Add(RemoveCardIfCorrupt);
     }
 
     public override void Enter()
@@ -73,5 +77,10 @@ public class CardDownState : CardState
         {
             stateMachine.ChangeState(Owner.PeekedState);
         }
+    }
+
+    private void RemoveCardIfCorrupt(bool _)
+    {
+
     }
 }

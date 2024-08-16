@@ -24,6 +24,8 @@ public class CardMatchController : MonoBehaviour
         GameEvents.OnMLCardsPaired.Add(Pairing);
         GameEvents.OnMLCardExitUpState.Add(RemoveCardFromList);
         GameEvents.OnMLCardSetToCorrupt.Add(ReduceMaxPairCount);
+
+        GameEvents.OnMLCorruptCardsPaired.Add(CorruptPairing);
     }
 
     private void OnDisable()
@@ -32,6 +34,8 @@ public class CardMatchController : MonoBehaviour
         GameEvents.OnMLCardsPaired.Remove(Pairing);
         GameEvents.OnMLCardExitUpState.Remove(RemoveCardFromList);
         GameEvents.OnMLCardSetToCorrupt.Remove(ReduceMaxPairCount);
+
+        GameEvents.OnMLCorruptCardsPaired.Remove(CorruptPairing);
     }
 
     private void Awake()
@@ -55,6 +59,9 @@ public class CardMatchController : MonoBehaviour
             if (ramGrid != null)
             {
                 MaxPairCount = Mathf.FloorToInt(ramGrid.Row * ramGrid.Column / 2f);
+                print("MaxPair: " + MaxPairCount);
+                MaxPairCount -= reducePairCount;
+                print("MaxPair Reduced: " + MaxPairCount);
             }
         }
         StartCoroutine(Wait());
@@ -84,9 +91,18 @@ public class CardMatchController : MonoBehaviour
                         RAMCard card2 = openedCards[1];
                         card1.PairCard();
                         card2.PairCard();
-                        GameEvents.OnMLCardsPaired.Publish(new CardPairArgument(card1, card2));
-                        if (MLScoreManager.Instance != null)
-                            MLScoreManager.Instance.AddScore(10f);
+                        if (card1.Corrupted)
+                        {
+                            if (MLScoreManager.Instance != null)
+                                MLScoreManager.Instance.AddScore(-25f);
+                            GameEvents.OnMLCorruptCardsPaired.Publish(new CardPairArgument(card1, card2));
+                        }
+                        else
+                        {
+                            if (MLScoreManager.Instance != null)
+                                MLScoreManager.Instance.AddScore(10f);
+                            GameEvents.OnMLCardsPaired.Publish(new CardPairArgument(card1, card2));
+                        }
                     }
                     else
                     {
@@ -123,6 +139,7 @@ public class CardMatchController : MonoBehaviour
     private void Pairing(CardPairArgument arg)
     {
         PairCount++;
+        print("Pairing: " + arg.card1.name + " " + arg.card2.name);
         if (PairCount >= MaxPairCount)
         {
             print("All paired!");
@@ -130,8 +147,19 @@ public class CardMatchController : MonoBehaviour
         }
     }
 
+    private void CorruptPairing(CardPairArgument arg)
+    {
+        print("Corrupt Pairing: " + arg.card1.name + " " + arg.card2.name);
+    }
+
+    private int reduceCardCount = 0, reducePairCount = 0;
     private void ReduceMaxPairCount(RAMCard _)
     {
-        MaxPairCount--;
+        reduceCardCount++;
+        if (reduceCardCount >= 2)
+        {
+            reducePairCount++;
+            reduceCardCount = 0;
+        }
     }
 }

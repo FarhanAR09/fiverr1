@@ -6,6 +6,7 @@ public static partial class GameEvents
 {
     public static GameEvent<CardFlipArgument> OnMLCardFlipped = new();
     public static GameEvent<CardPairArgument> OnMLCardsPaired = new();
+    public static GameEvent<CardPairArgument> OnMLCorruptCardsPaired = new();
     public static GameEvent<CardPairArgument> OnMLCardsFailPairing = new();
     public static GameEvent<RAMCard> OnMLCardExitUpState = new();
     public static GameEvent<RAMCard> OnMLCardFinishedSingleCheck = new();
