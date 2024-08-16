@@ -2,6 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using Unity.VisualScripting.Antlr3.Runtime;
 using Unity.VisualScripting.FullSerializer;
+using UnityEditor;
 using UnityEngine;
 
 public class CardDownState : CardState
@@ -32,7 +33,7 @@ public class CardDownState : CardState
         }
         GameEvents.OnMLFlashPowerStarted.Remove(PeekCard);
 
-        GameEvents.OnMLAllCardsPaired.Add(RemoveCardIfCorrupt);
+        GameEvents.OnMLAllCardsPaired.Remove(RemoveCardIfCorrupt);
     }
 
     public override void Enter()
@@ -66,7 +67,6 @@ public class CardDownState : CardState
     {
         if (stateMachine != null && Owner != null && Owner.UpState != null)
         {
-            //Debug.Log(Owner.name + " state called");
             stateMachine.ChangeState(Owner.UpState);
         }
     }
@@ -81,6 +81,9 @@ public class CardDownState : CardState
 
     private void RemoveCardIfCorrupt(bool _)
     {
-
+        if (Owner != null && Owner.Corrupted)
+        {
+            Object.Destroy(Owner.gameObject);
+        }
     }
 }
