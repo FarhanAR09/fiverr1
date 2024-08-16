@@ -92,7 +92,6 @@ public class RAMGrid : MonoBehaviour
             bruh += i + ", ";
             corruptedNumbers.Add(i);
         }
-        print("Koruptor: " + bruh);
 
         //Shuffle card
         Shuffle(cardIds);

@@ -59,9 +59,7 @@ public class CardMatchController : MonoBehaviour
             if (ramGrid != null)
             {
                 MaxPairCount = Mathf.FloorToInt(ramGrid.Row * ramGrid.Column / 2f);
-                print("MaxPair: " + MaxPairCount);
                 MaxPairCount -= reducePairCount;
-                print("MaxPair Reduced: " + MaxPairCount);
             }
         }
         StartCoroutine(Wait());

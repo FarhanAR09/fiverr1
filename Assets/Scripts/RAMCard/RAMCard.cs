@@ -71,7 +71,6 @@ public class RAMCard : MonoBehaviour
 
         if (Corrupted)
         {
-            print(name + " " + CardNumber + " " + " corrupt " + Corrupted);
             GameEvents.OnMLCardSetToCorrupt.Publish(this);
         }
     }

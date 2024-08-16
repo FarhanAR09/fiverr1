@@ -120,7 +120,6 @@ public class PowerCooldownDisplay : MonoBehaviour
     private void ResetDisplay(bool _)
     {
         if (!unlocked) return;
-        print(name + " reset");
         if (image != null)
         {
             image.material.SetFloat("_Intensity", 0f);
