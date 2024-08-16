@@ -43,6 +43,8 @@ public class CardUpState : CardState
         if (Owner != null)
         {
             Owner.NumberRevealed(true);
+            if (Owner.Corrupted)
+                Owner.SetColor(Color.red);
         }
 
         GameEvents.OnMLCardFlipped.Publish(new CardFlipArgument(Owner, true));

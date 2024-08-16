@@ -43,6 +43,7 @@ public class CardDownState : CardState
         if (Owner != null)
         {
             Owner.NumberRevealed(false);
+            Owner.SetColor(Color.white);
         }
 
         GameEvents.OnMLCardFlipped.Publish(new CardFlipArgument(Owner, false));

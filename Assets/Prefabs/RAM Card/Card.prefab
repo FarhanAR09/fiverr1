@@ -236,7 +236,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   <CardNumber>k__BackingField: 0
   display: {fileID: 8451908987286431316}
-  spriteRenderer: {fileID: 0}
+  spriteRenderer: {fileID: 3287337189819713677}
 --- !u!61 &9038460821831523529
 BoxCollider2D:
   m_ObjectHideFlags: 0

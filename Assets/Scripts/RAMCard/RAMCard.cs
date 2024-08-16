@@ -83,4 +83,12 @@ public class RAMCard : MonoBehaviour
             display.enabled = revealed;
         }
     }
+
+    public void SetColor(Color color)
+    {
+        if (spriteRenderer != null)
+        {
+            spriteRenderer.color = color;
+        }
+    }
 }

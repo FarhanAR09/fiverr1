@@ -15,6 +15,8 @@ public class CardPeekedState : CardState
         if (Owner != null)
         {
             Owner.NumberRevealed(true);
+            if (Owner.Corrupted)
+                Owner.SetColor(Color.red);
         }
         peekTime = peekDuration;
     }
