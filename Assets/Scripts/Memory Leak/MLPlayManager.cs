@@ -23,12 +23,12 @@ public class MLPlayManager : MonoBehaviour
 
     private void OnEnable()
     {
-        GameEvents.OnAllCardsPaired.Add(UnlockNewLevel);
+        GameEvents.OnMLAllCardsPaired.Add(UnlockNewLevel);
     }
 
     private void OnDisable()
     {
-        GameEvents.OnAllCardsPaired.Remove(UnlockNewLevel);
+        GameEvents.OnMLAllCardsPaired.Remove(UnlockNewLevel);
     }
 
     private void Awake()
@@ -50,7 +50,7 @@ public class MLPlayManager : MonoBehaviour
         //print("Loaded Level: " + CurrentLevel);
         if (RAMGrid.Instance != null)
         {
-            RAMGrid.Instance.SetupByLevel(CurrentLevel);
+            RAMGrid.Instance.SetupClassicByLevel(CurrentLevel);
         }
     }
 

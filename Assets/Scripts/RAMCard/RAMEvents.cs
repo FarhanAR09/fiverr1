@@ -4,12 +4,13 @@ using UnityEngine;
 
 public static partial class GameEvents
 {
-    public static GameEvent<CardFlipArgument> OnCardFlipped = new();
-    public static GameEvent<CardPairArgument> OnCardsPaired = new();
-    public static GameEvent<CardPairArgument> OnCardsFailPairing = new();
-    public static GameEvent<RAMCard> OnCardExitUpState = new();
-    public static GameEvent<bool> OnAllCardsPaired = new();
-    public static GameEvent<RAMCard> OnCardFinishedSingleCheck = new();
+    public static GameEvent<CardFlipArgument> OnMLCardFlipped = new();
+    public static GameEvent<CardPairArgument> OnMLCardsPaired = new();
+    public static GameEvent<CardPairArgument> OnMLCardsFailPairing = new();
+    public static GameEvent<RAMCard> OnMLCardExitUpState = new();
+    public static GameEvent<RAMCard> OnMLCardFinishedSingleCheck = new();
+    public static GameEvent<RAMCard> OnMLCardSetToCorrupt = new();
+    public static GameEvent<bool> OnMLAllCardsPaired = new();
 }
 
 public class CardFlipArgument

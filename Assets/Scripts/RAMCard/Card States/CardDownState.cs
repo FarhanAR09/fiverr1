@@ -40,7 +40,7 @@ public class CardDownState : CardState
             Owner.NumberRevealed(false);
         }
 
-        GameEvents.OnCardFlipped.Publish(new CardFlipArgument(Owner, false));
+        GameEvents.OnMLCardFlipped.Publish(new CardFlipArgument(Owner, false));
     }
 
     public override void Exit()

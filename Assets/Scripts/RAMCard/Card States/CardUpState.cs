@@ -45,7 +45,7 @@ public class CardUpState : CardState
             Owner.NumberRevealed(true);
         }
 
-        GameEvents.OnCardFlipped.Publish(new CardFlipArgument(Owner, true));
+        GameEvents.OnMLCardFlipped.Publish(new CardFlipArgument(Owner, true));
     }
 
     public override void Exit()
@@ -56,7 +56,7 @@ public class CardUpState : CardState
         {
             Owner.NumberRevealed(false);
         }
-        GameEvents.OnCardExitUpState.Publish(Owner);
+        GameEvents.OnMLCardExitUpState.Publish(Owner);
     }
 
     public override void FrameUpdate()
@@ -96,7 +96,7 @@ public class CardUpState : CardState
         if (stateMachine != null && Owner != null && Owner.DownState != null)
         {
             stateMachine.ChangeState(Owner.DownState);
-            GameEvents.OnCardFinishedSingleCheck.Publish(Owner);
+            GameEvents.OnMLCardFinishedSingleCheck.Publish(Owner);
         }
     }
 }

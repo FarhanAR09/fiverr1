@@ -10,9 +10,7 @@ public class RAMCard : MonoBehaviour
     //TODO: cuma coba2 pairing, move to data
     [field: SerializeField]
     public int CardNumber { get; private set; } = 0;
-
-    public bool IsOpen { get; private set; } = false;
-    public bool IsDisabled { get; private set; } = false;
+    public bool Corrupted { get; private set; } = false;
 
     public UnityAction OnClicked, PairRequestCalled, PutDownRequestCalled;
 
@@ -60,16 +58,21 @@ public class RAMCard : MonoBehaviour
         PutDownRequestCalled?.Invoke();
     }
 
-    public void Setup(int cardNumber)
+    public void Setup(int cardNumber, bool corrupted = false)
     {
-        //print($"{name} was setup with {cardNumber}");
         CardNumber = cardNumber;
+        Corrupted = corrupted;
         
-        //TODO: setup visuals
         if (display != null)
         {
             display.SetText(cardNumber.ToString());
             display.enabled = false;
+        }
+
+        if (Corrupted)
+        {
+            print(name + " " + CardNumber + " " + " corrupt " + Corrupted);
+            GameEvents.OnMLCardSetToCorrupt.Publish(this);
         }
     }
 

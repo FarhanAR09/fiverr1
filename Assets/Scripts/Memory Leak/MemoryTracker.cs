@@ -12,9 +12,9 @@ public class MemoryTracker : MonoBehaviour
 
     private void OnEnable()
     {
-        GameEvents.OnCardsPaired.Add(TrackSuccessfulPairings);
-        GameEvents.OnCardsFailPairing.Add(TrackFailedPairings);
-        GameEvents.OnCardFinishedSingleCheck.Add(SingleCheckBreakCombo);
+        GameEvents.OnMLCardsPaired.Add(TrackSuccessfulPairings);
+        GameEvents.OnMLCardsFailPairing.Add(TrackFailedPairings);
+        GameEvents.OnMLCardFinishedSingleCheck.Add(SingleCheckBreakCombo);
 
         //DEBUG
         GameEvents.OnMLComboUpdated.Add(DebugCombo);
@@ -24,9 +24,9 @@ public class MemoryTracker : MonoBehaviour
 
     private void OnDisable()
     {
-        GameEvents.OnCardsPaired.Remove(TrackSuccessfulPairings);
-        GameEvents.OnCardsFailPairing.Remove(TrackFailedPairings);
-        GameEvents.OnCardFinishedSingleCheck.Remove(SingleCheckBreakCombo);
+        GameEvents.OnMLCardsPaired.Remove(TrackSuccessfulPairings);
+        GameEvents.OnMLCardsFailPairing.Remove(TrackFailedPairings);
+        GameEvents.OnMLCardFinishedSingleCheck.Remove(SingleCheckBreakCombo);
 
         //DEBUG
         GameEvents.OnMLComboUpdated.Remove(DebugCombo);

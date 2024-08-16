@@ -7,25 +7,9 @@ public class RAMStick : MonoBehaviour
     [SerializeField]
     private List<RAMCard> cards;
 
-    public void Setup(List<int> cardNumbers)
+    public void Setup(List<int> cardNumbers, List<int> corruptedNumbers)
     {
-        //if (cards.Count != cardNumbers.Count)
-        //{
-        //    Debug.LogError("CardNumbers amount mismatches with number of cards in " + name);
-        //    return;
-        //}
-
         int allCardsCount = cards.Count;
-
-        //for (int i = activeCardsCount; i < allCardsCount; i++)
-        //{
-        //    Destroy(cards[i].gameObject);
-        //}
-
-        //for (int i = 0; i < activeCardsCount; i++)
-        //{
-        //    cards[i].Setup(cardNumbers[i]);
-        //}
 
         List<int> activeIndexes = GetRAMCardActiveIndex(cardNumbers.Count);
         int assignedIndex = 0;
@@ -33,7 +17,9 @@ public class RAMStick : MonoBehaviour
         {
             if (activeIndexes.Contains(i))
             {
-                cards[i].Setup(cardNumbers[assignedIndex]);
+                cards[i].Setup(
+                    cardNumbers[assignedIndex],
+                    corruptedNumbers != null && corruptedNumbers.Contains(cardNumbers[assignedIndex]));
                 assignedIndex++;
             }
             else

@@ -108,7 +108,6 @@ public class PowerCooldownDisplay : MonoBehaviour
     private void UpdateDisplayFromNormalized(float value)
     {
         if (!unlocked) return;
-        print(name + " " + value);
         if (image != null)
         {
             image.material.SetFloat("_Reveal", value);

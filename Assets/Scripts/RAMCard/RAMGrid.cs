@@ -16,7 +16,7 @@ public class RAMGrid : MonoBehaviour
     public int Row { get { return row; } }
     public int Column { get { return column; } }
 
-    private bool beenSetup = false;
+    public bool BeenSetup { get; private set; } = false;
 
     private void Awake()
     {
@@ -30,10 +30,9 @@ public class RAMGrid : MonoBehaviour
         }
     }
 
-    public void SetupByLevel(int level)
+    public void SetupClassicByLevel(int level)
     {
-        if (beenSetup) return;
-        beenSetup = true;
+        if (BeenSetup) return;
 
         switch (level)
         {
@@ -74,21 +73,26 @@ public class RAMGrid : MonoBehaviour
             }
         }
 
-        //Count cards
         int cardCount = row * column;
-        //foreach (RAMStick stick in sticks)
-        //{
-        //    if (stick.enabled)
-        //        cardCount += stick.GetStickCardCount();
-        //}
 
-        //Generate card
+        //Generate card numbers
         List<int>  cardIds = new();
         for (int i = 0; i < cardCount / 2; i++)
         {
             cardIds.Add(i);
             cardIds.Add(i);
         }
+
+        //Generate corrupted card numbers
+        List<int> corruptedNumbers = new();
+        string bruh = "";
+        //Corrupted numbers = 20% of pairs starting from number 0, 1, ...
+        for (int i = 0; i < Mathf.CeilToInt(cardCount * 0.2f / 2f); i++)
+        {
+            bruh += i + ", ";
+            corruptedNumbers.Add(i);
+        }
+        print("Koruptor: " + bruh);
 
         //Shuffle card
         Shuffle(cardIds);
@@ -99,9 +103,11 @@ public class RAMGrid : MonoBehaviour
         {
             if (!activeSticksIndexes.Contains(i))
                 continue;
-            sticks[i].Setup(cardIds.GetRange(assignedCount, row));
+            sticks[i].Setup(cardIds.GetRange(assignedCount, row), corruptedNumbers);
             assignedCount += row;
         }
+        
+        BeenSetup = true;
     }
 
     private void Shuffle<T>(List<T> list)
