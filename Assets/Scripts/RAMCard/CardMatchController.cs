@@ -2,7 +2,6 @@ using System.Collections;
 using System.Collections.Generic;
 using Unity.Burst.Intrinsics;
 using Unity.VisualScripting;
-using UnityEditor.IMGUI.Controls;
 using UnityEngine;
 
 public class CardMatchController : MonoBehaviour
@@ -24,8 +23,6 @@ public class CardMatchController : MonoBehaviour
         GameEvents.OnMLCardsPaired.Add(Pairing);
         GameEvents.OnMLCardExitUpState.Add(RemoveCardFromList);
         GameEvents.OnMLCardSetToCorrupt.Add(ReduceMaxPairCount);
-
-        GameEvents.OnMLCorruptCardsPaired.Add(CorruptPairing);
     }
 
     private void OnDisable()
@@ -34,8 +31,6 @@ public class CardMatchController : MonoBehaviour
         GameEvents.OnMLCardsPaired.Remove(Pairing);
         GameEvents.OnMLCardExitUpState.Remove(RemoveCardFromList);
         GameEvents.OnMLCardSetToCorrupt.Remove(ReduceMaxPairCount);
-
-        GameEvents.OnMLCorruptCardsPaired.Remove(CorruptPairing);
     }
 
     private void Awake()
@@ -137,17 +132,11 @@ public class CardMatchController : MonoBehaviour
     private void Pairing(CardPairArgument arg)
     {
         PairCount++;
-        print("Pairing: " + arg.card1.name + " " + arg.card2.name);
         if (PairCount >= MaxPairCount)
         {
             print("All paired!");
             GameEvents.OnMLAllCardsPaired.Publish(true);
         }
-    }
-
-    private void CorruptPairing(CardPairArgument arg)
-    {
-        print("Corrupt Pairing: " + arg.card1.name + " " + arg.card2.name);
     }
 
     private int reduceCardCount = 0, reducePairCount = 0;

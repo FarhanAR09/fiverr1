@@ -21,16 +21,6 @@ public class MLPlayManager : MonoBehaviour
         } 
     }
 
-    private void OnEnable()
-    {
-        GameEvents.OnMLAllCardsPaired.Add(UnlockNewLevel);
-    }
-
-    private void OnDisable()
-    {
-        GameEvents.OnMLAllCardsPaired.Remove(UnlockNewLevel);
-    }
-
     private void Awake()
     {
         if (Instance == null)
@@ -51,16 +41,6 @@ public class MLPlayManager : MonoBehaviour
         if (RAMGrid.Instance != null)
         {
             RAMGrid.Instance.SetupClassicByLevel(CurrentLevel);
-        }
-    }
-
-    private void UnlockNewLevel(bool _)
-    {
-        int savedUnlockedLevel = PlayerPrefs.GetInt(GameConstants.MLUNLOCKEDLEVEL);
-        if (savedUnlockedLevel < CurrentLevel + 1)
-        {
-            PlayerPrefs.SetInt(GameConstants.MLUNLOCKEDLEVEL, CurrentLevel + 1);
-            PlayerPrefs.Save();
         }
     }
 }

@@ -24,7 +24,8 @@ public class RAMStick : MonoBehaviour
             }
             else
             {
-                Destroy(cards[i].gameObject);
+                //Destroy(cards[i].gameObject);
+                cards[i].gameObject.SetActive(false);
             }
         }
     }

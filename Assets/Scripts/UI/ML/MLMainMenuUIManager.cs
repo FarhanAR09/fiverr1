@@ -45,18 +45,6 @@ public class MLMainMenuUIManager : MonoBehaviour
 
     private void Start()
     {
-        //Set button color by unlocked level in Classic mode
-        if (difficultiesButtonTexts != null)
-        {
-            //int unlockedLevel = 3;
-            int unlockedLevel = PlayerPrefs.GetInt(GameConstants.MLUNLOCKEDLEVEL, 1);
-            for (int i = 0; i < difficultiesButtons.Count; i++)
-            {
-                difficultiesButtons[i].interactable = (i + 1) <= unlockedLevel;
-                difficultiesButtonTexts[i].color = (i + 1) <= unlockedLevel ? Color.white : new Color(0.2f, 0.2f, 0.2f);
-            }
-        }
-
         //Enable only main panel
         SetPanel(mainMenuPanel, true);
         SetPanel(modeSelectionPanel, false);
@@ -93,6 +81,8 @@ public class MLMainMenuUIManager : MonoBehaviour
     {
         SetPanel(modeSelectionPanel, false);
         SetPanel(classicLevelSelectionPanel, true);
+        UpdateClassicDifficultySelectionPage();
+
     }
 
     public void PlayClassic(int level)
@@ -135,6 +125,25 @@ public class MLMainMenuUIManager : MonoBehaviour
         if (upgradeCreditDisplay != null)
         {
             upgradeCreditDisplay.SetText($"CREDIT: {CreditManager.GetCredit(GameConstants.MLCREDIT):F0}");
+        }
+    }
+
+    private void UpdateClassicDifficultySelectionPage()
+    {
+        if (classicLevelSelectionPanel != null)
+        {
+            //Set button color by unlocked level in Classic mode
+            if (difficultiesButtons != null && difficultiesButtonTexts != null)
+            {
+                //int unlockedLevel = 3;
+                int unlockedLevel = PlayerPrefs.GetInt(GameConstants.MLUPGRADEDIFFICULTIES, 1);
+                print(unlockedLevel);
+                for (int i = 0; i < difficultiesButtons.Count; i++)
+                {
+                    difficultiesButtons[i].interactable = (i + 1) <= unlockedLevel;
+                    difficultiesButtonTexts[i].color = (i + 1) <= unlockedLevel ? Color.white : new Color(0.2f, 0.2f, 0.2f);
+                }
+            }
         }
     }
 }
