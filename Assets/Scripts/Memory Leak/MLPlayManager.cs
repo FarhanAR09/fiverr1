@@ -1,12 +1,13 @@
 using System.Collections;
 using System.Collections.Generic;
+using System.Runtime.InteropServices;
 using Unity.VisualScripting;
 using UnityEngine;
 
 public class MLPlayManager : MonoBehaviour
 {
     public static MLPlayManager Instance { get; private set; }
-    public int Difficulty { get; private set; } = 0;
+    public int Difficulty { get; private set; } = 1;
     public MLGameMode GameMode { get; private set; } = MLGameMode.Classic;
 
     public float CardAutoFlipDuration {
@@ -21,6 +22,22 @@ public class MLPlayManager : MonoBehaviour
                 _ => 1.7f,
             };
         } 
+    }
+
+    private void OnEnable()
+    {
+        if (GameMode == MLGameMode.Endless || GameMode == MLGameMode.Trial)
+        {
+            GameEvents.OnMLAllCardsPaired.Add(ResetGridTrialEndless);
+        }
+    }
+
+    private void OnDisable()
+    {
+        if (GameMode == MLGameMode.Endless || GameMode == MLGameMode.Trial)
+        {
+            GameEvents.OnMLAllCardsPaired.Remove(ResetGridTrialEndless);
+        }
     }
 
     private void Awake()
@@ -45,25 +62,16 @@ public class MLPlayManager : MonoBehaviour
         print("Difficulty: " + Difficulty);
         if (RAMGrid.Instance != null)
         {
-            RAMGrid.Instance.SetupClassicByLevel(Difficulty);
+            RAMGrid.Instance.SetupByLevel(Difficulty);
         }
         GameEvents.OnMLGameSetup.Publish(true);
     }
 
-    //private int rCount = 0;
-    //private void Update()
-    //{
-    //    if (Input.GetKeyDown(KeyCode.R))
-    //    {
-    //        if (RAMGrid.Instance != null)
-    //        {
-    //            print("------------------------------------ Resetting Memory Leak ------------------------------------");
-    //            rCount++;
-    //            if (rCount > 5 || rCount < 1)
-    //                rCount = 1;
-    //            RAMGrid.Instance.BeenSetup = false;
-    //            RAMGrid.Instance.SetupClassicByLevel(rCount);
-    //        }
-    //    }
-    //}
+    private void ResetGridTrialEndless(bool _)
+    {
+        if (!(GameMode == MLGameMode.Endless || GameMode == MLGameMode.Trial) || RAMGrid.Instance == null)
+            return;
+        print("Resetting");
+        RAMGrid.Instance.SetupByLevel(Difficulty);
+    }
 }

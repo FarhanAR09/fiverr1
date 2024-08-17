@@ -10,12 +10,11 @@ public class CardMatchController : MonoBehaviour
 
     private List<RAMCard> openedCards = new();
 
-    [SerializeField]
-    private RAMGrid ramGrid;
     public int MaxPairCount { get; private set; } = 0;
     public int PairCount { get; private set; } = 0;
     public int TimesCardOpened { get; private set; } = 0;
 
+    private bool gridIsSetup = false;
 
     private void OnEnable()
     {
@@ -23,6 +22,11 @@ public class CardMatchController : MonoBehaviour
         GameEvents.OnMLCardsPaired.Add(Pairing);
         GameEvents.OnMLCardExitUpState.Add(RemoveCardFromList);
         GameEvents.OnMLCardSetToCorrupt.Add(ReduceMaxPairCount);
+
+        if (RAMGrid.Instance != null)
+        {
+            RAMGrid.Instance.onGridSetup += TrackGridSetupState;
+        }
     }
 
     private void OnDisable()
@@ -31,6 +35,11 @@ public class CardMatchController : MonoBehaviour
         GameEvents.OnMLCardsPaired.Remove(Pairing);
         GameEvents.OnMLCardExitUpState.Remove(RemoveCardFromList);
         GameEvents.OnMLCardSetToCorrupt.Remove(ReduceMaxPairCount);
+
+        if (RAMGrid.Instance != null)
+        {
+            RAMGrid.Instance.onGridSetup -= TrackGridSetupState;
+        }
     }
 
     private void Awake()
@@ -47,16 +56,18 @@ public class CardMatchController : MonoBehaviour
 
     private void Start()
     {
-        //FIX: this should wait until grid finish setting up, but it's fine now
         IEnumerator Wait()
         {
-            yield return new WaitUntil(() => ramGrid != null && ramGrid.BeenSetup);
-            if (ramGrid != null)
+            yield return new WaitUntil(() => RAMGrid.Instance != null && gridIsSetup);
+            print("Card Match Setup Started");
+            gridIsSetup = false;
+            if (RAMGrid.Instance != null)
             {
-                MaxPairCount = Mathf.FloorToInt(ramGrid.Row * ramGrid.Column / 2f);
+                MaxPairCount = Mathf.FloorToInt(RAMGrid.Instance.Row * RAMGrid.Instance.Column / 2f);
                 MaxPairCount -= reducePairCount;
             }
         }
+        StopCoroutine(Wait());
         StartCoroutine(Wait());
     }
 
@@ -152,5 +163,10 @@ public class CardMatchController : MonoBehaviour
             reducePairCount++;
             reduceCardCount = 0;
         }
+    }
+
+    private void TrackGridSetupState()
+    {
+        gridIsSetup = true;
     }
 }

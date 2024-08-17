@@ -28,7 +28,6 @@ public class MLScoreManager : MonoBehaviour
             Mathf.Max(MemoryTracker.Instance.Combo, Mathf.Pow(2.71828f, 0.6f * MemoryTracker.Instance.Combo) - 1) :
             1;
         float addedScore = baseScore * (baseScore > 0 ? multiplier : 1);
-        print("Added score: " + addedScore);
         Score = Mathf.Max(0f, Score + addedScore);
         GameEvents.OnMLScoreUpdated.Publish(Score);
     }

@@ -16,7 +16,7 @@ MonoBehaviour:
   MaxLevel: 2
   ActionName: BaseUpgradeAction
   KeyName: mlFreezeUpgrade
-  Price: 01000000
+  Price: e8030000
   Icons:
-  - {fileID: 0}
-  - {fileID: 0}
+  - {fileID: 21300000, guid: 94a1663ca5a8b3746a9bb25450817e43, type: 3}
+  - {fileID: 21300000, guid: 94a1663ca5a8b3746a9bb25450817e43, type: 3}

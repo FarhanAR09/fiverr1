@@ -16,10 +16,10 @@ MonoBehaviour:
   MaxLevel: 5
   ActionName: BaseUpgradeAction
   KeyName: mlDifficultiesUpgrade
-  Price: 01000000020000000300000004000000
+  Price: e8030000dc050000ac0d000088130000
   Icons:
-  - {fileID: 0}
-  - {fileID: 0}
-  - {fileID: 0}
-  - {fileID: 0}
-  - {fileID: 0}
+  - {fileID: -67514094, guid: 3a94d900b36e17f4ea0664ded0660e5c, type: 3}
+  - {fileID: -1762682087, guid: 3a94d900b36e17f4ea0664ded0660e5c, type: 3}
+  - {fileID: -1332253185, guid: 3a94d900b36e17f4ea0664ded0660e5c, type: 3}
+  - {fileID: 2107863580, guid: 3a94d900b36e17f4ea0664ded0660e5c, type: 3}
+  - {fileID: 1432537883, guid: 3a94d900b36e17f4ea0664ded0660e5c, type: 3}

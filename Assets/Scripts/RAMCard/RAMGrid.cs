@@ -2,6 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using Unity.VisualScripting;
 using UnityEngine;
+using UnityEngine.Events;
 
 public class RAMGrid : MonoBehaviour
 {
@@ -16,7 +17,7 @@ public class RAMGrid : MonoBehaviour
     public int Row { get { return row; } }
     public int Column { get { return column; } }
 
-    public bool BeenSetup { get; set; } = false;
+    public UnityAction onGridSetup;
 
     private void Awake()
     {
@@ -30,7 +31,7 @@ public class RAMGrid : MonoBehaviour
         }
     }
 
-    public void SetupClassicByLevel(int level)
+    public void SetupByLevel(int level)
     {
         if (MLMainMenuFeatureSwitches.difficultyOverridden)
         {
@@ -70,8 +71,6 @@ public class RAMGrid : MonoBehaviour
 
     public void SetupBySize(int c, int r)
     {
-        if (BeenSetup) return;
-
         column = Mathf.Clamp(c, 1, sticks.Count);
         row = Mathf.Clamp(r, 1, 6);
         if (column * row % 2 != 0)
@@ -117,7 +116,8 @@ public class RAMGrid : MonoBehaviour
             assignedCount += row;
         }
 
-        BeenSetup = true;
+        print("Grid Setup Finished");
+        onGridSetup.Invoke();
     }
 
     private void Shuffle<T>(List<T> list)
