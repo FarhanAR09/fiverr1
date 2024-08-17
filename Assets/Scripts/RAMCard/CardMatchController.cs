@@ -136,6 +136,10 @@ public class CardMatchController : MonoBehaviour
         {
             print("All paired!");
             GameEvents.OnMLAllCardsPaired.Publish(true);
+            if (MLPlayManager.Instance.GameMode == MLGameMode.Classic)
+            {
+                GameEvents.OnMLGameFinished.Publish(true);
+            }
         }
     }
 

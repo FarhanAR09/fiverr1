@@ -19,19 +19,19 @@ public class MLFinishScreenManager : MonoBehaviour
     private void OnEnable()
     {
         GameEvents.OnMLLost.Add(ShowFinishScreen);
-        GameEvents.OnMLAllCardsPaired.Add(ShowFinishScreen);
+        GameEvents.OnMLGameFinished.Add(ShowFinishScreen);
 
         GameEvents.OnMLLost.Add(AddCredit);
-        GameEvents.OnMLAllCardsPaired.Add(AddCredit);
+        GameEvents.OnMLGameFinished.Add(AddCredit);
     }
 
     private void OnDisable()
     {
         GameEvents.OnMLLost.Remove(ShowFinishScreen);
-        GameEvents.OnMLAllCardsPaired.Remove(ShowFinishScreen);
+        GameEvents.OnMLGameFinished.Remove(ShowFinishScreen);
 
         GameEvents.OnMLLost.Remove(AddCredit);
-        GameEvents.OnMLAllCardsPaired.Remove(AddCredit);
+        GameEvents.OnMLGameFinished.Remove(AddCredit);
     }
 
     private void Awake()

@@ -84,7 +84,7 @@ public class CardDownState : CardState
     {
         if (Owner != null && Owner.Corrupted)
         {
-            Object.Destroy(Owner.gameObject);
+            Owner.gameObject.SetActive(false);
         }
     }
 }

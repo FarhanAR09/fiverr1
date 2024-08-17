@@ -47,7 +47,7 @@ public class MLPlayManager : MonoBehaviour
         {
             RAMGrid.Instance.SetupClassicByLevel(Difficulty);
         }
-        GameEvents.OnMLPlaySetup.Publish(true);
+        GameEvents.OnMLGameSetup.Publish(true);
     }
 
     //private int rCount = 0;
