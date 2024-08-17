@@ -23,6 +23,8 @@ public class CardMatchController : MonoBehaviour
         GameEvents.OnMLCardExitUpState.Add(RemoveCardFromList);
         GameEvents.OnMLCardSetToCorrupt.Add(ReduceMaxPairCount);
 
+        GameEvents.OnMLAllCardsPaired.Add(ResetPairCount);
+
         if (RAMGrid.Instance != null)
         {
             RAMGrid.Instance.onGridSetup += TrackGridSetupState;
@@ -35,6 +37,8 @@ public class CardMatchController : MonoBehaviour
         GameEvents.OnMLCardsPaired.Remove(Pairing);
         GameEvents.OnMLCardExitUpState.Remove(RemoveCardFromList);
         GameEvents.OnMLCardSetToCorrupt.Remove(ReduceMaxPairCount);
+
+        GameEvents.OnMLAllCardsPaired.Remove(ResetPairCount);
 
         if (RAMGrid.Instance != null)
         {
@@ -168,5 +172,10 @@ public class CardMatchController : MonoBehaviour
     private void TrackGridSetupState()
     {
         gridIsSetup = true;
+    }
+
+    private void ResetPairCount(bool _)
+    {
+        PairCount = 0;
     }
 }

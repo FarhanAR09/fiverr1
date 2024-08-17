@@ -10,6 +10,8 @@ public class MLPlayManager : MonoBehaviour
     public int Difficulty { get; private set; } = 1;
     public MLGameMode GameMode { get; private set; } = MLGameMode.Classic;
 
+    private bool gameOver = false;
+
     public float CardAutoFlipDuration {
         get {
             return Difficulty switch
@@ -30,6 +32,9 @@ public class MLPlayManager : MonoBehaviour
         {
             GameEvents.OnMLAllCardsPaired.Add(ResetGridTrialEndless);
         }
+
+        GameEvents.OnMLGameFinished.Add(TrackGameOver);
+        GameEvents.OnMLLost.Add(TrackGameOver);
     }
 
     private void OnDisable()
@@ -38,6 +43,9 @@ public class MLPlayManager : MonoBehaviour
         {
             GameEvents.OnMLAllCardsPaired.Remove(ResetGridTrialEndless);
         }
+
+        GameEvents.OnMLGameFinished.Remove(TrackGameOver);
+        GameEvents.OnMLLost.Remove(TrackGameOver);
     }
 
     private void Awake()
@@ -67,11 +75,24 @@ public class MLPlayManager : MonoBehaviour
         GameEvents.OnMLGameSetup.Publish(true);
     }
 
+    private void TrackGameOver(bool _)
+    {
+        gameOver = true;
+    }
+
     private void ResetGridTrialEndless(bool _)
     {
-        if (!(GameMode == MLGameMode.Endless || GameMode == MLGameMode.Trial) || RAMGrid.Instance == null)
-            return;
-        print("Resetting");
-        RAMGrid.Instance.SetupByLevel(Difficulty);
+        IEnumerator WaitReset()
+        {
+            //Wait for game over event
+            yield return new WaitForFixedUpdate();
+            if (!gameOver && (GameMode == MLGameMode.Endless || GameMode == MLGameMode.Trial) && RAMGrid.Instance != null)
+            {
+                print("Resetting");
+                RAMGrid.Instance.SetupByLevel(Difficulty);
+            }
+        }
+        StopCoroutine(WaitReset());
+        StartCoroutine(WaitReset());
     }
 }
