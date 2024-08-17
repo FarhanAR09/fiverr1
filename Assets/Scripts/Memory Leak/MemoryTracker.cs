@@ -15,11 +15,6 @@ public class MemoryTracker : MonoBehaviour
         GameEvents.OnMLCardsPaired.Add(TrackSuccessfulPairings);
         GameEvents.OnMLCardsFailPairing.Add(TrackFailedPairings);
         GameEvents.OnMLCardFinishedSingleCheck.Add(SingleCheckBreakCombo);
-
-        //DEBUG
-        GameEvents.OnMLComboUpdated.Add(DebugCombo);
-        GameEvents.OnMLComboBroken.Add(DebugComboBroken);
-        GameEvents.OnMLMistakesUpdated.Add(DebugMistakes);
     }
 
     private void OnDisable()
@@ -27,11 +22,6 @@ public class MemoryTracker : MonoBehaviour
         GameEvents.OnMLCardsPaired.Remove(TrackSuccessfulPairings);
         GameEvents.OnMLCardsFailPairing.Remove(TrackFailedPairings);
         GameEvents.OnMLCardFinishedSingleCheck.Remove(SingleCheckBreakCombo);
-
-        //DEBUG
-        GameEvents.OnMLComboUpdated.Remove(DebugCombo);
-        GameEvents.OnMLComboBroken.Remove(DebugComboBroken);
-        GameEvents.OnMLMistakesUpdated.Remove(DebugMistakes);
     }
 
     private void Awake()
@@ -45,6 +35,7 @@ public class MemoryTracker : MonoBehaviour
             Destroy(gameObject);
         }
 
+        Mistakes = 0;
         Combo = 0;
     }
 
@@ -85,20 +76,5 @@ public class MemoryTracker : MonoBehaviour
     {
         if (Combo > 0)
             BreakCombo();
-    }
-
-    private void DebugCombo(int combo)
-    {
-        //print("Combo: " + combo);
-    }
-
-    private void DebugComboBroken(bool _)
-    {
-        //print("COMBO BROKEN!");
-    }
-
-    private void DebugMistakes(int mistakes)
-    {
-        //print("Mistakes: " + mistakes);
     }
 }

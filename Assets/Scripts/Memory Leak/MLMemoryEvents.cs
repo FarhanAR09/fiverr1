@@ -4,6 +4,8 @@ using UnityEngine;
 
 public static partial class GameEvents
 {
+    public static GameEvent<bool> OnMLPlaySetup = new();
+
     public static GameEvent<int> OnMLComboUpdated = new();
     public static GameEvent<bool> OnMLComboBroken = new();
     public static GameEvent<int> OnMLMistakesUpdated = new();

@@ -16,7 +16,7 @@ public class RAMGrid : MonoBehaviour
     public int Row { get { return row; } }
     public int Column { get { return column; } }
 
-    public bool BeenSetup { get; private set; } = false;
+    public bool BeenSetup { get; set; } = false;
 
     private void Awake()
     {
@@ -72,18 +72,18 @@ public class RAMGrid : MonoBehaviour
     {
         if (BeenSetup) return;
 
-        column = c;
-        row = r;
+        column = Mathf.Clamp(c, 1, sticks.Count);
+        row = Mathf.Clamp(r, 1, 6);
+        if (column * row % 2 != 0)
+        {
+            row = 6;
+        }
 
-        //Setting difficulty
+        //Setting Active Column
         List<int> activeSticksIndexes = GetRAMStickActiveIndex(column);
         for (int i = 0; i < sticks.Count; i++)
         {
-            if (!activeSticksIndexes.Contains(i))
-            {
-                sticks[i].gameObject.SetActive(false);
-                //Destroy(sticks[i].gameObject);
-            }
+            sticks[i].gameObject.SetActive(activeSticksIndexes.Contains(i));
         }
 
         int cardCount = row * column;
@@ -96,16 +96,16 @@ public class RAMGrid : MonoBehaviour
             cardIds.Add(i);
         }
 
+        //Shuffle card
+        Shuffle(cardIds);
+
         //Generate corrupted card numbers
-        List<int> corruptedNumbers = new();
         //Corrupted numbers = 20% of pairs starting from number 0, 1, ...
-        for (int i = 0; i < Mathf.CeilToInt(cardCount * 0.2f / 2f); i++)
+        List<int> corruptedNumbers = new();
+        for (int i = 0; i < Mathf.FloorToInt(cardCount * 0.2f / 2f); i++)
         {
             corruptedNumbers.Add(i);
         }
-
-        //Shuffle card
-        Shuffle(cardIds);
 
         //Assign card number to cards
         int assignedCount = 0;

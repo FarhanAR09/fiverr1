@@ -1,5 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
+using Unity.VisualScripting;
 using UnityEngine;
 
 public class MLPlayManager : MonoBehaviour
@@ -42,5 +43,23 @@ public class MLPlayManager : MonoBehaviour
         {
             RAMGrid.Instance.SetupClassicByLevel(CurrentLevel);
         }
+        GameEvents.OnMLPlaySetup.Publish(true);
     }
+
+    //private int rCount = 0;
+    //private void Update()
+    //{
+    //    if (Input.GetKeyDown(KeyCode.R))
+    //    {
+    //        if (RAMGrid.Instance != null)
+    //        {
+    //            print("------------------------------------ Resetting Memory Leak ------------------------------------");
+    //            rCount++;
+    //            if (rCount > 5 || rCount < 1)
+    //                rCount = 1;
+    //            RAMGrid.Instance.BeenSetup = false;
+    //            RAMGrid.Instance.SetupClassicByLevel(rCount);
+    //        }
+    //    }
+    //}
 }

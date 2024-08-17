@@ -36,8 +36,6 @@ public class RAMCard : MonoBehaviour
             UpState = new(this, stateMachine);
             PairedState = new(this, stateMachine);
             PeekedState = new(this, stateMachine);
-
-            stateMachine.ChangeState(DownState);
         }
     }
 
@@ -67,6 +65,11 @@ public class RAMCard : MonoBehaviour
         {
             display.SetText(cardNumber.ToString());
             display.enabled = false;
+        }
+
+        if (stateMachine != null)
+        {
+            stateMachine.ChangeState(DownState);
         }
 
         if (Corrupted)

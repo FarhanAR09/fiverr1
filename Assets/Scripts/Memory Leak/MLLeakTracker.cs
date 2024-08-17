@@ -47,9 +47,6 @@ public class MLLeakTracker : MonoBehaviour
         {
             Destroy(gameObject);
         }
-
-        MaxMemory = Mathf.Max(1, MLMainMenuFeatureSwitches.DebugMaxLeak);
-        LeakedMemory = 0;
     }
 
     private void FixedUpdate()
