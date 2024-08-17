@@ -25,8 +25,9 @@ public static class GameConstants
     #endregion
 
     #region Memory Leak
+    public const string MLLOADGAMEMODE = "mlLoadGameMode";
     /// <summary>
-    /// Load this level
+    /// Load this difficulty level
     /// </summary>
     public const string MLLOADLEVEL = "mlLoadLevel";
     public const string MLUNLOCKEDLEVEL = "mlUnlockedLevel";

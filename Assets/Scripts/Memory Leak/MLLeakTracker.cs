@@ -70,7 +70,7 @@ public class MLLeakTracker : MonoBehaviour
         int multiplier = 10;
         if (MLPlayManager.Instance != null)
         {
-            multiplier = MLPlayManager.Instance.CurrentLevel switch
+            multiplier = MLPlayManager.Instance.Difficulty switch
             {
                 1 => 10,
                 2 => 12,

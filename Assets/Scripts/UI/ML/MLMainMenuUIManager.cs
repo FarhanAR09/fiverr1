@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using TMPro;
+using UnityEditor.Build.Content;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 using UnityEngine.UI;
@@ -65,60 +66,28 @@ public class MLMainMenuUIManager : MonoBehaviour
         }
     }
 
-    public void SwitchPanel(GameObject openedPanel, GameObject currentPanel)
+    public void OpenPanel(GameObject panel)
     {
-        SetPanel(currentPanel, false);
-        SetPanel(openedPanel, true);
+        SetPanel(panel, true);
     }
 
-    public void OpenModeSelection()
+    public void ClosePanel(GameObject panel)
     {
-        SetPanel(modeSelectionPanel, true);
-        SetPanel(mainMenuPanel, false);
+        SetPanel(panel, false);
     }
 
-    public void OpenClassicSelectLevel()
+    public void LoadPlayScene()
     {
-        SetPanel(modeSelectionPanel, false);
-        SetPanel(classicLevelSelectionPanel, true);
-        UpdateClassicDifficultySelectionPage();
-
+        static IEnumerator WaitAFrameBeforeLoading()
+        {
+            yield return new WaitForEndOfFrame();
+            SceneManager.LoadScene("MemoryLeakPlayScene");
+        }
+        StopCoroutine(WaitAFrameBeforeLoading());
+        StartCoroutine(WaitAFrameBeforeLoading());
     }
 
-    public void PlayClassic(int level)
-    {
-        PlayerPrefs.SetInt(GameConstants.MLLOADLEVEL, level);
-        //print("Selected Level: " + level);
-        SceneManager.LoadScene("MemoryLeakPlayScene");
-    }
-
-    public void PlayTrial()
-    {
-        //SceneManager.LoadScene();
-    }
-
-    public void PlayEndless()
-    {
-        //SceneManager.LoadScene();
-    }
-
-    public void BackToMainMenuPanel(GameObject currentPanel)
-    {
-        SwitchPanel(mainMenuPanel, currentPanel);
-    }
-
-    public void BackToModeSelection(GameObject currentPanel)
-    {
-        SwitchPanel(modeSelectionPanel, currentPanel);
-    }
-
-    public void OpenUpgradePanel(GameObject currentPanel)
-    {
-        SwitchPanel(upgradePanel, currentPanel);
-        UpdateUpgradeCreditDisplay();
-    }
-
-    private void UpdateUpgradeCreditDisplay(float _ = 0f)
+    public void UpdateUpgradeCreditDisplay(float _ = 0f)
     {
         CreditManager.LoadCredit(GameConstants.MLCREDIT);
         //print($"ML CREDIT: {CreditManager.GetCredit(GameConstants.MLCREDIT):F0}");
@@ -128,7 +97,7 @@ public class MLMainMenuUIManager : MonoBehaviour
         }
     }
 
-    private void UpdateClassicDifficultySelectionPage()
+    public void UpdateDifficultySelectionPage()
     {
         if (classicLevelSelectionPanel != null)
         {
@@ -144,5 +113,15 @@ public class MLMainMenuUIManager : MonoBehaviour
                 }
             }
         }
+    }
+
+    public void SelectMode(int mode)
+    {
+        PlayerPrefs.SetInt(GameConstants.MLLOADGAMEMODE, mode);
+    }
+
+    public void SelectDifficulty(int difficulty)
+    {
+        PlayerPrefs.SetInt(GameConstants.MLLOADLEVEL, Mathf.Clamp(difficulty, 1, 5));
     }
 }

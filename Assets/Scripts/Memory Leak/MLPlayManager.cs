@@ -6,11 +6,12 @@ using UnityEngine;
 public class MLPlayManager : MonoBehaviour
 {
     public static MLPlayManager Instance { get; private set; }
-    public int CurrentLevel { get; private set; } = 0;
+    public int Difficulty { get; private set; } = 0;
+    public MLGameMode GameMode { get; private set; } = MLGameMode.Classic;
 
     public float CardAutoFlipDuration {
         get {
-            return CurrentLevel switch
+            return Difficulty switch
             {
                 1 => 2.0f,
                 2 => 1.6f,
@@ -33,15 +34,18 @@ public class MLPlayManager : MonoBehaviour
             Destroy(gameObject);
         }
 
-        CurrentLevel = PlayerPrefs.GetInt(GameConstants.MLLOADLEVEL, 1);
+        GameMode = (MLGameMode)PlayerPrefs.GetInt(GameConstants.MLLOADGAMEMODE, 0);
+        Difficulty = PlayerPrefs.GetInt(GameConstants.MLLOADLEVEL, 1);
     }
 
     private void Start()
     {
         //print("Loaded Level: " + CurrentLevel);
+        print("GameMode: " + GameMode);
+        print("Difficulty: " + Difficulty);
         if (RAMGrid.Instance != null)
         {
-            RAMGrid.Instance.SetupClassicByLevel(CurrentLevel);
+            RAMGrid.Instance.SetupClassicByLevel(Difficulty);
         }
         GameEvents.OnMLPlaySetup.Publish(true);
     }

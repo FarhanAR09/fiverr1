@@ -89,7 +89,7 @@ public class MLFinishScreenManager : MonoBehaviour
         if (MLPlayManager.Instance != null)
         {
             //Full Credit = 1000 * (cardCount / 16)^2
-            fullCredit = MLPlayManager.Instance.CurrentLevel switch
+            fullCredit = MLPlayManager.Instance.Difficulty switch
             {
                 1 => 1000,
                 2 => 1500,
