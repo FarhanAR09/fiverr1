@@ -32,35 +32,48 @@ public class RAMGrid : MonoBehaviour
 
     public void SetupClassicByLevel(int level)
     {
-        if (BeenSetup) return;
-
+        if (MLMainMenuFeatureSwitches.difficultyOverridden)
+        {
+            SetupBySize(MLMainMenuFeatureSwitches.debugColumnCount, MLMainMenuFeatureSwitches.debugRowCount);
+            return;
+        }
+        int col, row;
         switch (level)
         {
             case 1:
                 row = 4;
-                column = 4;
+                col = 4;
                 break;
             case 2:
                 row = 4;
-                column = 5;
+                col = 5;
                 break;
             case 3:
                 row = 5;
-                column = 6;
+                col = 6;
                 break;
             case 4:
                 row = 6;
-                column = 6;
+                col = 6;
                 break;
             case 5:
                 row = 6;
-                column = 7;
+                col = 7;
                 break;
             default:
                 row = 4;
-                column = 4;
+                col = 4;
                 break;
         }
+        SetupBySize(col, row);
+    }
+
+    public void SetupBySize(int c, int r)
+    {
+        if (BeenSetup) return;
+
+        column = c;
+        row = r;
 
         //Setting difficulty
         List<int> activeSticksIndexes = GetRAMStickActiveIndex(column);
@@ -76,7 +89,7 @@ public class RAMGrid : MonoBehaviour
         int cardCount = row * column;
 
         //Generate card numbers
-        List<int>  cardIds = new();
+        List<int> cardIds = new();
         for (int i = 0; i < cardCount / 2; i++)
         {
             cardIds.Add(i);
@@ -85,11 +98,9 @@ public class RAMGrid : MonoBehaviour
 
         //Generate corrupted card numbers
         List<int> corruptedNumbers = new();
-        string bruh = "";
         //Corrupted numbers = 20% of pairs starting from number 0, 1, ...
         for (int i = 0; i < Mathf.CeilToInt(cardCount * 0.2f / 2f); i++)
         {
-            bruh += i + ", ";
             corruptedNumbers.Add(i);
         }
 
@@ -105,7 +116,7 @@ public class RAMGrid : MonoBehaviour
             sticks[i].Setup(cardIds.GetRange(assignedCount, row), corruptedNumbers);
             assignedCount += row;
         }
-        
+
         BeenSetup = true;
     }
 

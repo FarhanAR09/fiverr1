@@ -137,7 +137,6 @@ public class MLMainMenuUIManager : MonoBehaviour
             {
                 //int unlockedLevel = 3;
                 int unlockedLevel = PlayerPrefs.GetInt(GameConstants.MLUPGRADEDIFFICULTIES, 1);
-                print(unlockedLevel);
                 for (int i = 0; i < difficultiesButtons.Count; i++)
                 {
                     difficultiesButtons[i].interactable = (i + 1) <= unlockedLevel;
