@@ -99,7 +99,7 @@ public class CardMatchController : MonoBehaviour
                         RAMCard card2 = openedCards[1];
                         card1.PairCard();
                         card2.PairCard();
-                        if (card1.Corrupted)
+                        if (card1.Corrupted || card2.Corrupted)
                         {
                             if (MLScoreManager.Instance != null)
                                 MLScoreManager.Instance.AddScore(-25f);
@@ -123,6 +123,8 @@ public class CardMatchController : MonoBehaviour
                             card1.PutDownCard();
                             card2.PutDownCard();
                             GameEvents.OnMLCardsFailPairing.Publish(new(card1, card2));
+                            if (card1.Corrupted || card2.Corrupted)
+                                GameEvents.OnMLCorruptCardsPaired.Publish(new CardPairArgument(card1, card2));
                             if (MLScoreManager.Instance != null)
                                 MLScoreManager.Instance.AddScore(-10f);
                         }

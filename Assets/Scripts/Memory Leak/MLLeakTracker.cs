@@ -91,8 +91,6 @@ public class MLLeakTracker : MonoBehaviour
             }
             else //Defaults to trial
             {
-                print("Trial Leak: " + (MaxMemory * mistakes / MLMainMenuFeatureSwitches.DebugTrialMaxMistakes));
-                print(MLMainMenuFeatureSwitches.DebugTrialMaxMistakes);
                 SetLeak(MaxMemory * mistakes / MLMainMenuFeatureSwitches.DebugTrialMaxMistakes);
             }
         }
@@ -150,9 +148,17 @@ public class MLLeakTracker : MonoBehaviour
         if (lost || !(MLPlayManager.Instance != null && MLPlayManager.Instance.CheckMode(MLGameMode.Classic, MLGameMode.Endless)))
             return;
 
-        if (MLPlayManager.Instance != null)
+        if (arg.card1.Corrupted && arg.card2.Corrupted)
         {
             AddLeak(30);
+        }
+        else if (arg.card1.Corrupted)
+        {
+            AddLeak(10);
+        }
+        else if (arg.card2.Corrupted)
+        {
+            AddLeak(10);
         }
     }
 }
