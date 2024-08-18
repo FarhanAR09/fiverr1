@@ -42,9 +42,9 @@ public class CardUpState : CardState
         autoFlipTime = 0f;
         if (Owner != null)
         {
-            Owner.NumberRevealed(true);
+            Owner.SetReveal(true);
             if (Owner.Corrupted)
-                Owner.SetColor(Color.red);
+                Owner.SetBackgroundColor(Color.red);
         }
 
         GameEvents.OnMLCardFlipped.Publish(new CardFlipArgument(Owner, true));
@@ -56,7 +56,7 @@ public class CardUpState : CardState
 
         if (Owner != null)
         {
-            Owner.NumberRevealed(false);
+            Owner.SetReveal(false);
         }
         GameEvents.OnMLCardExitUpState.Publish(Owner);
     }

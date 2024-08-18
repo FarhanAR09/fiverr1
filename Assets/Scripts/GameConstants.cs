@@ -1,7 +1,3 @@
-using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
-
 public static class GameConstants
 {
     #region Cache Flush Speed Up
@@ -38,5 +34,10 @@ public static class GameConstants
     public const string MLUPGRADEFREEZE = "mlFreezeUpgrade";
     #endregion
 
+    #region Assets
+    public const string MLCARDTHEMEASSETSPATH = "Data/MLCardThemeAssets";
+
+    public const string MLCARDTHEMEASSETSPATHTEST1 = MLCARDTHEMEASSETSPATH + "/TestAssets1";
+    #endregion
     #endregion
 }

@@ -22,10 +22,12 @@ public class RAMCard : MonoBehaviour
     public CardPeekedState PeekedState { get; private set; }
 
     [SerializeField]
-    private TMP_Text display;
+    private TMP_Text nameDisplay;
 
     [SerializeField]
-    private SpriteRenderer spriteRenderer;
+    private SpriteRenderer background, icon;
+
+    private bool assetBeenSetup = false;
 
     private void Awake()
     {
@@ -56,41 +58,62 @@ public class RAMCard : MonoBehaviour
         PutDownRequestCalled?.Invoke();
     }
 
-    public void Setup(int cardNumber, bool corrupted = false)
+    public void SetupNumber(int cardNumber, bool corrupted = false)
     {
         CardNumber = cardNumber;
         Corrupted = corrupted;
-        
-        if (display != null)
+
+        if (!assetBeenSetup)
         {
-            display.SetText(cardNumber.ToString());
-            display.enabled = false;
+            SetupAsset();
+            assetBeenSetup = true;
         }
 
         if (stateMachine != null)
         {
             stateMachine.ChangeState(DownState);
         }
-
         if (Corrupted)
         {
             GameEvents.OnMLCardSetToCorrupt.Publish(this);
         }
     }
 
-    public void NumberRevealed(bool revealed)
+    private void SetupAsset()
     {
-        if (display != null)
+        if (MLCardThemeManager.Instance == null)
         {
-            display.enabled = revealed;
+            Debug.LogWarning("MLCardThemeManager is null");
+            return;
+        }
+
+        if (icon != null)
+        {
+            icon.sprite = MLCardThemeManager.Instance.GetCardIcon(CardNumber);
+        }
+        if (nameDisplay != null)
+        {
+            nameDisplay.SetText(MLCardThemeManager.Instance.GetCardName(CardNumber));
         }
     }
 
-    public void SetColor(Color color)
+    public void SetReveal(bool revealed)
     {
-        if (spriteRenderer != null)
+        if (icon != null)
         {
-            spriteRenderer.color = color;
+            icon.enabled = revealed;
+        }
+        if (nameDisplay != null)
+        {
+            nameDisplay.enabled = revealed;
+        }
+    }
+
+    public void SetBackgroundColor(Color color)
+    {
+        if (background != null)
+        {
+            background.color = color;
         }
     }
 }

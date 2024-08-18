@@ -18,7 +18,7 @@ public class RAMStick : MonoBehaviour
             if (activeIndexes.Contains(i))
             {
                 cards[i].gameObject.SetActive(true);
-                cards[i].Setup(
+                cards[i].SetupNumber(
                     cardNumbers[assignedIndex],
                     corruptedNumbers != null && corruptedNumbers.Contains(cardNumbers[assignedIndex]));
                 assignedIndex++;

@@ -63,7 +63,7 @@ public class CardMatchController : MonoBehaviour
         IEnumerator Wait()
         {
             yield return new WaitUntil(() => RAMGrid.Instance != null && gridIsSetup);
-            print("Card Match Setup Started");
+            
             gridIsSetup = false;
             if (RAMGrid.Instance != null)
             {

@@ -116,7 +116,6 @@ public class RAMGrid : MonoBehaviour
             assignedCount += row;
         }
 
-        print("Grid Setup Finished");
         onGridSetup.Invoke();
     }
 

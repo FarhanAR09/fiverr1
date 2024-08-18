@@ -22,9 +22,9 @@ public class CardPairedState : CardState
 
         if (Owner != null)
         {
-            Owner.NumberRevealed(true);
+            Owner.SetReveal(true);
             if (Owner.Corrupted)
-                Owner.SetColor(Color.red);
+                Owner.SetBackgroundColor(Color.red);
         }
     }
 

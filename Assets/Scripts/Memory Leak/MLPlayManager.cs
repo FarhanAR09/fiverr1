@@ -67,8 +67,6 @@ public class MLPlayManager : MonoBehaviour
     private void Start()
     {
         //print("Loaded Level: " + CurrentLevel);
-        print("GameMode: " + GameMode);
-        print("Difficulty: " + Difficulty);
         if (RAMGrid.Instance != null)
         {
             RAMGrid.Instance.SetupByLevel(Difficulty);
