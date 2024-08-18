@@ -150,11 +150,11 @@ public class CardMatchController : MonoBehaviour
         if (PairCount >= MaxPairCount)
         {
             print("All paired!");
-            GameEvents.OnMLAllCardsPaired.Publish(true);
             if (MLPlayManager.Instance.GameMode == MLGameMode.Classic)
             {
                 GameEvents.OnMLGameFinished.Publish(true);
             }
+            GameEvents.OnMLAllCardsPaired.Publish(true);
         }
     }
 

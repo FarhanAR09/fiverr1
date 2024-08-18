@@ -33,9 +33,9 @@ public class RAMGrid : MonoBehaviour
 
     public void SetupByLevel(int level)
     {
-        if (MLMainMenuFeatureSwitches.difficultyOverridden)
+        if (MLMainMenuFeatureSwitches.DifficultyOverridden)
         {
-            SetupBySize(MLMainMenuFeatureSwitches.debugColumnCount, MLMainMenuFeatureSwitches.debugRowCount);
+            SetupBySize(MLMainMenuFeatureSwitches.DebugColumnCount, MLMainMenuFeatureSwitches.DebugRowCount);
             return;
         }
         int col, row;

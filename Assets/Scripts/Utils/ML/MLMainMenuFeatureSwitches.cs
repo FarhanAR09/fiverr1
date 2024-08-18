@@ -15,12 +15,14 @@ public class MLMainMenuFeatureSwitches : MonoBehaviour
     [SerializeField]
     private Toggle overrideDifficultyToggle;
     [SerializeField]
-    private TMP_InputField gridSizeInputCol, gridSizeInputRow, maxLeakInput;
+    private TMP_InputField gridSizeInputCol, gridSizeInputRow, maxLeakInput, maxTrialMistakesInput;
 
-    public static bool difficultyOverridden = false;
-    public static int debugColumnCount = 2, debugRowCount = 2;
+    public static bool DifficultyOverridden { get; private set; } = false;
+    public static int DebugColumnCount { get; private set; } = 2;
+    public static int DebugRowCount { get; private set; } = 2;
 
     public static int DebugMaxLeak { get; private set; } = 100;
+    public static int DebugTrialMaxMistakes { get; private set; } = 16;
 
     private void Awake()
     {
@@ -54,6 +56,8 @@ public class MLMainMenuFeatureSwitches : MonoBehaviour
             gridSizeInputRow.onEndEdit.AddListener(ChangeRowCount);
         if (maxLeakInput != null)
             maxLeakInput.onEndEdit.AddListener(ChangeMaxLeak);
+        if (maxTrialMistakesInput != null)
+            maxTrialMistakesInput.onEndEdit.AddListener(ChangeMaxTrialMistakes);
     }
 
     private void OnDisable()
@@ -66,6 +70,8 @@ public class MLMainMenuFeatureSwitches : MonoBehaviour
             gridSizeInputRow.onEndEdit.RemoveListener(ChangeRowCount);
         if (maxLeakInput != null)
             maxLeakInput.onEndEdit.RemoveListener(ChangeMaxLeak);
+        if (maxTrialMistakesInput != null)
+            maxTrialMistakesInput.onEndEdit.RemoveListener(ChangeMaxTrialMistakes);
     }
 
     private void Update()
@@ -86,18 +92,28 @@ public class MLMainMenuFeatureSwitches : MonoBehaviour
                     //if (!GameSpeedManager.TryModifyGameSpeedModifier("FSPause", 0))
                     //    GameSpeedManager.TryAddGameSpeedModifier("FSPause", 0);
 
+                    //Update Toggles
+                    if (overrideDifficultyToggle != null)
+                    {
+                        overrideDifficultyToggle.isOn = DifficultyOverridden;
+                    }
+
                     //Update Inputs to Variables
                     if (gridSizeInputCol != null)
                     {
-                        gridSizeInputCol.text = debugColumnCount.ToString();
+                        gridSizeInputCol.text = DebugColumnCount.ToString();
                     }
                     if (gridSizeInputRow != null)
                     {
-                        gridSizeInputRow.text = debugRowCount.ToString();
+                        gridSizeInputRow.text = DebugRowCount.ToString();
                     }
                     if (maxLeakInput != null)
                     {
                         maxLeakInput.text = DebugMaxLeak.ToString();
+                    }
+                    if (maxTrialMistakesInput != null)
+                    {
+                        maxTrialMistakesInput.text = DebugTrialMaxMistakes.ToString();
                     }
                 }
             }
@@ -106,7 +122,11 @@ public class MLMainMenuFeatureSwitches : MonoBehaviour
 
     private void OverrideDifficulty(bool overridden)
     {
-        difficultyOverridden = overridden;
+        DifficultyOverridden = overridden;
+        if (overrideDifficultyToggle != null)
+        {
+            overrideDifficultyToggle.isOn = DifficultyOverridden;
+        }
     }
 
     private void ChangeColumnCount(string _)
@@ -115,12 +135,12 @@ public class MLMainMenuFeatureSwitches : MonoBehaviour
         {
             if (int.TryParse(gridSizeInputCol.text, out int amount))
             {
-                debugColumnCount = amount;
-                if (debugColumnCount * debugRowCount % 2 != 0)
+                DebugColumnCount = amount;
+                if (DebugColumnCount * DebugRowCount % 2 != 0)
                 {
-                    debugColumnCount++;
+                    DebugColumnCount++;
                 }
-                gridSizeInputCol.text = debugColumnCount.ToString();
+                gridSizeInputCol.text = DebugColumnCount.ToString();
             }
             else
             {
@@ -135,12 +155,12 @@ public class MLMainMenuFeatureSwitches : MonoBehaviour
         {
             if (int.TryParse(gridSizeInputRow.text, out int amount))
             {
-                debugRowCount = amount;
-                if (debugColumnCount * debugRowCount % 2 != 0)
+                DebugRowCount = amount;
+                if (DebugColumnCount * DebugRowCount % 2 != 0)
                 {
-                    debugRowCount++;
+                    DebugRowCount++;
                 }
-                gridSizeInputRow.text = debugRowCount.ToString();
+                gridSizeInputRow.text = DebugRowCount.ToString();
             }
             else
             {
@@ -165,58 +185,19 @@ public class MLMainMenuFeatureSwitches : MonoBehaviour
         }
     }
 
-    private void PurgeState(bool state)
+    private void ChangeMaxTrialMistakes(string _)
     {
-        GameEvents.OnSwitchPurge.Publish(state);
-    }
-
-    private void SpeedUpState(bool state)
-    {
-        GameEvents.OnSwitchSpeedUp.Publish(state);
-    }
-
-    private void SlowDownState(bool state)
-    {
-        GameEvents.OnSwitchSlowDown.Publish(state);
-    }
-
-    private void RequireChargeState(bool state)
-    {
-        GameEvents.OnSwitchRequireCharge.Publish(state);
-    }
-
-    private void CooldownBatteryState(bool state)
-    {
-        GameEvents.OnSwitchCooldownCharge.Publish(state);
-    }
-
-    private void PowersCooldownState(bool state)
-    {
-        GameEvents.OnSwitchPowersCooldown.Publish(state);
-    }
-
-    private void SequentialGatesState(bool active)
-    {
-        GameEvents.OnSwitchSequentialGates.Publish(active);
-    }
-
-    private void IdleMechanicState(bool active)
-    {
-        GameEvents.OnSwitchIdleMechanics.Publish(active);
-    }
-
-    private void SpawnBitsEaters(bool active)
-    {
-        GameEvents.OnSwitchSpawnBitsEaters.Publish(active);
-    }
-
-    private void SpawnTrojanHorses(bool active)
-    {
-        GameEvents.OnSwitchSpawnTrojanHorses.Publish(active);
-    }
-
-    private void SpawnQuantumGhosts(bool active)
-    {
-        GameEvents.OnSwitchSpawnQuantumGhosts.Publish(active);
+        if (maxTrialMistakesInput != null)
+        {
+            if (int.TryParse(maxTrialMistakesInput.text, out int amount))
+            {
+                DebugTrialMaxMistakes = Mathf.Max(0, amount);
+                maxTrialMistakesInput.text = DebugTrialMaxMistakes.ToString();
+            }
+            else
+            {
+                Debug.LogWarning("Invalid Input: should be number");
+            }
+        }
     }
 }

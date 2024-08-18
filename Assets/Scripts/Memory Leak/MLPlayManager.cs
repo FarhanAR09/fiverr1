@@ -1,5 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
 using System.Runtime.InteropServices;
 using Unity.VisualScripting;
 using UnityEngine;
@@ -94,5 +95,15 @@ public class MLPlayManager : MonoBehaviour
         }
         StopCoroutine(WaitReset());
         StartCoroutine(WaitReset());
+    }
+
+    public bool CheckMode(params MLGameMode[] modes)
+    {
+        if (modes.Length > 0)
+        {
+            List<MLGameMode> modesList = modes.ToList();
+            return modesList.Contains(GameMode);
+        }
+        return false;
     }
 }

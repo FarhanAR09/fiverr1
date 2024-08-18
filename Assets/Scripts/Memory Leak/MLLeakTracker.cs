@@ -51,7 +51,7 @@ public class MLLeakTracker : MonoBehaviour
 
     private void FixedUpdate()
     {
-        if (!isFrozen)
+        if (!isFrozen && MLPlayManager.Instance != null && MLPlayManager.Instance.CheckMode(MLGameMode.Classic, MLGameMode.Endless))
         {
             if (addLeakTime < addLeakDuration)
             {
@@ -67,29 +67,59 @@ public class MLLeakTracker : MonoBehaviour
 
     private void AddLeakByMistakes(int mistakes)
     {
-        int multiplier = 10;
+        if (lost)
+            return;
+
         if (MLPlayManager.Instance != null)
         {
-            multiplier = MLPlayManager.Instance.Difficulty switch
+            if (MLPlayManager.Instance.CheckMode(MLGameMode.Classic, MLGameMode.Endless))
             {
-                1 => 10,
-                2 => 12,
-                3 => 14,
-                4 => 17,
-                5 => 20,
-                _ => 10,
-            };
+                int multiplier = 10;
+                if (MLPlayManager.Instance != null)
+                {
+                    multiplier = MLPlayManager.Instance.Difficulty switch
+                    {
+                        1 => 10,
+                        2 => 12,
+                        3 => 14,
+                        4 => 17,
+                        5 => 20,
+                        _ => 10,
+                    };
+                }
+                AddLeak(1 + Mathf.FloorToInt(multiplier * Mathf.Log(mistakes + 1, 32)));
+            }
+            else //Defaults to trial
+            {
+                print("Trial Leak: " + (MaxMemory * mistakes / MLMainMenuFeatureSwitches.DebugTrialMaxMistakes));
+                print(MLMainMenuFeatureSwitches.DebugTrialMaxMistakes);
+                SetLeak(MaxMemory * mistakes / MLMainMenuFeatureSwitches.DebugTrialMaxMistakes);
+            }
         }
-        AddLeak(1 + Mathf.FloorToInt(multiplier * Mathf.Log(mistakes + 1, 32)));
     }
 
     private void AddLeak(int amount)
     {
         if (lost)
             return;
-
         LeakedMemory = Mathf.Max(0, LeakedMemory + amount);
         OnMemoryLeakUpdated?.Invoke(LeakedMemory);
+        if (LeakedMemory >= MaxMemory)
+        {
+            lost = true;
+            print("-----=====| GAME OVER |=====-----");
+            GameEvents.OnMLLost.Publish(true);
+        }
+    }
+
+    private void SetLeak(int amount)
+    {
+        if (lost)
+            return;
+
+        LeakedMemory = Mathf.Max(0, amount);
+        OnMemoryLeakUpdated?.Invoke(LeakedMemory);
+
         if (LeakedMemory >= MaxMemory)
         {
             lost = true;
@@ -105,6 +135,9 @@ public class MLLeakTracker : MonoBehaviour
 
     private void ReduceLeakByCombo(CardPairArgument _)
     {
+        if (lost || !(MLPlayManager.Instance != null && MLPlayManager.Instance.CheckMode(MLGameMode.Classic, MLGameMode.Endless)))
+            return;
+
         if (MemoryTracker.Instance != null)
         {
             int reduce = -Mathf.CeilToInt(20 * Mathf.Log(0.25f * (MemoryTracker.Instance.Combo - 1) + 1));
@@ -114,6 +147,12 @@ public class MLLeakTracker : MonoBehaviour
 
     private void AddLeakByCorruptPair(CardPairArgument arg)
     {
-        AddLeak(30);
+        if (lost || !(MLPlayManager.Instance != null && MLPlayManager.Instance.CheckMode(MLGameMode.Classic, MLGameMode.Endless)))
+            return;
+
+        if (MLPlayManager.Instance != null)
+        {
+            AddLeak(30);
+        }
     }
 }
