@@ -24,7 +24,14 @@ public class MLCardThemeManager : MonoBehaviour
 
         //Load Assets
         //TODO: Load theme according to input
-        ThemeAssets = Resources.Load<MLCardThemeAssets>(GameConstants.MLCARDTHEMEASSETSPATHTEST1);
+        int themeIndex = PlayerPrefs.GetInt(GameConstants.MLSELECTCARDTHEMEINDEX, 0);
+        string assetsPath = themeIndex switch
+        {
+            0 => GameConstants.MLCARDTHEMEASSETSPATHTEST1,
+            1 => GameConstants.MLCARDTHEMEASSETSPATHTEST2,
+            _ => GameConstants.MLCARDTHEMEASSETSPATHTEST1
+        };
+        ThemeAssets = Resources.Load<MLCardThemeAssets>(assetsPath);
         if (ThemeAssets == null)
         {
             Debug.LogError("Resource was not found");

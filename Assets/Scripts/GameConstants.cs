@@ -27,6 +27,7 @@ public static class GameConstants
     /// </summary>
     public const string MLLOADLEVEL = "mlLoadLevel";
     public const string MLUNLOCKEDLEVEL = "mlUnlockedLevel";
+    public const string MLSELECTCARDTHEMEINDEX = "mlSelectedThemeIndex";
 
     #region Upgrades
     public const string MLUPGRADEDIFFICULTIES = "mlDifficultiesUpgrade";
@@ -38,6 +39,7 @@ public static class GameConstants
     public const string MLCARDTHEMEASSETSPATH = "Data/MLCardThemeAssets";
 
     public const string MLCARDTHEMEASSETSPATHTEST1 = MLCARDTHEMEASSETSPATH + "/TestAssets1";
+    public const string MLCARDTHEMEASSETSPATHTEST2 = MLCARDTHEMEASSETSPATH + "/TestAssets2";
     #endregion
     #endregion
 }

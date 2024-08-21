@@ -10,7 +10,7 @@ public class MLMainMenuUIManager : MonoBehaviour
     public static MLMainMenuUIManager Instance { get; private set; }
 
     [SerializeField]
-    private GameObject mainMenuPanel, modeSelectionPanel, classicLevelSelectionPanel, upgradePanel;
+    private GameObject mainMenuPanel, modeSelectionPanel, classicLevelSelectionPanel, upgradePanel, themePanel;
 
     [SerializeField]
     private List<Button> difficultiesButtons = new();
@@ -20,6 +20,14 @@ public class MLMainMenuUIManager : MonoBehaviour
     //private int unlockedLevel = 1;
     [SerializeField]
     private TMP_Text upgradeCreditDisplay;
+
+    private int cardThemeIndex = 0;
+
+    [Tooltip("Sort according to ThemeID")]
+    [SerializeField]
+    private List<Toggle> themeToggles;
+    [SerializeField]
+    private ToggleGroup themeToggleGroup;
 
     private void OnEnable()
     {
@@ -50,6 +58,7 @@ public class MLMainMenuUIManager : MonoBehaviour
         SetPanel(modeSelectionPanel, false);
         SetPanel(classicLevelSelectionPanel, false);
         SetPanel(upgradePanel, false);
+        SetPanel(themePanel, false);
 
         //Give credit on load
         //CreditManager.LoadCredit(GameConstants.MLCREDIT);
@@ -114,6 +123,15 @@ public class MLMainMenuUIManager : MonoBehaviour
         }
     }
 
+    public void UpdateThemeSelectionPage()
+    {
+        if (themeToggleGroup && themeToggles != null && themeToggles.Count > 0)
+        {
+            int selectedTheme = PlayerPrefs.GetInt(GameConstants.MLSELECTCARDTHEMEINDEX, 0);
+            themeToggles[selectedTheme].isOn = true;
+        }
+    }
+
     public void SelectMode(int mode)
     {
         PlayerPrefs.SetInt(GameConstants.MLLOADGAMEMODE, mode);
@@ -122,5 +140,13 @@ public class MLMainMenuUIManager : MonoBehaviour
     public void SelectDifficulty(int difficulty)
     {
         PlayerPrefs.SetInt(GameConstants.MLLOADLEVEL, Mathf.Clamp(difficulty, 1, 5));
+    }
+
+    public void SelectCardTheme(int cardThemeIndex)
+    {
+        if (cardThemeIndex == this.cardThemeIndex)
+            return;
+        this.cardThemeIndex = cardThemeIndex;
+        PlayerPrefs.SetInt(GameConstants.MLSELECTCARDTHEMEINDEX, cardThemeIndex);
     }
 }

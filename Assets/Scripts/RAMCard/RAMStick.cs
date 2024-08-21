@@ -7,6 +7,9 @@ public class RAMStick : MonoBehaviour
     [SerializeField]
     private List<RAMCard> cards;
 
+    [SerializeField]
+    private SpriteRenderer ramStickDisplay;
+
     public void Setup(List<int> cardNumbers, List<int> corruptedNumbers)
     {
         int allCardsCount = cards.Count;
@@ -27,6 +30,26 @@ public class RAMStick : MonoBehaviour
             {
                 cards[i].gameObject.SetActive(false);
             }
+        }
+
+        if (ramStickDisplay != null)
+        {
+            ramStickDisplay.gameObject.SetActive(true);
+        }
+    }
+
+    public void DisableStick()
+    {
+        if (cards != null)
+        {
+            foreach (RAMCard card in cards)
+            {
+                card.gameObject.SetActive(false);
+            }
+        }
+        if (ramStickDisplay != null)
+        {
+            ramStickDisplay.gameObject.SetActive(false);
         }
     }
 

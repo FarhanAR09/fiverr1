@@ -82,7 +82,11 @@ public class RAMGrid : MonoBehaviour
         List<int> activeSticksIndexes = GetRAMStickActiveIndex(column);
         for (int i = 0; i < sticks.Count; i++)
         {
-            sticks[i].gameObject.SetActive(activeSticksIndexes.Contains(i));
+            if (!activeSticksIndexes.Contains(i))
+            {
+                sticks[i].DisableStick();
+            }
+            //sticks[i].gameObject.SetActive(isActive);
         }
 
         int cardCount = row * column;
