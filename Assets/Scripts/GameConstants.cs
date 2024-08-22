@@ -41,5 +41,10 @@ public static class GameConstants
     public const string MLCARDTHEMEASSETSPATHTEST1 = MLCARDTHEMEASSETSPATH + "/TestAssets1";
     public const string MLCARDTHEMEASSETSPATHTEST2 = MLCARDTHEMEASSETSPATH + "/TestAssets2";
     #endregion
+
+    #region Debug: Feature Switches
+    public const string MLFSMAXLEAK = "mlFsMaxLeak";
+    #endregion
+
     #endregion
 }

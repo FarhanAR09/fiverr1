@@ -47,6 +47,8 @@ public class MLLeakTracker : MonoBehaviour
         {
             Destroy(gameObject);
         }
+
+        MaxMemory = PlayerPrefs.GetInt(GameConstants.MLFSMAXLEAK, MaxMemory);
     }
 
     private void FixedUpdate()
