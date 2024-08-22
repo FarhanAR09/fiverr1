@@ -83,9 +83,8 @@ public class CardMatchController : MonoBehaviour
         if (arg.isUp)
         {
             TimesCardOpened++;
-            //print("Adding card " + arg.card.name);
             openedCards.Add(arg.card);
-            //print(openedCards.Count);
+
             //Delayed to give time for state initialization
             IEnumerator DelayAFrame()
             {
@@ -94,7 +93,6 @@ public class CardMatchController : MonoBehaviour
                 {
                     if (openedCards[0].CardNumber == openedCards[1].CardNumber)
                     {
-                        //print("Card count: " + openedCards.Count);
                         RAMCard card1 = openedCards[0];
                         RAMCard card2 = openedCards[1];
                         card1.PairCard();
@@ -114,7 +112,6 @@ public class CardMatchController : MonoBehaviour
                     }
                     else
                     {
-                        //Debug.Log("Bruh u stupid");
                         RAMCard card1 = openedCards[0];
                         RAMCard card2 = openedCards[1];
                         IEnumerator DelayPutDown()

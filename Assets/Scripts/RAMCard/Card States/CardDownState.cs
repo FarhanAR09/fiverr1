@@ -44,6 +44,7 @@ public class CardDownState : CardState
         {
             Owner.SetReveal(false);
             Owner.SetBackgroundColor(Color.white);
+            Owner.StartFlipAnimation(false);
         }
 
         GameEvents.OnMLCardFlipped.Publish(new CardFlipArgument(Owner, false));

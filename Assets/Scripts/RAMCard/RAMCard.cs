@@ -116,4 +116,32 @@ public class RAMCard : MonoBehaviour
             background.color = color;
         }
     }
+
+    private Coroutine flipAnimation;
+    public void StartFlipAnimation(bool isUp)
+    {
+        IEnumerator FlipAnimation()
+        {
+            float animDur = 1f;
+            float animTime = 0f;
+
+            while (animTime < animDur)
+            {
+                yield return new WaitForEndOfFrame();
+                animTime += Time.unscaledDeltaTime;
+
+                if (background != null)
+                {
+                    background.transform.localRotation =
+                        Quaternion.Euler(
+                            0f,
+                            Mathf.Lerp(background.transform.localRotation.eulerAngles.y, isUp ? 0f : 180f, Time.unscaledDeltaTime * 10f),
+                            0f);
+                }
+            }
+        }
+        if (flipAnimation != null)
+            StopCoroutine(flipAnimation);
+        flipAnimation = StartCoroutine(FlipAnimation());
+    }
 }

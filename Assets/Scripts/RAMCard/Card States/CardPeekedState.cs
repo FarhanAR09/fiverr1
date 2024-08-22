@@ -17,6 +17,7 @@ public class CardPeekedState : CardState
             Owner.SetReveal(true);
             if (Owner.Corrupted)
                 Owner.SetBackgroundColor(Color.red);
+            Owner.StartFlipAnimation(true);
         }
         peekTime = peekDuration;
     }
