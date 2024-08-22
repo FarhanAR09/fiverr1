@@ -18,7 +18,7 @@ public class CardUpState : CardState
         {
             Owner.PairRequestCalled += PairCard;
             Owner.PutDownRequestCalled += PutDownCard;
-            Owner.OnClicked += PutDownCardSingleCheck;
+            //Owner.OnClicked += PutDownCardSingleCheck;
         }
     }
 
@@ -30,7 +30,7 @@ public class CardUpState : CardState
         {
             Owner.PairRequestCalled -= PairCard;
             Owner.PutDownRequestCalled -= PutDownCard;
-            Owner.OnClicked -= PutDownCardSingleCheck;
+            //Owner.OnClicked -= PutDownCardSingleCheck;
         }
     }
 

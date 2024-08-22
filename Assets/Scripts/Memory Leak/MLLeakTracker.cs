@@ -74,20 +74,20 @@ public class MLLeakTracker : MonoBehaviour
         {
             if (MLPlayManager.Instance.CheckMode(MLGameMode.Classic, MLGameMode.Endless))
             {
-                int multiplier = 10;
+                float multiplier = 1;
                 if (MLPlayManager.Instance != null)
                 {
                     multiplier = MLPlayManager.Instance.Difficulty switch
                     {
-                        1 => 10,
-                        2 => 12,
-                        3 => 14,
-                        4 => 17,
-                        5 => 20,
-                        _ => 10,
+                        1 => 1f,
+                        2 => 1.2f,
+                        3 => 1.4f,
+                        4 => 1.8f,
+                        5 => 2f,
+                        _ => 1f,
                     };
                 }
-                AddLeak(1 + Mathf.FloorToInt(multiplier * Mathf.Log(mistakes + 1, 32)));
+                AddLeak(Mathf.RoundToInt(multiplier * 1f));
             }
             else //Defaults to trial
             {
