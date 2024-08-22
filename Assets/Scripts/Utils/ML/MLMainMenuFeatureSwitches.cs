@@ -176,6 +176,8 @@ public class MLMainMenuFeatureSwitches : MonoBehaviour
             {
                 DebugMaxLeak = Mathf.Max(0, amount);
                 maxLeakInput.text = DebugMaxLeak.ToString();
+
+                PlayerPrefs.SetInt(GameConstants.MLFSMAXLEAK, amount);
             }
             else
             {
