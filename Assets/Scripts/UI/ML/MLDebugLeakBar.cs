@@ -5,9 +5,10 @@ using UnityEngine;
 public class MLDebugLeakBar : MonoBehaviour
 {
     [SerializeField]
-    private Transform bar;
+    private Transform cover;
 
-    private float maxYScale;
+    [SerializeField]
+    private float height;
 
     private void OnEnable()
     {
@@ -15,6 +16,7 @@ public class MLDebugLeakBar : MonoBehaviour
         {
             MLLeakTracker.Instance.OnMemoryLeakUpdated += UpdateBar;
         }
+        else Debug.LogWarning("Tracker null");
     }
 
     private void OnDisable()
@@ -23,14 +25,7 @@ public class MLDebugLeakBar : MonoBehaviour
         {
             MLLeakTracker.Instance.OnMemoryLeakUpdated -= UpdateBar;
         }
-    }
-
-    private void Awake()
-    {
-        if (bar != null)
-        {
-            maxYScale = bar.localScale.y;
-        }
+        else Debug.LogWarning("Tracker null");
     }
 
     private void Start()
@@ -41,7 +36,10 @@ public class MLDebugLeakBar : MonoBehaviour
     private void UpdateBar(int _)
     {
         float norm = (float) MLLeakTracker.Instance.LeakedMemory / MLLeakTracker.Instance.MaxMemory;
-        if (bar != null)
-            bar.localScale = new Vector3(bar.localScale.x, Mathf.Max(0.05f, Mathf.Lerp(0f, maxYScale, norm)), bar.localScale.z);
+        if (cover != null)
+        {
+            cover.transform.localPosition = Vector3.Lerp(Vector3.zero, new Vector3(0, height / 4f, 0), norm);
+            cover.localScale = new Vector3(1, 1 - norm, 1);
+        }
     }
 }
