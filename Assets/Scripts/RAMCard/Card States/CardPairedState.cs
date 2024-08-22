@@ -26,6 +26,7 @@ public class CardPairedState : CardState
             if (Owner.Corrupted)
                 Owner.SetBackgroundColor(Color.red);
             Owner.StartFlipAnimation(true);
+            Owner.EmitParticles();
         }
     }
 

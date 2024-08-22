@@ -88,13 +88,14 @@ public class CardMatchController : MonoBehaviour
             //Delayed to give time for state initialization
             IEnumerator DelayAFrame()
             {
-                yield return new WaitForFixedUpdate();
                 if (openedCards.Count >= 2)
                 {
-                    if (openedCards[0].CardNumber == openedCards[1].CardNumber)
+                    RAMCard card1 = openedCards[0];
+                    RAMCard card2 = openedCards[1];
+                    openedCards.Clear();
+                    if (card1.CardNumber == card2.CardNumber)
                     {
-                        RAMCard card1 = openedCards[0];
-                        RAMCard card2 = openedCards[1];
+                        yield return new WaitForFixedUpdate();
                         card1.PairCard();
                         card2.PairCard();
                         if (card1.Corrupted || card2.Corrupted)
@@ -112,8 +113,6 @@ public class CardMatchController : MonoBehaviour
                     }
                     else
                     {
-                        RAMCard card1 = openedCards[0];
-                        RAMCard card2 = openedCards[1];
                         IEnumerator DelayPutDown()
                         {
                             yield return new WaitForSeconds(0.5f);
@@ -127,8 +126,6 @@ public class CardMatchController : MonoBehaviour
                         }
                         StartCoroutine(DelayPutDown());
                     }
-                    //Already cleared by HandleCardNotUpAnymore, just a guard
-                    openedCards.Clear();
                 }
             }
             StartCoroutine(DelayAFrame());

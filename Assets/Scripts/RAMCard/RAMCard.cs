@@ -27,7 +27,20 @@ public class RAMCard : MonoBehaviour
     [SerializeField]
     private SpriteRenderer background, icon;
 
+    [SerializeField]
+    private ParticleSystem psExplode;
+
     private bool assetBeenSetup = false;
+
+    private void OnEnable()
+    {
+        GameEvents.OnMLCardsFailPairing.Add(EmitFailPairParticles);
+    }
+
+    private void OnDisable()
+    {
+        GameEvents.OnMLCardsFailPairing.Remove(EmitFailPairParticles);
+    }
 
     private void Awake()
     {
@@ -143,5 +156,29 @@ public class RAMCard : MonoBehaviour
         if (flipAnimation != null)
             StopCoroutine(flipAnimation);
         flipAnimation = StartCoroutine(FlipAnimation());
+    }
+
+    public void EmitParticles()
+    {
+        if (psExplode != null)
+        {
+            var main = psExplode.main;
+            main.startColor = Corrupted ? Color.red : Color.green;
+
+            psExplode.Emit(16);
+        }
+    }
+
+    private void EmitFailPairParticles(CardPairArgument arg)
+    {
+        if (arg.card1.Equals(this) || arg.card2.Equals(this))
+        {
+            if (psExplode != null)
+            {
+                var main = psExplode.main;
+                main.startColor = Color.red;
+                psExplode.Emit(16);
+            }
+        }
     }
 }

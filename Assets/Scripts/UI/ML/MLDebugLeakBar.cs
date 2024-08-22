@@ -12,7 +12,7 @@ public class MLDebugLeakBar : MonoBehaviour
     private float height;
 
     [SerializeField]
-    private ParticleSystem psBorderLeak;
+    private ParticleSystem psBorderLeak, psBodyLeak;
 
     [SerializeField]
     private SpriteRenderer leakLamp;
@@ -28,6 +28,7 @@ public class MLDebugLeakBar : MonoBehaviour
             MLLeakTracker.Instance.OnMemoryLeakUpdated += UpdateBar;
         }
         else Debug.LogWarning("Tracker null");
+        GameEvents.OnMLFreezeStateUpdated.Add(UpdateFrozenVisual);
     }
 
     private void OnDisable()
@@ -37,6 +38,7 @@ public class MLDebugLeakBar : MonoBehaviour
             MLLeakTracker.Instance.OnMemoryLeakUpdated -= UpdateBar;
         }
         else Debug.LogWarning("Tracker null");
+        GameEvents.OnMLFreezeStateUpdated.Remove(UpdateFrozenVisual);
     }
 
     private void Start()
@@ -75,5 +77,51 @@ public class MLDebugLeakBar : MonoBehaviour
             targetPsPos = new Vector3(0f, height * norm - height / 2f, 0f);
         }
         blinkFrequency = Mathf.Lerp(2f, 16f, norm);
+        if (psBodyLeak != null)
+        {
+            psBodyLeak.transform.localPosition = new Vector3(0f, Mathf.Lerp(-height / 2f, 0f, norm), 0f);
+            var shape = psBodyLeak.shape;
+            shape.scale = new Vector3(0.78f, Mathf.Lerp(0f, height, norm), 1f);
+            var em = psBodyLeak.emission;
+            em.rateOverTime = Mathf.Lerp(4, 32, norm);
+        }
+    }
+
+    private void UpdateFrozenVisual(bool frozen)
+    {
+        if (frozen)
+        {
+            if (leakLamp != null)
+            {
+                leakLamp.color = Color.cyan;
+            }
+            if (psBorderLeak != null)
+            {
+                var em = psBorderLeak.emission;
+                em.enabled = false;
+            }
+            if (psBodyLeak != null)
+            {
+                var em = psBodyLeak.emission;
+                em.enabled = false;
+            }
+        }
+        else
+        {
+            if (leakLamp != null)
+            {
+                leakLamp.color = Color.red;
+            }
+            if (psBorderLeak != null)
+            {
+                var em = psBorderLeak.emission;
+                em.enabled = true;
+            }
+            if (psBodyLeak != null)
+            {
+                var em = psBodyLeak.emission;
+                em.enabled = true;
+            }
+        }
     }
 }

@@ -12,7 +12,7 @@ public class MLPowerManager : MonoBehaviour
     private float flashCdTime = 0f;
 
     private bool canFreeze = false, isFrozen = false, freezeUnlocked = true;
-    private readonly float freezeCdDuration = 60f, freezeDuration = 15f;
+    private readonly float freezeCdDuration = 10f, freezeDuration = 15f;
     private float freezeCdTime = 0f, freezeTime = 0f;
 
     private void Awake()
