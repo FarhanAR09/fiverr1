@@ -7,6 +7,11 @@ using UnityEngine.UI;
 [RequireComponent(typeof(Button))]
 public class UpgradeItemButton : MonoBehaviour
 {
+    public enum Game
+    {
+        FTC, ML
+    }
+
     private Button button;
     [SerializeField]
     private UpgradeItem upgradeItem;
@@ -14,6 +19,21 @@ public class UpgradeItemButton : MonoBehaviour
     private Image iconDisplay;
     [SerializeField]
     private TMP_Text nameDisplay, levelDisplay;
+
+    [SerializeField]
+    private Game game = Game.FTC;
+    private string Key
+    {
+        get
+        {
+            return game switch
+            {
+                Game.FTC => GameConstants.FTCCREDIT,
+                Game.ML => GameConstants.MLCREDIT,
+                _ => GameConstants.FTCCREDIT,
+            };
+        }
+    }
 
     private void Awake()
     {
@@ -33,24 +53,23 @@ public class UpgradeItemButton : MonoBehaviour
 
     private void TryUpgrade()
     {
-        //TODO: credit check
         if (upgradeItem != null && PlayerPrefs.GetInt(upgradeItem.KeyName) < upgradeItem.MaxLevel)
         {
-            //TODO: reduce credits
-            int level = PlayerPrefs.GetInt(upgradeItem.KeyName);
+            int level = PlayerPrefs.GetInt(upgradeItem.KeyName, 1);
             int price = 0;
             if (level - 1 >= 0 && level - 1 < upgradeItem.MaxLevel - 1)
             {
                 price = upgradeItem.Price[level - 1];
             }
+            else Debug.LogError("Price array mistake");
 
-            CreditManager.LoadCredit();
-            if (CreditManager.TrySpendCredit(price))
+            CreditManager.LoadCredit(Key);
+            if (CreditManager.TrySpendCredit(Key, price))
             {
                 upgradeItem.TryUpgrade(callback: UpdateDisplay);
                 //Debug.Log("Enough Credit");
             }
-            CreditManager.SaveCredit();
+            CreditManager.SaveCredit(Key);
         }
         else Debug.LogWarning("Upgrade Failed");
     }
@@ -59,7 +78,7 @@ public class UpgradeItemButton : MonoBehaviour
     {
         if (success && upgradeItem != null)
         {
-            int level = PlayerPrefs.GetInt(upgradeItem.KeyName);
+            int level = PlayerPrefs.GetInt(upgradeItem.KeyName, 1);
             if (level < 1)
             {
                 PlayerPrefs.SetInt(upgradeItem.KeyName, 1);
@@ -96,7 +115,6 @@ public class UpgradeItemButton : MonoBehaviour
             {
                 nameDisplay.SetText(upgradeItem.Name);
             }
-            //Debug.Log(upgradeItem.name + " Success");
 
             //if (level > upgradeItem.MaxLevel)
             //{

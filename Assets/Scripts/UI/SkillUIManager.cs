@@ -37,9 +37,9 @@ public class SkillUIManager : MonoBehaviour
 
     private void Start()
     {
-        bulletTimeUnlocked = PlayerPrefs.GetInt("upgradeTimeSlow") >= 2;
-        empUnlocked = PlayerPrefs.GetInt("upgradeEMP") >= 2;
-        boostUnlocked = PlayerPrefs.GetInt("upgradeBoost") >= 2;
+        bulletTimeUnlocked = PlayerPrefs.GetInt(GameConstants.FTCUPGRADEBULLETTIME) >= 2;
+        empUnlocked = PlayerPrefs.GetInt(GameConstants.FTCUPGRADEEMP) >= 2;
+        boostUnlocked = PlayerPrefs.GetInt(GameConstants.FTCUPGRADEBOOST) >= 2;
 
         if (empDisplay != null)
         {

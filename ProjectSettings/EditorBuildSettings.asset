@@ -6,9 +6,18 @@ EditorBuildSettings:
   serializedVersion: 2
   m_Scenes:
   - enabled: 1
-    path: Assets/Scenes/MainMenuScene.unity
+    path: Assets/Scenes/SoCMainMenuScene.unity
+    guid: 9425e2fa8f33ecc4087eead4b54badbe
+  - enabled: 1
+    path: Assets/Scenes/FtCMainMenuScene.unity
     guid: 57f619569ca99a741aef1d690b8663be
   - enabled: 1
-    path: Assets/Scenes/PlayScene.unity
+    path: Assets/Scenes/FtCPlayScene.unity
     guid: 8c9cfa26abfee488c85f1582747f6a02
+  - enabled: 1
+    path: Assets/Scenes/MLMainMenuScene.unity
+    guid: e1c4b278880ac544697e1e181a0826eb
+  - enabled: 1
+    path: Assets/Scenes/MLPlayScene.unity
+    guid: 352fa42c4da76b84eb4dcc96487c7845
   m_configObjects: {}

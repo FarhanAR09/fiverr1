@@ -2,11 +2,24 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Threading.Tasks;
+using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.Events;
 
 public class UpgradeActionInvoker : MonoBehaviour
 {
+    public class InvokeActionParams
+    {
+        public UpgradeItem upgradeItem;
+        public UnityAction<bool> callback;
+
+        public InvokeActionParams(UpgradeItem upgradeItem, UnityAction<bool> callback)
+        {
+            this.upgradeItem = upgradeItem;
+            this.callback = callback;
+        }
+    }
+
     private static UpgradeActionInvoker _instance;
 
     public static UpgradeActionInvoker Instance
@@ -36,55 +49,83 @@ public class UpgradeActionInvoker : MonoBehaviour
         }
     }
 
-    public void InvokeAction(string name = "DefaultUpgradeAction", UnityAction<bool> callback = null)
+    public void InvokeAction(UpgradeItem upgradeItem, string name = "DefaultUpgradeAction", UnityAction<bool> callback = null)
     {
-        StartCoroutine(name, callback);
+        //StartCoroutine(name, callback);
+        StartCoroutine(upgradeItem.ActionName, new InvokeActionParams(upgradeItem, callback));
     }
 
-    private void BaseUpgradeAction(string key, UnityAction<bool> callback = null)
+    private void BaseUpgrade(InvokeActionParams args)
     {
         //Debug.Log("Upgrading...");
         //Debug.Log(PlayerPrefs.GetInt(key));
-        PlayerPrefs.SetInt(key, PlayerPrefs.GetInt(key) + 1);
+        PlayerPrefs.SetInt(args.upgradeItem.KeyName, PlayerPrefs.GetInt(args.upgradeItem.KeyName, 1) + 1);
         PlayerPrefs.Save();
         //Debug.Log(PlayerPrefs.GetInt(key));
-        callback?.Invoke(true);
+        args.callback?.Invoke(true);
     }
 
-    private IEnumerator DefaultUpgradeAction(UnityAction<bool> callback = null)
+    private IEnumerator DefaultUpgradeAction(InvokeActionParams args)
     {
         Debug.LogWarning("Invalid Upgrade Action Name!");
-        callback?.Invoke(false);
+        args.callback?.Invoke(false);
         yield return null;
     }
 
-    private IEnumerator TestUpgradeAction(UnityAction<bool> callback = null)
+    private IEnumerator BaseUpgradeAction(InvokeActionParams args)
     {
-        BaseUpgradeAction("upgradeTest", callback);
+        BaseUpgrade(args);
         yield return null;
     }
 
-    private IEnumerator MaxLivesUpgrade(UnityAction<bool> callback = null)
+    private IEnumerator TestUpgradeAction(InvokeActionParams args)
     {
-        BaseUpgradeAction("upgradeMaxLives", callback);
+        BaseUpgrade(args);
         yield return null;
     }
 
-    private IEnumerator TimeSlowUpgrade(UnityAction<bool> callback = null)
+    private IEnumerator MaxLivesUpgrade(InvokeActionParams args)
     {
-        BaseUpgradeAction("upgradeTimeSlow", callback);
+        BaseUpgrade(args);
         yield return null;
     }
 
-    private IEnumerator EMPUpgrade(UnityAction<bool> callback = null)
+    private IEnumerator TimeSlowUpgrade(InvokeActionParams args)
     {
-        BaseUpgradeAction("upgradeEMP", callback);
+        BaseUpgrade(args);
         yield return null;
     }
 
-    private IEnumerator BoostUpgrade(UnityAction<bool> callback = null)
+    private IEnumerator EMPUpgrade(InvokeActionParams args)
     {
-        BaseUpgradeAction("upgradeBoost", callback);
+        BaseUpgrade(args);
+        yield return null;
+    }
+
+    private IEnumerator BoostUpgrade(InvokeActionParams args)
+    {
+        BaseUpgrade(args);
+        yield return null;
+    }
+
+    private IEnumerator MLUpgradeDifficulties(InvokeActionParams args)
+    {
+        print("MLUpgradeDifficulties");
+        BaseUpgrade(args);
+        yield return null;
+    }
+
+    private IEnumerator MLUpgradeFlash(InvokeActionParams args)
+    {
+        print("MLUpgradeFlash");
+        BaseUpgrade(args);
+        yield return null;
+    }
+
+    private IEnumerator MLUpgradeFreeze(InvokeActionParams args)
+    {
+        print("MLUpgradeFreeze");
+        BaseUpgrade(args);
         yield return null;
     }
 }
