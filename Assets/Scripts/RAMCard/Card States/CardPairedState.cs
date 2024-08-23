@@ -27,6 +27,7 @@ public class CardPairedState : CardState
                 Owner.SetBackgroundColor(Color.red);
             Owner.StartFlipAnimation(true);
             Owner.EmitParticles();
+            Owner.EmitSFXCardFlip();
         }
     }
 

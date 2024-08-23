@@ -32,6 +32,9 @@ public class RAMCard : MonoBehaviour
 
     private bool assetBeenSetup = false;
 
+    [SerializeField]
+    private AudioClip sfxCardFlip;
+
     private void OnEnable()
     {
         GameEvents.OnMLCardsFailPairing.Add(EmitFailPairParticles);
@@ -179,6 +182,14 @@ public class RAMCard : MonoBehaviour
                 main.startColor = Color.red;
                 psExplode.Emit(16);
             }
+        }
+    }
+
+    public void EmitSFXCardFlip()
+    {
+        if (sfxCardFlip != null && SFXController.Instance != null)
+        {
+            SFXController.Instance.RequestPlay(sfxCardFlip, 0, volumeMultiplier: 0.5f);
         }
     }
 }

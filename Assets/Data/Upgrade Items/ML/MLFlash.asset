@@ -13,10 +13,12 @@ MonoBehaviour:
   m_Name: MLFlash
   m_EditorClassIdentifier: 
   Name: Flash
-  MaxLevel: 2
+  MaxLevel: 4
   ActionName: BaseUpgradeAction
   KeyName: mlFlashUpgrade
-  Price: e8030000
+  Price: e8030000d0070000b80b0000
   Icons:
+  - {fileID: 21300000, guid: a84e99f2321139341b1e744f994c80a7, type: 3}
+  - {fileID: 21300000, guid: a84e99f2321139341b1e744f994c80a7, type: 3}
   - {fileID: 21300000, guid: a84e99f2321139341b1e744f994c80a7, type: 3}
   - {fileID: 21300000, guid: a84e99f2321139341b1e744f994c80a7, type: 3}

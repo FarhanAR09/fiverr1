@@ -7,12 +7,16 @@ public class MLPowerManager : MonoBehaviour
 {
     public static MLPowerManager Instance { get; private set; }
 
+    [SerializeField]
+    private AudioClip sfxFlash, sfxFreezeStart, sfxFreezeEnd;
+
     private bool canFlash = false, flashUnlocked = true;
     private readonly float flashCdDuration = 90f;
     private float flashCdTime = 0f;
+    private int flashLevel = 1;
 
     private bool canFreeze = false, isFrozen = false, freezeUnlocked = true;
-    private readonly float freezeCdDuration = 10f, freezeDuration = 15f;
+    private readonly float freezeCdDuration = 45f, freezeDuration = 15f;
     private float freezeCdTime = 0f, freezeTime = 0f;
 
     private void Awake()
@@ -26,7 +30,8 @@ public class MLPowerManager : MonoBehaviour
             Destroy(gameObject);
         }
 
-        flashUnlocked = PlayerPrefs.GetInt(GameConstants.MLUPGRADEFLASH, 1) > 1;
+        flashLevel = PlayerPrefs.GetInt(GameConstants.MLUPGRADEFLASH, 1);
+        flashUnlocked = flashLevel > 1;
         freezeUnlocked = PlayerPrefs.GetInt(GameConstants.MLUPGRADEFREEZE, 1) > 1;
     }
 
@@ -44,6 +49,10 @@ public class MLPowerManager : MonoBehaviour
         if (flashUnlocked && canFlash && Input.GetKeyDown(KeyCode.Q))
         {
             ResetFlashCD();
+            if (sfxFlash != null && SFXController.Instance != null)
+            {
+                SFXController.Instance.RequestPlay(sfxFlash, 100);
+            }
             GameEvents.OnMLFlashPowerStarted.Publish(true);
         }
 
@@ -52,6 +61,10 @@ public class MLPowerManager : MonoBehaviour
             freezeTime = 0f;
             canFreeze = false;
             isFrozen = true;
+            if (sfxFreezeStart != null && SFXController.Instance != null)
+            {
+                SFXController.Instance.RequestPlay(sfxFreezeStart, 100);
+            }
             GameEvents.OnMLFreezeStateUpdated.Publish(true);
         }
     }
@@ -91,6 +104,10 @@ public class MLPowerManager : MonoBehaviour
                     canFreeze = false;
                     freezeTime = 0f;
                     freezeCdTime = 0f;
+                    if (sfxFreezeEnd != null && SFXController.Instance != null)
+                    {
+                        SFXController.Instance.RequestPlay(sfxFreezeEnd, 100);
+                    }
                     GameEvents.OnMLFreezeStateUpdated.Publish(false);
                     GameEvents.OnMLFreezeCDStarted.Publish(true);
                 }

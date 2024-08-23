@@ -6077,6 +6077,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 0f1d52df64055a242952b5350e7e3f30, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  sfxFlash: {fileID: 8300000, guid: b1bb9d41ec90b6b4397e8657d5ff7825, type: 3}
+  sfxFreezeStart: {fileID: 8300000, guid: a8de9c5ae436fea4f9ceae8331746942, type: 3}
+  sfxFreezeEnd: {fileID: 8300000, guid: e6648f89077e1d743a3b6dc522a338b4, type: 3}
 --- !u!1 &615297438
 GameObject:
   m_ObjectHideFlags: 0

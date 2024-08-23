@@ -5129,6 +5129,7 @@ MonoBehaviour:
   background: {fileID: 3287337189819713677}
   icon: {fileID: 2508135122171022910}
   psExplode: {fileID: 3192923365492378339}
+  sfxCardFlip: {fileID: 8300000, guid: 569905587e03b4f448c270838124aac1, type: 3}
 --- !u!61 &9038460821831523529
 BoxCollider2D:
   m_ObjectHideFlags: 0
