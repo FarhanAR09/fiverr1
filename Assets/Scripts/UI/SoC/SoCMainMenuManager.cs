@@ -29,4 +29,9 @@ public class SoCMainMenuManager : MonoBehaviour
             _ => GameConstants.SOCMAINMENUSCENE,
         });
     }
+
+    public void QuitGame()
+    {
+        Application.Quit();
+    }
 }

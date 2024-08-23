@@ -178,4 +178,9 @@ public class MainMenuManager : MonoBehaviour
             upgradeCreditsDisplay.SetText("CREDITS: " + CreditManager.GetCredit(GameConstants.FTCCREDIT).ToString("F0"));
         }
     }
+
+    public void GoToSOCMainMenu()
+    {
+        SceneManager.LoadScene(GameConstants.SOCMAINMENUSCENE);
+    }
 }

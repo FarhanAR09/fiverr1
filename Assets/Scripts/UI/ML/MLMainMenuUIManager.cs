@@ -149,4 +149,9 @@ public class MLMainMenuUIManager : MonoBehaviour
         this.cardThemeIndex = cardThemeIndex;
         PlayerPrefs.SetInt(GameConstants.MLSELECTCARDTHEMEINDEX, cardThemeIndex);
     }
+
+    public void GoToSOCMainMenu()
+    {
+        SceneManager.LoadScene(GameConstants.SOCMAINMENUSCENE);
+    }
 }
