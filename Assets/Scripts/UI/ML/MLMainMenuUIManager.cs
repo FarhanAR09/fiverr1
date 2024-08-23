@@ -89,7 +89,7 @@ public class MLMainMenuUIManager : MonoBehaviour
         static IEnumerator WaitAFrameBeforeLoading()
         {
             yield return new WaitForEndOfFrame();
-            SceneManager.LoadScene("MemoryLeakPlayScene");
+            SceneManager.LoadScene(GameConstants.MLPLAYSCENE);
         }
         StopCoroutine(WaitAFrameBeforeLoading());
         StartCoroutine(WaitAFrameBeforeLoading());

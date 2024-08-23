@@ -73,7 +73,7 @@ public class MainMenuManager : MonoBehaviour
 
     public void Play()
     {
-        SceneManager.LoadScene("PlayScene");
+        SceneManager.LoadScene(GameConstants.FTCPLAYSCENE);
     }
 
     public void Exit()

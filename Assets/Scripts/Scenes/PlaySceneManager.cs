@@ -146,7 +146,7 @@ public class PlaySceneManager : MonoBehaviour
     {
         SetHighscore();
         ScoreCounter.ResetScore();
-        SceneManager.LoadScene("MainMenuScene");
+        SceneManager.LoadScene(GameConstants.FTCMAINMENUSCENE);
     }
 
     private void SetHighscore()

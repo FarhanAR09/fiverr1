@@ -1,5 +1,16 @@
 public static class GameConstants
 {
+
+    #region System on Chip
+    #region Scenes
+    public const string SOCMAINMENUSCENE = "SoCMainMenuScene";
+    public const string FTCPLAYSCENE = "FtCPlayScene";
+    public const string FTCMAINMENUSCENE = "FtCMainMenuScene";
+    public const string MLPLAYSCENE = "MLPlayScene";
+    public const string MLMAINMENUSCENE = "MLMainMenuScene";
+    #endregion
+    #endregion
+
     #region Cache Flush Speed Up
     public const string LEVELSPEEDKEY = "LevelTimeSpeedUp";
     public const float LEVELUPSPEEDUP = 0.1f;
