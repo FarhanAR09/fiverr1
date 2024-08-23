@@ -59,7 +59,6 @@ public class UpgradeActionInvoker : MonoBehaviour
     {
         //Debug.Log("Upgrading...");
         //Debug.Log(PlayerPrefs.GetInt(key));
-        print(args.upgradeItem.KeyName + " " + (PlayerPrefs.GetInt(args.upgradeItem.KeyName, 1) + 1));
         PlayerPrefs.SetInt(args.upgradeItem.KeyName, PlayerPrefs.GetInt(args.upgradeItem.KeyName, 1) + 1);
         PlayerPrefs.Save();
         //Debug.Log(PlayerPrefs.GetInt(key));

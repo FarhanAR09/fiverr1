@@ -27,7 +27,23 @@ public class RAMCard : MonoBehaviour
     [SerializeField]
     private SpriteRenderer background, icon;
 
+    [SerializeField]
+    private ParticleSystem psExplode;
+
     private bool assetBeenSetup = false;
+
+    [SerializeField]
+    private AudioClip sfxCardFlip;
+
+    private void OnEnable()
+    {
+        GameEvents.OnMLCardsFailPairing.Add(EmitFailPairParticles);
+    }
+
+    private void OnDisable()
+    {
+        GameEvents.OnMLCardsFailPairing.Remove(EmitFailPairParticles);
+    }
 
     private void Awake()
     {
@@ -114,6 +130,66 @@ public class RAMCard : MonoBehaviour
         if (background != null)
         {
             background.color = color;
+        }
+    }
+
+    private Coroutine flipAnimation;
+    public void StartFlipAnimation(bool isUp)
+    {
+        IEnumerator FlipAnimation()
+        {
+            float animDur = 1f;
+            float animTime = 0f;
+
+            while (animTime < animDur)
+            {
+                yield return new WaitForEndOfFrame();
+                animTime += Time.unscaledDeltaTime;
+
+                if (background != null)
+                {
+                    background.transform.localRotation =
+                        Quaternion.Euler(
+                            0f,
+                            Mathf.Lerp(background.transform.localRotation.eulerAngles.y, isUp ? 0f : 180f, Time.unscaledDeltaTime * 10f),
+                            0f);
+                }
+            }
+        }
+        if (flipAnimation != null)
+            StopCoroutine(flipAnimation);
+        flipAnimation = StartCoroutine(FlipAnimation());
+    }
+
+    public void EmitParticles()
+    {
+        if (psExplode != null)
+        {
+            var main = psExplode.main;
+            main.startColor = Corrupted ? Color.red : Color.green;
+
+            psExplode.Emit(16);
+        }
+    }
+
+    private void EmitFailPairParticles(CardPairArgument arg)
+    {
+        if (arg.card1.Equals(this) || arg.card2.Equals(this))
+        {
+            if (psExplode != null)
+            {
+                var main = psExplode.main;
+                main.startColor = Color.red;
+                psExplode.Emit(16);
+            }
+        }
+    }
+
+    public void EmitSFXCardFlip()
+    {
+        if (sfxCardFlip != null && SFXController.Instance != null)
+        {
+            SFXController.Instance.RequestPlay(sfxCardFlip, 0, volumeMultiplier: 0.5f);
         }
     }
 }
