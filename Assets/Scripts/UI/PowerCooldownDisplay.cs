@@ -130,7 +130,6 @@ public class PowerCooldownDisplay : MonoBehaviour
     private void IntensifyDisplay(bool _)
     {
         if (!unlocked) return;
-        print(name + " full");
         if (image != null)
         {
             image.material.SetFloat("_Intensity", 7f);

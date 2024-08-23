@@ -83,20 +83,19 @@ public class CardMatchController : MonoBehaviour
         if (arg.isUp)
         {
             TimesCardOpened++;
-            //print("Adding card " + arg.card.name);
             openedCards.Add(arg.card);
-            //print(openedCards.Count);
+
             //Delayed to give time for state initialization
             IEnumerator DelayAFrame()
             {
-                yield return new WaitForFixedUpdate();
                 if (openedCards.Count >= 2)
                 {
-                    if (openedCards[0].CardNumber == openedCards[1].CardNumber)
+                    RAMCard card1 = openedCards[0];
+                    RAMCard card2 = openedCards[1];
+                    openedCards.Clear();
+                    if (card1.CardNumber == card2.CardNumber)
                     {
-                        //print("Card count: " + openedCards.Count);
-                        RAMCard card1 = openedCards[0];
-                        RAMCard card2 = openedCards[1];
+                        yield return new WaitForFixedUpdate();
                         card1.PairCard();
                         card2.PairCard();
                         if (card1.Corrupted || card2.Corrupted)
@@ -114,9 +113,6 @@ public class CardMatchController : MonoBehaviour
                     }
                     else
                     {
-                        //Debug.Log("Bruh u stupid");
-                        RAMCard card1 = openedCards[0];
-                        RAMCard card2 = openedCards[1];
                         IEnumerator DelayPutDown()
                         {
                             yield return new WaitForSeconds(0.5f);
@@ -130,8 +126,6 @@ public class CardMatchController : MonoBehaviour
                         }
                         StartCoroutine(DelayPutDown());
                     }
-                    //Already cleared by HandleCardNotUpAnymore, just a guard
-                    openedCards.Clear();
                 }
             }
             StartCoroutine(DelayAFrame());

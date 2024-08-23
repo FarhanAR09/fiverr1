@@ -45,6 +45,8 @@ public class CardUpState : CardState
             Owner.SetReveal(true);
             if (Owner.Corrupted)
                 Owner.SetBackgroundColor(Color.red);
+            Owner.StartFlipAnimation(true);
+            Owner.EmitSFXCardFlip();
         }
 
         GameEvents.OnMLCardFlipped.Publish(new CardFlipArgument(Owner, true));

@@ -4,9 +4,28 @@ using UnityEngine;
 
 public class CardPeekedState : CardState
 {
-    public CardPeekedState(RAMCard owner, StateMachine stateMachine) : base(owner, stateMachine) { }
+    public CardPeekedState(RAMCard owner, StateMachine stateMachine) : base(owner, stateMachine) {
+        flashLevel = PlayerPrefs.GetInt(GameConstants.MLUPGRADEFLASH, 1);
+        if (!(flashLevel > 1 && flashLevel <= 4))
+        {
+            Debug.LogWarning("Flash/Peek Level Invalid: " + flashLevel);
+        }
+    }
 
-    private readonly float peekDuration = 2f;
+    private int flashLevel = 1;
+    private float peekDuration
+    {
+        get
+        {
+            return flashLevel switch
+            {
+                2 => 1.5f,
+                3 => 2f,
+                4 => 3f,
+                _ => 0.1f
+            };
+        }
+    }
     private float peekTime = 0f;
 
     public override void Enter()
@@ -17,6 +36,8 @@ public class CardPeekedState : CardState
             Owner.SetReveal(true);
             if (Owner.Corrupted)
                 Owner.SetBackgroundColor(Color.red);
+            Owner.StartFlipAnimation(true);
+            Owner.EmitSFXCardFlip();
         }
         peekTime = peekDuration;
     }

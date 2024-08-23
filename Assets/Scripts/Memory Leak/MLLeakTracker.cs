@@ -21,6 +21,8 @@ public class MLLeakTracker : MonoBehaviour
 
     private bool lost = false;
 
+    private int calculatedMistakes = 0;
+
     private void OnEnable()
     {
         GameEvents.OnMLMistakesUpdated.Add(AddLeakByMistakes);
@@ -69,7 +71,7 @@ public class MLLeakTracker : MonoBehaviour
 
     private void AddLeakByMistakes(int mistakes)
     {
-        if (lost)
+        if (lost || isFrozen)
             return;
 
         if (MLPlayManager.Instance != null)
@@ -89,11 +91,13 @@ public class MLLeakTracker : MonoBehaviour
                         _ => 1f,
                     };
                 }
-                AddLeak(Mathf.RoundToInt(multiplier * 1f));
+                calculatedMistakes++;
+                AddLeak(1 + Mathf.FloorToInt(multiplier * Mathf.Log(calculatedMistakes + 1, 32)));
             }
             else //Defaults to trial
             {
-                SetLeak(MaxMemory * mistakes / MLMainMenuFeatureSwitches.DebugTrialMaxMistakes);
+                calculatedMistakes++;
+                SetLeak(MaxMemory * calculatedMistakes / MLMainMenuFeatureSwitches.DebugTrialMaxMistakes);
             }
         }
     }
@@ -147,7 +151,7 @@ public class MLLeakTracker : MonoBehaviour
 
     private void AddLeakByCorruptPair(CardPairArgument arg)
     {
-        if (lost || !(MLPlayManager.Instance != null && MLPlayManager.Instance.CheckMode(MLGameMode.Classic, MLGameMode.Endless)))
+        if (lost || isFrozen || !(MLPlayManager.Instance != null && MLPlayManager.Instance.CheckMode(MLGameMode.Classic, MLGameMode.Endless)))
             return;
 
         if (arg.card1.Corrupted && arg.card2.Corrupted)
