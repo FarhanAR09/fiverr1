@@ -17,6 +17,8 @@ public class CardDownState : CardState
         {
             //Debug.Log(Owner.name + " subscribed");
             Owner.OnClicked += OnClicked;
+            Owner.OnHoverDown += EnableHighlight;
+            Owner.OnHoverUp += DisableHighlight;
         }
         GameEvents.OnMLFlashPowerStarted.Add(PeekCard);
 
@@ -30,6 +32,8 @@ public class CardDownState : CardState
         if (Owner != null)
         {
             Owner.OnClicked -= OnClicked;
+            Owner.OnHoverDown -= EnableHighlight;
+            Owner.OnHoverUp -= DisableHighlight;
         }
         GameEvents.OnMLFlashPowerStarted.Remove(PeekCard);
 
@@ -54,6 +58,8 @@ public class CardDownState : CardState
     public override void Exit()
     {
         base.Exit();
+
+        DisableHighlight();
     }
 
     public override void FrameUpdate()
@@ -87,6 +93,22 @@ public class CardDownState : CardState
         if (Owner != null && Owner.Corrupted)
         {
             Owner.gameObject.SetActive(false);
+        }
+    }
+
+    private void EnableHighlight()
+    {
+        if (Owner != null)
+        {
+            Owner.GlowHighlight(true);
+        }
+    }
+
+    private void DisableHighlight()
+    {
+        if (Owner != null)
+        {
+            Owner.GlowHighlight(false);
         }
     }
 }
