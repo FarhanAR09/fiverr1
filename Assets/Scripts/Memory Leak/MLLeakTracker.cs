@@ -111,7 +111,7 @@ public class MLLeakTracker : MonoBehaviour
         if (LeakedMemory >= MaxMemory)
         {
             lost = true;
-            print("-----=====| GAME OVER |=====-----");
+            
             GameEvents.OnMLLost.Publish(true);
         }
     }

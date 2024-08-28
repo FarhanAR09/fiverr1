@@ -13,7 +13,7 @@ public class RAMCard : MonoBehaviour
     public int CardNumber { get; private set; } = 0;
     public bool Corrupted { get; private set; } = false;
 
-    public UnityAction OnClicked, OnHoverUp, OnHoverDown, PairRequestCalled, PutDownRequestCalled;
+    public UnityAction OnClicked, OnHoverUp, OnHoverDown, PairRequestCalled, PutDownRequestCalled, FailPairViewingRequestCalled;
 
 
     private StateMachine stateMachine;
@@ -21,6 +21,7 @@ public class RAMCard : MonoBehaviour
     public CardUpState UpState { get; private set; }
     public CardPairedState PairedState { get; private set; }
     public CardPeekedState PeekedState { get; private set; }
+    public CardFailPairViewingState FailPairViewingState { get; private set; }
 
     [SerializeField]
     private TMP_Text nameDisplay;
@@ -71,13 +72,24 @@ public class RAMCard : MonoBehaviour
             UpState = new(this, stateMachine);
             PairedState = new(this, stateMachine);
             PeekedState = new(this, stateMachine);
+            FailPairViewingState = new(this, stateMachine);
         }
     }
 
     private void OnMouseDown()
     {
         //print(name + " clicked");
-        OnClicked?.Invoke();
+        if (MLPlayManager.Instance != null)
+        {
+            if (!MLPlayManager.Instance.GameOver)
+            {
+                OnClicked?.Invoke();
+            }
+        }
+        else
+        {
+            OnClicked?.Invoke();
+        }
     }
 
     private void OnMouseOver()
@@ -113,6 +125,11 @@ public class RAMCard : MonoBehaviour
     public void PutDownCard()
     {
         PutDownRequestCalled?.Invoke();
+    }
+
+    public void ViewFailedPairCard()
+    {
+        FailPairViewingRequestCalled?.Invoke();
     }
 
     public void SetupNumber(int cardNumber, bool corrupted = false)

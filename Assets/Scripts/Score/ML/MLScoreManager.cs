@@ -46,11 +46,6 @@ public class MLScoreManager : MonoBehaviour
 
     private void SetHighscore(bool _)
     {
-        print(Score);
-        print(PlayerPrefs.GetFloat(GameConstants.MLHIGHSCORE, 0f));
-        print("Setting Highscore " + Mathf.Max(
-                Score,
-                PlayerPrefs.GetFloat(GameConstants.MLHIGHSCORE, 0f)));
         PlayerPrefs.SetFloat(
             GameConstants.MLHIGHSCORE,
             Mathf.Max(
