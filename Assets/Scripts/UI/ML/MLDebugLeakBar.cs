@@ -20,6 +20,11 @@ public class MLDebugLeakBar : MonoBehaviour
 
     private Vector3 targetCoverPos, targetCoverScale, targetPsPos;
 
+    //Color Controller
+    [SerializeField]
+    private StateMachine colorsMachine;
+    private LeakOMeterColorState redState, greenState, cyanState;
+
     private void OnEnable()
     {
         if (MLLeakTracker.Instance != null)
@@ -38,6 +43,13 @@ public class MLDebugLeakBar : MonoBehaviour
         }
         else Debug.LogWarning("Tracker null");
         GameEvents.OnMLFreezeStateUpdated.Remove(UpdateFrozenVisual);
+    }
+
+    private void Awake()
+    {
+        redState = new LeakOMeterColorState(gameObject, colorsMachine, Color.red, leakLamp);
+        greenState = new LeakOMeterColorState(gameObject, colorsMachine, Color.green, leakLamp);
+        cyanState = new LeakOMeterColorState(gameObject, colorsMachine, Color.cyan, leakLamp);
     }
 
     private void Start()
@@ -63,9 +75,20 @@ public class MLDebugLeakBar : MonoBehaviour
         }
     }
 
-    private void UpdateBar(int _)
+    private int trackedLeak = 0;
+    private void UpdateBar(int leak)
     {
-        float norm = (float) MLLeakTracker.Instance.LeakedMemory / MLLeakTracker.Instance.MaxMemory;
+        float norm = (float)MLLeakTracker.Instance.LeakedMemory / MLLeakTracker.Instance.MaxMemory;
+        if (leak - trackedLeak >= 0)
+        {
+            ChangeColor(redState);
+            SetParticleEmission(true);
+        }
+        else
+        {
+            ChangeColor(greenState);
+            SetParticleEmission(false);
+        }
         if (cover != null)
         {
             targetCoverPos = Vector3.Lerp(Vector3.zero, new Vector3(0, height / 2f, 0), norm);
@@ -84,43 +107,56 @@ public class MLDebugLeakBar : MonoBehaviour
             var em = psBodyLeak.emission;
             em.rateOverTime = Mathf.Lerp(4, 32, norm);
         }
+
+        trackedLeak = leak;
     }
 
     private void UpdateFrozenVisual(bool frozen)
     {
         if (frozen)
         {
-            if (leakLamp != null)
-            {
-                leakLamp.color = Color.cyan;
-            }
-            if (psBorderLeak != null)
-            {
-                var em = psBorderLeak.emission;
-                em.enabled = false;
-            }
-            if (psBodyLeak != null)
-            {
-                var em = psBodyLeak.emission;
-                em.enabled = false;
-            }
+            //if (leakLamp != null)
+            //{
+            //    leakLamp.color = Color.cyan;
+            //}
+            ChangeColor(cyanState);
+            SetParticleEmission(false);
         }
         else
         {
-            if (leakLamp != null)
-            {
-                leakLamp.color = Color.red;
-            }
-            if (psBorderLeak != null)
-            {
-                var em = psBorderLeak.emission;
-                em.enabled = true;
-            }
-            if (psBodyLeak != null)
-            {
-                var em = psBodyLeak.emission;
-                em.enabled = true;
-            }
+            //if (leakLamp != null)
+            //{
+            //    leakLamp.color = Color.red;
+            //}
+            ChangeColor(redState);
+            SetParticleEmission(true);
         }
+    }
+
+    private void SetParticleEmission(bool on)
+    {
+        if (psBorderLeak != null)
+        {
+            var em = psBorderLeak.emission;
+            em.enabled = on;
+        }
+        if (psBodyLeak != null)
+        {
+            var em = psBodyLeak.emission;
+            em.enabled = on;
+        }
+    }
+
+    private void ChangeColor(LeakOMeterColorState colorState)
+    {
+        if (colorsMachine != null)
+        {
+            if (colorState != null)
+            {
+                colorsMachine.ChangeState(colorState);
+            }
+            else Debug.LogWarning($"ColorState in {name} is null");
+        }
+        else Debug.LogWarning($"ColorsMachine in {name} is null");
     }
 }
