@@ -11,7 +11,7 @@ public class MLPlayManager : MonoBehaviour
     public int Difficulty { get; private set; } = 1;
     public MLGameMode GameMode { get; private set; } = MLGameMode.Classic;
 
-    private bool gameOver = false;
+    public bool GameOver { get; private set; } = false;
 
     public float CardAutoFlipDuration {
         get {
@@ -76,7 +76,7 @@ public class MLPlayManager : MonoBehaviour
 
     private void TrackGameOver(bool _)
     {
-        gameOver = true;
+        GameOver = true;
     }
 
     private void ResetGridTrialEndless(bool _)
@@ -85,9 +85,8 @@ public class MLPlayManager : MonoBehaviour
         {
             //Wait for game over event
             yield return new WaitForFixedUpdate();
-            if (!gameOver && (GameMode == MLGameMode.Endless || GameMode == MLGameMode.Trial) && RAMGrid.Instance != null)
+            if (!GameOver && (GameMode == MLGameMode.Endless || GameMode == MLGameMode.Trial) && RAMGrid.Instance != null)
             {
-                print("Resetting");
                 RAMGrid.Instance.SetupByLevel(Difficulty);
             }
         }

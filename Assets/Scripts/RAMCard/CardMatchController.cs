@@ -93,9 +93,9 @@ public class CardMatchController : MonoBehaviour
                     RAMCard card1 = openedCards[0];
                     RAMCard card2 = openedCards[1];
                     openedCards.Clear();
+                    yield return new WaitForFixedUpdate();
                     if (card1.CardNumber == card2.CardNumber)
                     {
-                        yield return new WaitForFixedUpdate();
                         card1.PairCard();
                         card2.PairCard();
                         if (card1.Corrupted || card2.Corrupted)
@@ -113,18 +113,16 @@ public class CardMatchController : MonoBehaviour
                     }
                     else
                     {
-                        IEnumerator DelayPutDown()
-                        {
-                            yield return new WaitForSeconds(0.5f);
-                            card1.PutDownCard();
-                            card2.PutDownCard();
-                            GameEvents.OnMLCardsFailPairing.Publish(new(card1, card2));
-                            if (card1.Corrupted || card2.Corrupted)
-                                GameEvents.OnMLCorruptCardsPaired.Publish(new CardPairArgument(card1, card2));
-                            if (MLScoreManager.Instance != null)
-                                MLScoreManager.Instance.AddScore(-10f);
-                        }
-                        StartCoroutine(DelayPutDown());
+                        card1.ViewFailedPairCard();
+                        card2.ViewFailedPairCard();
+                        yield return new WaitForSeconds(0.5f);
+                        card1.PutDownCard();
+                        card2.PutDownCard();
+                        GameEvents.OnMLCardsFailPairing.Publish(new(card1, card2));
+                        if (card1.Corrupted || card2.Corrupted)
+                            GameEvents.OnMLCorruptCardsPaired.Publish(new CardPairArgument(card1, card2));
+                        if (MLScoreManager.Instance != null)
+                            MLScoreManager.Instance.AddScore(-10f);
                     }
                 }
             }

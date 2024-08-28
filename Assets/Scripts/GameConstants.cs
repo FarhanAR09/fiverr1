@@ -40,6 +40,8 @@ public static class GameConstants
     public const string MLUNLOCKEDLEVEL = "mlUnlockedLevel";
     public const string MLSELECTCARDTHEMEINDEX = "mlSelectedThemeIndex";
 
+    public const string MLHIGHSCORE = "mlHighScore";
+
     #region Upgrades
     public const string MLUPGRADEDIFFICULTIES = "mlDifficultiesUpgrade";
     public const string MLUPGRADEFLASH = "mlFlashUpgrade";

@@ -8,6 +8,18 @@ public class MLScoreManager : MonoBehaviour
 
     public float Score { get; private set; }
 
+    private void OnEnable()
+    {
+        GameEvents.OnMLGameFinished.Add(SetHighscore);
+        GameEvents.OnMLLost.Add(SetHighscore);
+    }
+
+    private void OnDisable()
+    {
+        GameEvents.OnMLGameFinished.Remove(SetHighscore);
+        GameEvents.OnMLLost.Remove(SetHighscore);
+    }
+
     private void Awake()
     {
         if (Instance == null)
@@ -30,5 +42,15 @@ public class MLScoreManager : MonoBehaviour
         float addedScore = baseScore * (baseScore > 0 ? multiplier : 1);
         Score = Mathf.Max(0f, Score + addedScore);
         GameEvents.OnMLScoreUpdated.Publish(Score);
+    }
+
+    private void SetHighscore(bool _)
+    {
+        PlayerPrefs.SetFloat(
+            GameConstants.MLHIGHSCORE,
+            Mathf.Max(
+                Score,
+                PlayerPrefs.GetFloat(GameConstants.MLHIGHSCORE, 0f)));
+        PlayerPrefs.Save();
     }
 }

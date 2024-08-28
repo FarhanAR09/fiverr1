@@ -18,6 +18,7 @@ public class CardUpState : CardState
         {
             Owner.PairRequestCalled += PairCard;
             Owner.PutDownRequestCalled += PutDownCard;
+            Owner.FailPairViewingRequestCalled += FailPairView;
             //Owner.OnClicked += PutDownCardSingleCheck;
         }
     }
@@ -30,6 +31,7 @@ public class CardUpState : CardState
         {
             Owner.PairRequestCalled -= PairCard;
             Owner.PutDownRequestCalled -= PutDownCard;
+            Owner.FailPairViewingRequestCalled -= FailPairView;
             //Owner.OnClicked -= PutDownCardSingleCheck;
         }
     }
@@ -101,6 +103,14 @@ public class CardUpState : CardState
         {
             stateMachine.ChangeState(Owner.DownState);
             GameEvents.OnMLCardFinishedSingleCheck.Publish(Owner);
+        }
+    }
+
+    private void FailPairView()
+    {
+        if (stateMachine != null && Owner != null && Owner.FailPairViewingState != null)
+        {
+            stateMachine.ChangeState(Owner.FailPairViewingState);
         }
     }
 }

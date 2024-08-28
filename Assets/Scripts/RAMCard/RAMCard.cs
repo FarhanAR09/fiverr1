@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using TMPro;
 using UnityEngine;
 using UnityEngine.Events;
+using UnityEngine.UIElements;
 
 [RequireComponent(typeof(StateMachine))]
 public class RAMCard : MonoBehaviour
@@ -12,7 +13,7 @@ public class RAMCard : MonoBehaviour
     public int CardNumber { get; private set; } = 0;
     public bool Corrupted { get; private set; } = false;
 
-    public UnityAction OnClicked, PairRequestCalled, PutDownRequestCalled;
+    public UnityAction OnClicked, OnHoverUp, OnHoverDown, PairRequestCalled, PutDownRequestCalled, FailPairViewingRequestCalled;
 
 
     private StateMachine stateMachine;
@@ -20,6 +21,7 @@ public class RAMCard : MonoBehaviour
     public CardUpState UpState { get; private set; }
     public CardPairedState PairedState { get; private set; }
     public CardPeekedState PeekedState { get; private set; }
+    public CardFailPairViewingState FailPairViewingState { get; private set; }
 
     [SerializeField]
     private TMP_Text nameDisplay;
@@ -35,14 +37,30 @@ public class RAMCard : MonoBehaviour
     [SerializeField]
     private AudioClip sfxCardFlip;
 
+    //Hover Handling
+    private bool lastHover, isHover;
+
+    [SerializeField]
+    private SpriteRenderer hoverGlow;
+
     private void OnEnable()
     {
         GameEvents.OnMLCardsFailPairing.Add(EmitFailPairParticles);
+
+        //Hover
+        isHover = false;
+        lastHover = false;
+
+        GlowHighlight(false);
     }
 
     private void OnDisable()
     {
         GameEvents.OnMLCardsFailPairing.Remove(EmitFailPairParticles);
+
+        //Hover
+        isHover = false;
+        lastHover = false;
     }
 
     private void Awake()
@@ -54,13 +72,48 @@ public class RAMCard : MonoBehaviour
             UpState = new(this, stateMachine);
             PairedState = new(this, stateMachine);
             PeekedState = new(this, stateMachine);
+            FailPairViewingState = new(this, stateMachine);
         }
     }
 
     private void OnMouseDown()
     {
         //print(name + " clicked");
-        OnClicked?.Invoke();
+        if (MLPlayManager.Instance != null)
+        {
+            if (!MLPlayManager.Instance.GameOver)
+            {
+                OnClicked?.Invoke();
+            }
+        }
+        else
+        {
+            OnClicked?.Invoke();
+        }
+    }
+
+    private void OnMouseOver()
+    {
+        //Hover
+        isHover = true;
+    }
+
+    private void LateUpdate()
+    {
+        //Hover
+        if (lastHover != isHover)       //Is hovering change state from last frame
+        {
+            if (lastHover)              //Last frame hovering
+            {
+                OnHoverUp?.Invoke();
+            }
+            else                        //Is hovering
+            {
+                OnHoverDown?.Invoke();
+            }
+        }
+        lastHover = isHover;
+        isHover = false;
     }
 
     public void PairCard()
@@ -72,6 +125,11 @@ public class RAMCard : MonoBehaviour
     public void PutDownCard()
     {
         PutDownRequestCalled?.Invoke();
+    }
+
+    public void ViewFailedPairCard()
+    {
+        FailPairViewingRequestCalled?.Invoke();
     }
 
     public void SetupNumber(int cardNumber, bool corrupted = false)
@@ -191,5 +249,29 @@ public class RAMCard : MonoBehaviour
         {
             SFXController.Instance.RequestPlay(sfxCardFlip, 0, volumeMultiplier: 0.5f);
         }
+    }
+
+    private Coroutine smoothGlowTransition;
+    public void GlowHighlight(bool on)
+    {
+        IEnumerator GlowSmoothTransition()
+        {
+            float animDur = 10f, animTime = 0;
+            float alpha = hoverGlow != null ? hoverGlow.color.a : 0f;
+            while (animTime < animDur)
+            {
+                yield return new WaitForEndOfFrame();
+                animTime += Time.unscaledDeltaTime;
+
+                if (hoverGlow != null)
+                {
+                    alpha = Mathf.Lerp(alpha, on ? 1f : 0f, Time.unscaledDeltaTime * 16f);
+                    hoverGlow.color = new Color(hoverGlow.color.r, hoverGlow.color.g, hoverGlow.color.b, alpha);
+                }
+            }
+        }
+        if (smoothGlowTransition != null)
+            StopCoroutine(smoothGlowTransition);
+        smoothGlowTransition = StartCoroutine(GlowSmoothTransition());
     }
 }
