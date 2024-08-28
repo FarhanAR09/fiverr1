@@ -19,8 +19,6 @@ public class MLLeakTracker : MonoBehaviour
 
     public UnityAction<int> OnMemoryLeakUpdated;
 
-    private bool lost = false;
-
     private int calculatedMistakes = 0;
 
     private void OnEnable()
@@ -71,7 +69,7 @@ public class MLLeakTracker : MonoBehaviour
 
     private void AddLeakByMistakes(int mistakes)
     {
-        if (lost || isFrozen)
+        if (IsGameOver() || isFrozen)
             return;
 
         if (MLPlayManager.Instance != null)
@@ -104,21 +102,19 @@ public class MLLeakTracker : MonoBehaviour
 
     private void AddLeak(int amount)
     {
-        if (lost)
+        if (IsGameOver())
             return;
         LeakedMemory = Mathf.Max(0, LeakedMemory + amount);
         OnMemoryLeakUpdated?.Invoke(LeakedMemory);
         if (LeakedMemory >= MaxMemory)
         {
-            lost = true;
-            
             GameEvents.OnMLLost.Publish(true);
         }
     }
 
     private void SetLeak(int amount)
     {
-        if (lost)
+        if (IsGameOver())
             return;
 
         LeakedMemory = Mathf.Max(0, amount);
@@ -126,8 +122,6 @@ public class MLLeakTracker : MonoBehaviour
 
         if (LeakedMemory >= MaxMemory)
         {
-            lost = true;
-            print("-----=====| YOU LOSE |=====-----");
             GameEvents.OnMLLost.Publish(true);
         }
     }
@@ -139,7 +133,7 @@ public class MLLeakTracker : MonoBehaviour
 
     private void ReduceLeakByCombo(CardPairArgument _)
     {
-        if (lost || !(MLPlayManager.Instance != null && MLPlayManager.Instance.CheckMode(MLGameMode.Classic, MLGameMode.Endless)))
+        if (IsGameOver() || !(MLPlayManager.Instance != null && MLPlayManager.Instance.CheckMode(MLGameMode.Classic, MLGameMode.Endless)))
             return;
 
         if (MemoryTracker.Instance != null)
@@ -151,7 +145,7 @@ public class MLLeakTracker : MonoBehaviour
 
     private void AddLeakByCorruptPair(CardPairArgument arg)
     {
-        if (lost || isFrozen || !(MLPlayManager.Instance != null && MLPlayManager.Instance.CheckMode(MLGameMode.Classic, MLGameMode.Endless)))
+        if (IsGameOver() || isFrozen || !(MLPlayManager.Instance != null && MLPlayManager.Instance.CheckMode(MLGameMode.Classic, MLGameMode.Endless)))
             return;
 
         if (arg.card1.Corrupted && arg.card2.Corrupted)
@@ -165,6 +159,18 @@ public class MLLeakTracker : MonoBehaviour
         else if (arg.card2.Corrupted)
         {
             AddLeak(10);
+        }
+    }
+
+    private bool IsGameOver()
+    {
+        if (MLPlayManager.Instance != null)
+        {
+            return MLPlayManager.Instance.GameOver;
+        }
+        else
+        {
+            return false;
         }
     }
 }
