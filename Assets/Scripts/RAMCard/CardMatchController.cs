@@ -111,6 +111,7 @@ public class CardMatchController : MonoBehaviour
                     }
                     else
                     {
+                        print("Fail Pair");
                         card1.ViewFailedPairCard();
                         card2.ViewFailedPairCard();
                         yield return new WaitForSeconds(0.5f);

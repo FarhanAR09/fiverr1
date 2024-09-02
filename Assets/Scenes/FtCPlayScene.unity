@@ -7069,6 +7069,7 @@ GameObject:
   - component: {fileID: 519420031}
   - component: {fileID: 519420029}
   - component: {fileID: 519420030}
+  - component: {fileID: 519420033}
   m_Layer: 0
   m_Name: Main Camera
   m_TagString: MainCamera
@@ -7194,6 +7195,20 @@ Transform:
   m_Children: []
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &519420033
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 519420028}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 767f8b9f39267ad41945f44a72e983eb, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  preferedHeight: 9
+  preferedWidth: 16
 --- !u!1 &548682466
 GameObject:
   m_ObjectHideFlags: 0
@@ -30770,6 +30785,7 @@ GameObject:
   - component: {fileID: 1696441077}
   - component: {fileID: 1696441076}
   - component: {fileID: 1696441075}
+  - component: {fileID: 1696441079}
   m_Layer: 5
   m_Name: Lose Canvas
   m_TagString: Untagged
@@ -30862,6 +30878,20 @@ RectTransform:
   m_AnchoredPosition: {x: 14.4, y: 32}
   m_SizeDelta: {x: 31.9851, y: 18.0368}
   m_Pivot: {x: 0.5, y: 0.5}
+--- !u!114 &1696441079
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1696441074}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: d24f61fe1b8e7364ab45d3ed2d8c01d8, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  followedCamera: {fileID: 519420031}
+  followCameraEveryFrame: 0
 --- !u!1 &1697383552
 GameObject:
   m_ObjectHideFlags: 0

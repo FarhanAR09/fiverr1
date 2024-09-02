@@ -74,6 +74,7 @@ public class MLLeakTracker : MonoBehaviour
 
         if (MLPlayManager.Instance != null)
         {
+            print("Mode " + MLPlayManager.Instance.CheckMode(MLGameMode.Classic, MLGameMode.Endless));
             if (MLPlayManager.Instance.CheckMode(MLGameMode.Classic, MLGameMode.Endless))
             {
                 float multiplier = 1;
@@ -81,15 +82,16 @@ public class MLLeakTracker : MonoBehaviour
                 {
                     multiplier = MLPlayManager.Instance.Difficulty switch
                     {
-                        1 => 1f,
-                        2 => 1.2f,
-                        3 => 1.4f,
-                        4 => 1.8f,
-                        5 => 2f,
-                        _ => 1f,
+                        1 => 2f,
+                        2 => 2.2f,
+                        3 => 2.4f,
+                        4 => 2.8f,
+                        5 => 3f,
+                        _ => 2f,
                     };
                 }
                 calculatedMistakes++;
+                print("Adding: " + (1 + Mathf.FloorToInt(multiplier * Mathf.Log(calculatedMistakes + 1, 32))));
                 AddLeak(1 + Mathf.FloorToInt(multiplier * Mathf.Log(calculatedMistakes + 1, 32)));
             }
             else //Defaults to trial
@@ -110,6 +112,7 @@ public class MLLeakTracker : MonoBehaviour
         {
             GameEvents.OnMLLost.Publish(true);
         }
+        print(LeakedMemory);
     }
 
     private void SetLeak(int amount)
