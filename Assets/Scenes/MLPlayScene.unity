@@ -7555,7 +7555,7 @@ MonoBehaviour:
   m_GameObject: {fileID: 1334604648}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 8e8e77284714e564cb7625865df84935, type: 3}
+  m_Script: {fileID: 11500000, guid: 7ff1d8a36b717944bbd25e9e08129e37, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
   followedCamera: {fileID: 1568362205}
