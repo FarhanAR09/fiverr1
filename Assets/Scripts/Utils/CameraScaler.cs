@@ -19,7 +19,10 @@ public class CameraScaler : MonoBehaviour
         if (scaledCamera != null)
         {
             initSize = scaledCamera.orthographicSize;
-            scaledCamera.orthographicSize = initSize * PreferedRatio / scaledCamera.aspect;
+            if (PreferedRatio > scaledCamera.aspect)
+                scaledCamera.orthographicSize = initSize * PreferedRatio / scaledCamera.aspect;
+            else
+                scaledCamera.orthographicSize = initSize * scaledCamera.aspect / PreferedRatio;
         }
     }
 }
