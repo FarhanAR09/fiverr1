@@ -18,6 +18,10 @@ public class CAPistol : MonoBehaviour, ICAGun
     private readonly float cooldownDuration = 0.5f;
     private float cooldownTimer = 0f;
 
+    //Debug
+    [SerializeField]
+    private GameObject debugProjectilePrefab;
+
     private void Start()
     {
         AbleToShoot = true;
@@ -31,7 +35,6 @@ public class CAPistol : MonoBehaviour, ICAGun
             if (cooldownTimer < cooldownDuration)
             {
                 cooldownTimer += Time.fixedDeltaTime;
-                print("Cooldown: " + cooldownTimer);
             }
             else
             {
@@ -42,11 +45,19 @@ public class CAPistol : MonoBehaviour, ICAGun
 
     public void Shoot()
     {
-        if (!AbleToShoot)
+        if (!AbleToShoot || debugProjectilePrefab == null)
             return;
 
-        print(name + " shot at " + Direction);
-        Debug.DrawRay(transform.position, 2f * Direction, Color.red, 1f);
+        GameObject goProjectile = Instantiate(debugProjectilePrefab, transform.position, Quaternion.identity);
+        if (!goProjectile.TryGetComponent<CAProjectile>(out var projectile))
+        {
+            Destroy(goProjectile);
+            return;
+        }
+
+        projectile.Fire(5f * Direction);
+        Destroy(projectile.gameObject, 2f);
+
         SetAbleToShootState(false);
         cooldownTimer = 0f;
     }
@@ -79,7 +90,6 @@ public class CAPistol : MonoBehaviour, ICAGun
     private void SetAbleToShootState(bool able)
     {
         AbleToShoot = able;
-        print(able);
         OnShootAbilityStateChanged?.Invoke(AbleToShoot);
     }
 }
