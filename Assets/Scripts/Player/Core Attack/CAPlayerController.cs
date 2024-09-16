@@ -57,7 +57,6 @@ namespace CoreAttack
                 Vector2 input = new(Input.GetAxis("Horizontal"), Input.GetAxis("Vertical"));
                 if (input != Vector2.zero)
                 {
-                    print(input);
                     movementController.MoveTo(input + (Vector2)transform.position);
                 }
             }

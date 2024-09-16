@@ -22,6 +22,10 @@ namespace CoreAttack
         [SerializeField]
         private CoreAttack.EnemyBehaviorState enemyBehaviorState;
 
+        //Contact Damager
+        [SerializeField]
+        private ContactDamager contactDamager;
+
         private void Awake()
         {
             TryGetComponent(out movementController);
@@ -68,6 +72,15 @@ namespace CoreAttack
         public void SetMovementTarget(Vector2 targetPosition)
         {
             this.targetPosition = targetPosition;
+        }
+
+        public void SetContactDamagerEnabled(bool on)
+        {
+            if (contactDamager != null)
+            {
+                contactDamager.ContactDamagerEnabled = on;
+            }
+            else Debug.LogWarning("ContactDamager is null in " + name);
         }
     }
 }

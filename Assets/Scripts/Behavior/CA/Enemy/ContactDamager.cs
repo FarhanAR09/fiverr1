@@ -13,7 +13,7 @@ namespace CoreAttack
         {
             if (ContactDamagerEnabled)
             {
-                if (collision.gameObject.Equals(Player.Instance.gameObject.GetComponent<Collider2D>()))
+                if (collision.gameObject.Equals(Player.Instance.gameObject))
                 {
                     Player.Instance.Hit();
                     Player.Instance.Hurt(10f);

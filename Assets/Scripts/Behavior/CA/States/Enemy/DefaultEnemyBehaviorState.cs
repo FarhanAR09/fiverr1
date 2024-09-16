@@ -10,6 +10,11 @@ namespace CoreAttack
         public override void Enter()
         {
             base.Enter();
+
+            if (OwnerAI != null)
+            {
+                OwnerAI.SetContactDamagerEnabled(true);
+            }
         }
 
         public override void Exit()
