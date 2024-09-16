@@ -6,7 +6,7 @@ namespace CoreAttack
 {
     public class EnemyBehaviorState : SOState
     {
-        protected new CoreAttack.EnemyAIController Owner;
+        protected CoreAttack.EnemyAIController OwnerAI;
 
         public override void Enter()
         {
@@ -38,10 +38,10 @@ namespace CoreAttack
             base.PhysicsUpdate();
         }
 
-        public virtual void Setup(CoreAttack.EnemyAIController owner, StateMachine stateMachine)
+        public virtual void Setup(CoreAttack.EnemyAIController ownerAI, SOStateMachine stateMachine)
         {
-            Owner = owner;
-            this.stateMachine = stateMachine;
+            base.Setup(ownerAI.gameObject, stateMachine);
+            OwnerAI = ownerAI;
         }
     }
 }

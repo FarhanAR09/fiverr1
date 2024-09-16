@@ -2,62 +2,66 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-[RequireComponent(typeof(CAMovementController))]
-public class CAPlayerController : MonoBehaviour
+namespace CoreAttack
 {
-    private CAMovementController movementController;
-
-    [Tooltip("Gun GameObject with ICAGun interface")]
-    [SerializeField]
-    private GameObject gun;
-    private ICAGun iGun;
-
-    private Camera mainCam;
-
-    private void Awake()
+    [RequireComponent(typeof(CAMovementController))]
+    public class CAPlayerController : MonoBehaviour
     {
-        TryGetComponent(out movementController);
+        private CAMovementController movementController;
 
-        if (gun != null && gun.TryGetComponent(out ICAGun _iGun))
+        [Tooltip("Gun GameObject with ICAGun interface")]
+        [SerializeField]
+        private GameObject gun;
+        private ICAGun iGun;
+
+        private Camera mainCam;
+
+        private void Awake()
         {
-            iGun = _iGun;
+            TryGetComponent(out movementController);
+
+            if (gun != null && gun.TryGetComponent(out ICAGun _iGun))
+            {
+                iGun = _iGun;
+            }
+            else Debug.LogWarning("ICAGun is null in " + name);
+
+            mainCam = Camera.main;
         }
-        else Debug.LogWarning("ICAGun is null in " + name);
 
-        mainCam = Camera.main;
-    }
-
-    private void Update()
-    {
-        if (iGun != null && gun != null)
+        private void Update()
         {
-            Vector2 aimDirection = ((Vector2)(mainCam.ScreenToWorldPoint(Input.mousePosition) - transform.position)).normalized;
-            gun.transform.position = 1f * aimDirection + (Vector2)transform.position;
-            gun.transform.rotation = Quaternion.Euler(new Vector3(0, 0, Mathf.Atan2(aimDirection.y, aimDirection.x) * Mathf.Rad2Deg));
-
-            if (Input.GetMouseButtonDown(0))
+            if (iGun != null && gun != null)
             {
-                iGun.Shoot();
-            }
+                Vector2 aimDirection = ((Vector2)(mainCam.ScreenToWorldPoint(Input.mousePosition) - transform.position)).normalized;
+                gun.transform.position = 1f * aimDirection + (Vector2)transform.position;
+                gun.transform.rotation = Quaternion.Euler(new Vector3(0, 0, Mathf.Atan2(aimDirection.y, aimDirection.x) * Mathf.Rad2Deg));
 
-            if (Input.GetMouseButtonDown(1))
-            {
-                iGun.ToggleShoot(!iGun.ShootToggled);
+                if (Input.GetMouseButtonDown(0))
+                {
+                    iGun.Shoot();
+                }
+
+                if (Input.GetMouseButtonDown(1))
+                {
+                    iGun.ToggleShoot(!iGun.ShootToggled);
+                }
             }
+            else Debug.LogWarning("Gun is null in " + name);
         }
-        else Debug.LogWarning("Gun is null in " + name);
-    }
 
-    private void FixedUpdate()
-    {
-        if (movementController != null)
+        private void FixedUpdate()
         {
-            Vector2 input = new(Input.GetAxis("Horizontal"), Input.GetAxis("Vertical"));
-            if (input != Vector2.zero)
+            if (movementController != null)
             {
-                movementController.MoveTo(input + (Vector2)transform.position);
+                Vector2 input = new(Input.GetAxis("Horizontal"), Input.GetAxis("Vertical"));
+                if (input != Vector2.zero)
+                {
+                    print(input);
+                    movementController.MoveTo(input + (Vector2)transform.position);
+                }
             }
+            else Debug.LogWarning("Movement Controller is null in " + name);
         }
-        else Debug.LogWarning("Movement Controller is null in " + name);
     }
 }

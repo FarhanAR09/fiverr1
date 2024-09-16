@@ -6,9 +6,9 @@ using UnityEngine;
 public class SOState : ScriptableObject
 {
     public GameObject Owner { get; protected set; }
-    protected StateMachine stateMachine;
+    protected SOStateMachine stateMachine;
 
-    public virtual void Setup(GameObject owner, StateMachine stateMachine)
+    public virtual void Setup(GameObject owner, SOStateMachine stateMachine)
     {
         Owner = owner;
         this.stateMachine = stateMachine;
