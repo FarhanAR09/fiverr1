@@ -2,6 +2,7 @@ public static class GameConstants
 {
 
     #region System on Chip
+
     #region Scenes
     public const string SOCMAINMENUSCENE = "SoCMainMenuScene";
     public const string FTCPLAYSCENE = "FtCPlayScene";
@@ -9,26 +10,30 @@ public static class GameConstants
     public const string MLPLAYSCENE = "MLPlayScene";
     public const string MLMAINMENUSCENE = "MLMainMenuScene";
     #endregion
+
+    #region Credit Types
+    public const string FTCCREDIT = "ftcCredit";
+    public const string MLCREDIT = "mlCredit";
+    #endregion
     #endregion
 
-    #region Cache Flush Speed Up
+    #region Flush the Cache
+    #region FTC Cache Flush Speed Up
     public const string LEVELSPEEDKEY = "LevelTimeSpeedUp";
     public const float LEVELUPSPEEDUP = 0.1f;
     public const float PLAYERSTOPSLOWDOWN = 0.1f;
     #endregion
 
+    #region FTC Upgrades
     public const string FTCUPGRADEBULLETTIME = "upgradeTimeSlow";
     public const string FTCUPGRADEEMP = "upgradeEMP";
     public const string FTCUPGRADEBOOST = "upgradeBoost";
+    #endregion
 
-    #region Settings
+    #region FTC Settings
     public const string SOUNDVOLUME = "soundVolume";
     public const string MUSICVOLUME = "musicVolume";
     #endregion
-
-    #region Credit Types
-    public const string FTCCREDIT = "ftcCredit";
-    public const string MLCREDIT = "mlCredit";
     #endregion
 
     #region Memory Leak
@@ -57,6 +62,15 @@ public static class GameConstants
 
     #region Debug: Feature Switches
     public const string MLFSMAXLEAK = "mlFsMaxLeak";
+    #endregion
+
+    #endregion
+
+    #region Core Attack
+
+    #region Enemy Prefabs Keys
+    public const string
+        CAELECTRICGHOSTKEY = "caElectricGhost";
     #endregion
 
     #endregion

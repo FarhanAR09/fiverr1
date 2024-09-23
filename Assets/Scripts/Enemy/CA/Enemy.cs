@@ -12,9 +12,9 @@ namespace CoreAttack
         [SerializeField]
         private Health health;
 
-        public void Hit()
+        public bool TryHit()
         {
-            //Nothing
+            return true;
         }
 
         public void Hurt(float baseDamage)

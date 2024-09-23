@@ -6,9 +6,9 @@ public class CADummyEnemy : MonoBehaviour, ICAHittable, ICAHurtable
 {
     public GameObject Owner => gameObject;
 
-    public void Hit()
+    public bool TryHit()
     {
-        
+        return true;
     }
 
     public void Hurt(float baseDamage)

@@ -17,10 +17,12 @@ public class CAGenericBullet : CAProjectile
     public override void OnHit(ICAHittable hittable)
     {
         base.OnHit(hittable);
-        hittable.Hit();
-        if (hittable.Owner != null && hittable.Owner.TryGetComponent(out ICAHurtable hurtable))
+        if (hittable.TryHit())
         {
-            hurtable.Hurt(10f);
+            if (hittable.Owner != null && hittable.Owner.TryGetComponent(out ICAHurtable hurtable))
+            {
+                hurtable.Hurt(10f);
+            }
         }
 
         Disappear();

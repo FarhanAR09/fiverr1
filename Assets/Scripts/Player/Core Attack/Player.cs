@@ -35,9 +35,9 @@ namespace CoreAttack
             }
         }
 
-        public void Hit()
+        public bool TryHit()
         {
-            
+            return true;
         }
 
         public void Hurt(float baseDamage)

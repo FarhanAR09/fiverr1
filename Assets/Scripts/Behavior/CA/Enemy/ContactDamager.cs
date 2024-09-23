@@ -15,8 +15,10 @@ namespace CoreAttack
             {
                 if (collision.gameObject.Equals(Player.Instance.gameObject))
                 {
-                    Player.Instance.Hit();
-                    Player.Instance.Hurt(10f);
+                    if (Player.Instance.TryHit())
+                    {
+                        Player.Instance.Hurt(10f);
+                    }
                 }
             }
         }
