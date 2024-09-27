@@ -26,6 +26,10 @@ namespace CoreAttack
         [SerializeField]
         private ContactDamager contactDamager;
 
+        //Debug
+        [SerializeField]
+        private bool isDebug = false;
+
         private void Awake()
         {
             TryGetComponent(out movementController);
@@ -35,6 +39,7 @@ namespace CoreAttack
             {
                 if (enemyMovementState != null)
                 {
+                    enemyMovementState = Instantiate(enemyMovementState);
                     enemyMovementState.Setup(this, movementStateMachine);
                     if (movementStateMachine != null)
                     {
@@ -44,6 +49,7 @@ namespace CoreAttack
                 }
                 if (enemyBehaviorState != null)
                 {
+                    enemyBehaviorState = Instantiate(enemyBehaviorState);
                     enemyBehaviorState.Setup(this, behaviorStateMachine);
                     if (behaviorStateMachine != null)
                     {
@@ -71,6 +77,7 @@ namespace CoreAttack
 
         public void SetMovementTarget(Vector2 targetPosition)
         {
+            if (isDebug) Debug.Log("SetMovementTarget: " + targetPosition);
             this.targetPosition = targetPosition;
         }
 

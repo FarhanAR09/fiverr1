@@ -5,6 +5,7 @@ using CoreAttack;
 
 namespace CoreAttack
 {
+    [CreateAssetMenu(fileName = "New Default Enemy Behavior State", menuName = "States/Core Attack/Enemy Behavior State/Default")]
     public class DefaultEnemyBehaviorState : EnemyBehaviorState
     {
         public override void Enter()

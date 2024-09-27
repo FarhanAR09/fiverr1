@@ -19,7 +19,7 @@ namespace CoreAttack
             private set => _instance = value;
         }
 
-        private Dictionary<EnemyType, GameObject> prefabs = new();
+        private readonly Dictionary<EnemyType, GameObject> prefabs = new();
         [SerializeField]
         private List<EnemyType> prefabsKeys = new();
         [SerializeField]

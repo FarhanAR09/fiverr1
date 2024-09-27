@@ -21,6 +21,7 @@ namespace CoreAttack
         public override void Exit()
         {
             base.Exit();
+            Debug.Log("Exitting");
         }
 
         public override void FrameUpdate()

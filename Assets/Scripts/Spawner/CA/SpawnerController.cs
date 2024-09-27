@@ -42,8 +42,8 @@ namespace CoreAttack
                 total = 0f;
                 for (int i = 0; i < probabilities.Count; i++)
                 {
-                    cumulativeProbabilities.Add(total);
                     total += probabilities[i];
+                    cumulativeProbabilities.Add(total);
                 }
 
                 //Add to dictionary
@@ -63,7 +63,18 @@ namespace CoreAttack
             else
             {
                 spawnTimer = 0f;
-                print(GetTypeRandomly().ToString());
+                if (EnemyPrefabsProvider.Instance != null)
+                {
+                    EnemyType spawningType = GetTypeRandomly();
+                    print("Spawning " + spawningType.ToString());
+                    GameObject prefab = EnemyPrefabsProvider.Instance.TryGetPrefab(spawningType);
+                    if (prefab != null)
+                    {
+                        Instantiate(prefab, transform.position, new Quaternion());
+                    }
+                    else Debug.LogWarning(spawningType.ToString() + " is null");
+                }
+                else Debug.LogWarning("EnemyPrefabsProvider is null");
             }
         }
 
