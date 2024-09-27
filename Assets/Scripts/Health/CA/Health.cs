@@ -24,6 +24,7 @@ namespace CoreAttack
         }
 
         public float CurrentHealth => _currentHealth;
+        public float MaxHealth => _maxHealth;
 
         public void TakeDamage(float damage)
         {
