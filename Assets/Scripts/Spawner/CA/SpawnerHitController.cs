@@ -5,14 +5,18 @@ using UnityEngine.Events;
 
 namespace CoreAttack
 {
-    public class SpawnerHitController : MonoBehaviour, ICAHittable, ICAHurtable
+    public class SpawnerHitController : MonoBehaviour, ICAHittable, ICAHurtable, IHealthOwner
     {
         public GameObject Owner => gameObject;
 
         private SpawnerController spawner;
 
+        //Health
         [SerializeField]
         private Health health = new(100f);
+        public float CurrentHealth => health.CurrentHealth;
+        public float MaxHealth => health.MaxHealth;
+        public UnityAction<float> OnHealthUpdated { get => health.OnHealthUpdated; set => health.OnHealthUpdated = value; }
 
         public UnityAction<bool> OnSpawnerEnabledStateChanged;
 

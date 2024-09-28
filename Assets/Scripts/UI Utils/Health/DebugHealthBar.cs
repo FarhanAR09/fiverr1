@@ -25,10 +25,6 @@ namespace CoreAttack
             }
         }
 
-        //Transform
-        [SerializeField]
-        private Transform followedTransform;
-
         //Amount
         private float Amount
         {
@@ -62,6 +58,11 @@ namespace CoreAttack
             }
         }
 
+        private void Awake()
+        {
+            goHealthOwner.TryGetComponent(out _healthOwner);
+        }
+
         private void Start()
         {
             if (filledBar != null)
@@ -70,15 +71,11 @@ namespace CoreAttack
             }
         }
 
-        public void Setup(IHealthOwner healthOwner = null, Transform followedTransform = null)
+        public void Setup(IHealthOwner healthOwner = null)
         {
             if (healthOwner != null)
             {
                 HealthOwner = healthOwner;
-            }
-            if (followedTransform != null)
-            {
-                this.followedTransform = followedTransform;
             }
         }
 
