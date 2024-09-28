@@ -21,9 +21,8 @@ namespace CoreAttack
         }
 
         //Health
-        private Health health;
         [SerializeField]
-        private float maxHealth = 100f;
+        private Health health;
         //IHealthOwner
         public float CurrentHealth => health.CurrentHealth;
         public float MaxHealth => health.MaxHealth;
@@ -44,8 +43,6 @@ namespace CoreAttack
                 Destroy(gameObject);
                 return;
             }
-
-            health = new(maxHealth);
         }
 
         public bool TryHit()

@@ -29,7 +29,7 @@ namespace CoreAttack
         private float Amount
         {
             get { 
-                if (HealthOwner == null)
+                if (HealthOwner == null || HealthOwner.MaxHealth == 0)
                 {
                     return 0f;
                 }
