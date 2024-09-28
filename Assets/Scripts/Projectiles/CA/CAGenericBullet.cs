@@ -23,8 +23,7 @@ public class CAGenericBullet : CAProjectile
             {
                 hurtable.Hurt(10f);
             }
+            Disappear();
         }
-
-        Disappear();
     }
 }
