@@ -55,7 +55,7 @@ namespace CoreAttack
             }
         }
 
-        private float TypeToMultiplier(EnemyType type)
+        public float TypeToMultiplier(EnemyType type)
         {
             return type switch
             {

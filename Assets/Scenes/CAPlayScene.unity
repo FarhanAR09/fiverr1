@@ -134,6 +134,7 @@ GameObject:
   - component: {fileID: 65733005}
   - component: {fileID: 65733007}
   - component: {fileID: 65733006}
+  - component: {fileID: 65733008}
   m_Layer: 5
   m_Name: Type Multiplier Display
   m_TagString: Untagged
@@ -257,6 +258,19 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 65733004}
   m_CullTransparentMesh: 1
+--- !u!114 &65733008
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 65733004}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 7375d3925fe3a8b4398a56f6d24ba66f, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  textDisplay: {fileID: 65733006}
 --- !u!1 &172163765
 GameObject:
   m_ObjectHideFlags: 0
