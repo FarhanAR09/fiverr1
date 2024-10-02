@@ -24,6 +24,11 @@ namespace CoreAttack
         [field: SerializeField]
         public EnemyType Type { get; private set; } = EnemyType.ElectricGhost;
 
+        private void Start()
+        {
+            GameEvents.OnCAEnemySpawned.Publish(this);
+        }
+
         public bool TryHit()
         {
             return true;

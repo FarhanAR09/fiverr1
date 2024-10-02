@@ -6,6 +6,7 @@ using UnityEngine.Events;
 
 namespace CoreAttack
 {
+    [DefaultExecutionOrder(-1)]
     public class FactorNumberTracker : MonoBehaviour
     {
         //Singleton
@@ -60,8 +61,13 @@ namespace CoreAttack
 
         private void DecreaseCounter(Enemy _)
         {
-            Count--;
-            OnCounterUpdated?.Invoke(Count);
+            IEnumerator DelayDecreaseCounter()
+            {
+                yield return new WaitForFixedUpdate();
+                Count--;
+                OnCounterUpdated?.Invoke(Count);
+            }
+            StartCoroutine(DelayDecreaseCounter());
         }
     }
 }

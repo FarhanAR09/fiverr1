@@ -1,9 +1,11 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.Events;
 
 namespace CoreAttack
 {
+    [DefaultExecutionOrder(-1)]
     public class Score : MonoBehaviour
     {
         //Singleton
@@ -21,16 +23,32 @@ namespace CoreAttack
             set => _instance = value;
         }
 
+        public UnityAction<int> OnScoreUpdated { get; set;}
+
+        [field: SerializeField]
         public int Amount { get; private set; }
+
+        private void Awake()
+        {
+            if (_instance == null)
+            {
+                _instance = this;
+            }
+            else if (_instance != this)
+            {
+                Destroy(gameObject);
+            }
+        }
 
         public void AddScore(int amount)
         {
             Amount += amount;
+            OnScoreUpdated?.Invoke(Amount);
         }
 
         public void RemoveScore(int amount)
         { 
-            Amount -= amount;
+            AddScore(-amount);
         }
     }
 }
